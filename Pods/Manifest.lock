@@ -1,0 +1,41 @@
+PODS:
+  - Alamofire (4.6.0)
+  - CardIO (5.4.1)
+  - CLabsImageSlider (0.1.2)
+  - IQKeyboardManagerSwift (5.0.7)
+  - Kingfisher (4.6.1)
+  - LUExpandableTableView (3.0.0)
+  - SDWebImage (3.8.2):
+    - SDWebImage/Core (= 3.8.2)
+  - SDWebImage/Core (3.8.2)
+  - SKActivityIndicatorView (0.1.0)
+  - SKPhotoBrowser (5.0.3)
+  - Stripe (12.1.0)
+
+DEPENDENCIES:
+  - Alamofire (~> 4.5)
+  - CardIO
+  - CLabsImageSlider
+  - IQKeyboardManagerSwift
+  - Kingfisher (~> 4.0)
+  - LUExpandableTableView
+  - SDWebImage (~> 3.8)
+  - SKActivityIndicatorView
+  - SKPhotoBrowser
+  - Stripe
+
+SPEC CHECKSUMS:
+  Alamofire: f41a599bd63041760b26d393ec1069d9d7b917f4
+  CardIO: 56983b39b62f495fc6dae9ad7cf875143df06443
+  CLabsImageSlider: 49c296c17e2fb15f1abe8b5dd6157927912abb7c
+  IQKeyboardManagerSwift: 30fb3a61de1af53a95e02b80fb54ed0a19d5ede5
+  Kingfisher: 1f9157d9c02b380cbd0b7cc890161195164eb634
+  LUExpandableTableView: 3282bf2de40af3fadd97095f9a4738185a261d6f
+  SDWebImage: 098e97e6176540799c27e804c96653ee0833d13c
+  SKActivityIndicatorView: f46936f760d33eb8235333242269bf01cc9248ae
+  SKPhotoBrowser: 6de77f7004442e79059f19d86e2e7e6a03b43a13
+  Stripe: de8bffa8e6813f678d526c52f416fe224141fa09
+
+PODFILE CHECKSUM: f74d198d826262e524e1b565432a5026cfb18823
+
+COCOAPODS: 1.4.0
