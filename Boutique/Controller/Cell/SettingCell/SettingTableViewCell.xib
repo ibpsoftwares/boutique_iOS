@@ -32,7 +32,7 @@
                         </constraints>
                     </imageView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="reK-xq-2wP">
-                        <rect key="frame" x="50" y="16" width="34" height="18"/>
+                        <rect key="frame" x="50" y="18" width="34" height="18"/>
                         <fontDescription key="fontDescription" name="Whitney-Medium" family="Whitney" pointSize="15"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
@@ -40,7 +40,7 @@
                 </subviews>
                 <constraints>
                     <constraint firstItem="reK-xq-2wP" firstAttribute="leading" secondItem="iUq-ow-hiv" secondAttribute="trailing" constant="10" id="EvW-Sm-scX"/>
-                    <constraint firstItem="reK-xq-2wP" firstAttribute="centerY" secondItem="iUq-ow-hiv" secondAttribute="centerY" id="Qb3-5d-RAc"/>
+                    <constraint firstItem="reK-xq-2wP" firstAttribute="centerY" secondItem="iUq-ow-hiv" secondAttribute="centerY" constant="2" id="Qb3-5d-RAc"/>
                     <constraint firstItem="iUq-ow-hiv" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="10" id="Zc7-4b-Fli"/>
                     <constraint firstItem="iUq-ow-hiv" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="way-gG-Kbd"/>
                 </constraints>

@@ -130,10 +130,13 @@
             </constraints>
             <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
             <connections>
+                <outlet property="brandNameLabel" destination="v05-99-hnC" id="nfQ-n5-Nfz"/>
                 <outlet property="cellView" destination="QK6-Df-NSL" id="sEb-Rj-EW9"/>
+                <outlet property="crossLabel" destination="Bgq-6u-YJb" id="cBT-HA-ceX"/>
+                <outlet property="oldPriceLabel" destination="k7j-RG-poz" id="R1L-6g-1kW"/>
+                <outlet property="originalPriceLabel" destination="zHh-eh-bVF" id="dlP-1u-Qkt"/>
                 <outlet property="productImg" destination="UmF-65-YHS" id="Tfn-UM-e2T"/>
-                <outlet property="productNameLabel" destination="v05-99-hnC" id="gp6-80-9At"/>
-                <outlet property="productPriceLabel" destination="zHh-eh-bVF" id="2hT-Oj-kbc"/>
+                <outlet property="productNameLabel" destination="dF1-Sp-dnt" id="lvO-5T-TLO"/>
                 <outlet property="wishlistBtn" destination="zk0-Af-RaC" id="g03-ag-nlk"/>
             </connections>
             <point key="canvasLocation" x="292" y="4"/>

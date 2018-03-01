@@ -69,7 +69,7 @@ class MainTabBarViewController: UITabBarController ,UITabBarControllerDelegate{
                     for item in ((product ).value(forKey: "Wishlist") as! NSArray) {
                         print(item)
                         
-                        self.wishListProduct.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "Cloth_id") as! String), price: ((item as! NSDictionary).value(forKey: "price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String)))
+                        self.wishListProduct.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "Cloth_id") as! String), price: ((item as! NSDictionary).value(forKey: "price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), oldPrice: "", brand: ""))
                     }
                     
                     self.objectModel.badgeValue = (String)(self.wishListProduct.count)

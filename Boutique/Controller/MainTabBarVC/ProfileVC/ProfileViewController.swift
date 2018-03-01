@@ -12,6 +12,12 @@ class ProfileViewController: UIViewController,UIImagePickerControllerDelegate,UI
 
     @IBOutlet weak var profileImg: UIImageView!
     var picker = UIImagePickerController()
+    @IBOutlet weak var userNameView: UIView!
+    @IBOutlet weak var emailView: UIView!
+    @IBOutlet weak var phoneView: UIView!
+    @IBOutlet weak var dobView: UIView!
+    @IBOutlet weak var genderView: UIView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -21,6 +27,21 @@ class ProfileViewController: UIViewController,UIImagePickerControllerDelegate,UI
         profileImg.clipsToBounds = true
         profileImg.layer.borderColor = UIColor (red: 20.0/255.0, green: 99.0/255.0, blue: 130.0/255.0, alpha: 1).cgColor
         profileImg.layer.borderWidth = 2
+        
+        emailView.layer.borderColor = UIColor (red: 204.0/255.0, green: 204.0/255.0, blue: 204/255.0, alpha: 1).cgColor
+        emailView.layer.borderWidth = 0.8
+        
+        userNameView.layer.borderColor = UIColor (red: 204.0/255.0, green: 204.0/255.0, blue: 204/255.0, alpha: 1).cgColor
+        userNameView.layer.borderWidth = 0.8
+        
+        phoneView.layer.borderColor = UIColor (red: 204.0/255.0, green: 204.0/255.0, blue: 204/255.0, alpha: 1).cgColor
+        phoneView.layer.borderWidth = 0.8
+        
+        dobView.layer.borderColor = UIColor (red: 204.0/255.0, green: 204.0/255.0, blue: 204/255.0, alpha: 1).cgColor
+        dobView.layer.borderWidth = 0.8
+        
+        genderView.layer.borderColor = UIColor (red: 204.0/255.0, green: 204.0/255.0, blue: 204/255.0, alpha: 1).cgColor
+        genderView.layer.borderWidth = 0.8
     }
 
     override func didReceiveMemoryWarning() {

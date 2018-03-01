@@ -12,7 +12,7 @@ class SettingsViewController: UIViewController,UITableViewDelegate,UITableViewDa
 
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var headerView: UIView!
-    let items = ["Help", "Profile", "Change Password", "History","Sign out"]
+    let items = ["Help", "Contact Us", "Change Password", "History","Sign out"]
     let images = ["help", "profileImg", "setting1", "history","signout"]
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -55,15 +55,34 @@ class SettingsViewController: UIViewController,UITableViewDelegate,UITableViewDa
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print("You tapped cell number \(indexPath.row).")
         
+        if indexPath.row == 0{
+            openURL("http://www.vinsol.com")
+        }
+        else if indexPath.row == 1{
+            openURL("http://www.vinsol.com/contact")
+        }
         if indexPath.row == 2{
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let abcViewController = storyboard.instantiateViewController(withIdentifier: "ConfirmPasswordViewController") as! ConfirmPasswordViewController
+            navigationController?.pushViewController(abcViewController, animated: true)
+        }
+        else if indexPath.row == 3{
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let abcViewController = storyboard.instantiateViewController(withIdentifier: "OrderHistoryViewController") as! OrderHistoryViewController
             navigationController?.pushViewController(abcViewController, animated: true)
         }
        else if indexPath.row == 4{
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let abcViewController = storyboard.instantiateViewController(withIdentifier: "LoginViewController") as! LoginViewController
             navigationController?.pushViewController(abcViewController, animated: true)
+        }
+    }
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 65
+    }
+    func openURL(_ urlString: String) {
+        if let url = URL(string: urlString) {
+            UIApplication.shared.openURL(url)
         }
     }
     /*

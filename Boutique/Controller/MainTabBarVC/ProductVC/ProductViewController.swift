@@ -16,11 +16,15 @@ class getProductDetail {
     var price: String
     var id : String
     var image: String
-    init(name: String,id : String,price: String,image: String) {
+    var oldPrice: String
+    var brand: String
+    init(name: String,id : String,price: String,image: String,oldPrice: String,brand:String) {
         self.name = name
         self.id = id
         self.price = price
         self.image = image
+        self.oldPrice = oldPrice
+        self.brand = brand
     }
 }
 class getPrice {
@@ -48,6 +52,7 @@ class ProductViewController: UIViewController,UICollectionViewDelegate,UICollect
     var price = [getPrice]()
     var categoryID = String()
     @IBOutlet weak var slideView: UIView!
+    @IBOutlet weak var slideSortView: UIView!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var filterTableView: UITableView!
     var sortArr =  ["Price :High To Low","Price :Low To High","Newest First","Oldest First"]
@@ -68,7 +73,7 @@ class ProductViewController: UIViewController,UICollectionViewDelegate,UICollect
         self.collectionView.register(UINib(nibName: "HomeCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "myCell")
         
         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
-        var width = UIScreen.main.bounds.width
+            var width = UIScreen.main.bounds.width
         layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
        // width = width - 10
         layout.itemSize = CGSize(width: width / 2 , height:290)
@@ -97,6 +102,7 @@ class ProductViewController: UIViewController,UICollectionViewDelegate,UICollect
         
         SKActivityIndicator.spinnerColor(UIColor.darkGray)
         SKActivityIndicator.show("Loading...")
+        print(categoryID)
         
         Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecom/recipes/getbycategory/\(categoryID)/ZWNvbW1lcmNl/", parameters: nil, headers: nil) { (response:NSDictionary?, error:NSError?) in
             if error != nil {
@@ -112,18 +118,24 @@ class ProductViewController: UIViewController,UICollectionViewDelegate,UICollect
                 Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: (response?.value(forKey: "message") as! String))
             }
             else{
-                for item in (response!.value(forKey: "cloths") as! NSArray) {
-                    print(item)
-                    
-                    self.data.append(((item as! NSDictionary).value(forKey: "title") as! String))
-                    
-                    self.product.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "id") as! String), price: ((item as! NSDictionary).value(forKey: "price") as! String), image: ((item as! NSDictionary).value(forKey: "image") as! String)))
-                    
-                }
                 
-                DispatchQueue.main.async(execute: {
-                    self.collectionView.reloadData()
-                })
+                if ((response!.value(forKey: "cloths") != nil) ){
+                    
+                    for item in (response!.value(forKey: "cloths") as! NSArray) {
+                        print(item)
+                        
+                        self.data.append(((item as! NSDictionary).value(forKey: "title") as! String))
+                        
+                        self.product.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "id") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: ((item as! NSDictionary).value(forKey: "image") as! String), oldPrice: "", brand: ((item as! NSDictionary).value(forKey: "brand") as! String)))
+                        
+                    }
+                    DispatchQueue.main.async(execute: {
+                        self.collectionView.reloadData()
+                    })
+                }
+                else {
+                    self.showAlert(msg:(response!.value(forKey: "message") as! String))
+                }
             }
         }
     }
@@ -155,7 +167,7 @@ class ProductViewController: UIViewController,UICollectionViewDelegate,UICollect
 //            cell.productImg.kf.setImage(with: url,placeholder: nil)
 //        } else {
            cell.productNameLabel.text = self.product[indexPath.row].name
-            cell.productPriceLabel.text = self.product[indexPath.row].price
+            cell.originalPriceLabel.text = self.product[indexPath.row].price
             let url = URL(string: self.product[indexPath.row].image)
             cell.productImg.kf.setImage(with: url,placeholder: nil)
         //}
@@ -236,7 +248,7 @@ class ProductViewController: UIViewController,UICollectionViewDelegate,UICollect
                     
                     self.data.append(((item as! NSDictionary).value(forKey: "title") as! String))
                     
-                    self.product.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "id") as! String), price: ((item as! NSDictionary).value(forKey: "price") as! String), image: ((item as! NSDictionary).value(forKey: "image") as! String)))
+                    self.product.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "id") as! String), price: ((item as! NSDictionary).value(forKey: "price") as! String), image: ((item as! NSDictionary).value(forKey: "image") as! String), oldPrice: ((item as! NSDictionary).value(forKey: "image") as! String), brand: ""))
                     
                 }
                 
@@ -294,17 +306,27 @@ class ProductViewController: UIViewController,UICollectionViewDelegate,UICollect
 //    }
     
     @IBAction func btnSort(_ sender: UIButton) {
-             self.tableView.isHidden = false
-        if sender.tag == 1{
+        self.slideSortView.isHidden = false
+        self.tableView.isHidden = false
+        if sender.tag  == 0{
             self.slideView.isHidden = true
+            self.filterTableView.isHidden = false
             let transition = CATransition()
             transition.type = kCATransitionPush
             transition.subtype = kCATransitionFromTop
-            self.slideView.layer.add(transition, forKey: nil)
-            self.view .addSubview(self.slideView)
+            self.slideSortView.layer.add(transition, forKey: nil)
+            self.view .addSubview(self.slideSortView)
             sender.tag = 1
-    }
+        }
         else if sender.tag == 1{
+            let transition = CATransition()
+            transition.type = kCATransitionPush
+            transition.subtype = kCATransitionFromBottom
+            self.slideSortView.layer.add(transition, forKey: nil)
+            self.view .addSubview(self.slideSortView)
+            self.slideView.isHidden = true
+            self.filterTableView.isHidden = true
+            self.slideSortView.isHidden = true
              self.tableView.isHidden = true
             sender.tag = 0
         }
@@ -338,15 +360,16 @@ class ProductViewController: UIViewController,UICollectionViewDelegate,UICollect
                     print(item)
                     
                     
-                    self.product.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "Cloth_id") as! String), price: ((item as! NSDictionary).value(forKey: "price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String)))
+                    self.product.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "Cloth_id") as! String), price: ((item as! NSDictionary).value(forKey: "price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), oldPrice: ((item as! NSDictionary).value(forKey: "image1") as! String), brand: ""))
                     
                 }
                 DispatchQueue.main.async(execute: {
                     let transition = CATransition()
                     transition.type = kCATransitionPush
                     transition.subtype = kCATransitionFromBottom
-                    self.slideView.layer.add(transition, forKey: nil)
-                    self.view .addSubview(self.slideView)
+                    self.slideSortView.layer.add(transition, forKey: nil)
+                    self.view .addSubview(self.slideSortView)
+                    self.slideSortView.isHidden = true
                     self.tableView.isHidden = true
                     self.collectionView.reloadData()
                 })
@@ -369,16 +392,10 @@ class ProductViewController: UIViewController,UICollectionViewDelegate,UICollect
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        //let cell:CategoryTableViewCell = self.tableView.dequeueReusableCell(withIdentifier: "categoryCell") as! CategoryTableViewCell!
-        // cell.itemNameLabel.text = self.sortArr[indexPath.row]
-        
         var cell:CategoryTableViewCell?
-        
         if tableView == self.tableView {
             cell = self.tableView.dequeueReusableCell(withIdentifier: "categoryCell") as! CategoryTableViewCell!
-            
             cell?.itemNameLabel.text = self.sortArr[indexPath.row]
-            
         }
         
         if tableView == self.filterTableView {
@@ -440,7 +457,7 @@ class ProductViewController: UIViewController,UICollectionViewDelegate,UICollect
                         
                         self.data.append(((item as! NSDictionary).value(forKey: "title") as! String))
                         
-                        self.product.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "id") as! String), price: ((item as! NSDictionary).value(forKey: "price") as! String), image: ((item as! NSDictionary).value(forKey: "image") as! String)))
+                        self.product.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "id") as! String), price: ((item as! NSDictionary).value(forKey: "price") as! String), image: ((item as! NSDictionary).value(forKey: "image") as! String), oldPrice: ((item as! NSDictionary).value(forKey: "image") as! String), brand: ""))
                         
                     }
                     DispatchQueue.main.async(execute: {
@@ -486,7 +503,7 @@ class ProductViewController: UIViewController,UICollectionViewDelegate,UICollect
             self.filterTableView.isHidden = false
             let transition = CATransition()
             transition.type = kCATransitionPush
-            transition.subtype = kCATransitionFromLeft
+            transition.subtype = kCATransitionFromTop
             self.slideView.layer.add(transition, forKey: nil)
             self.view .addSubview(self.slideView)
             sender.tag = 1
@@ -494,7 +511,7 @@ class ProductViewController: UIViewController,UICollectionViewDelegate,UICollect
         else if sender.tag == 1{
             let transition = CATransition()
             transition.type = kCATransitionPush
-            transition.subtype = kCATransitionFromRight
+            transition.subtype = kCATransitionFromBottom
             self.slideView.layer.add(transition, forKey: nil)
             self.view .addSubview(self.slideView)
             self.slideView.isHidden = true
@@ -572,7 +589,7 @@ class ProductViewController: UIViewController,UICollectionViewDelegate,UICollect
                 DispatchQueue.main.async(execute: {
                     let transition = CATransition()
                     transition.type = kCATransitionPush
-                    transition.subtype = kCATransitionFromRight
+                    transition.subtype = kCATransitionFromBottom
                     self.slideView.layer.add(transition, forKey: nil)
                     self.view .addSubview(self.slideView)
                     self.slideView.isHidden = true

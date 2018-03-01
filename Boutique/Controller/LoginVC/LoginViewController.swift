@@ -26,8 +26,7 @@ class LoginViewController: UIViewController {
 
         // Do any additional setup after loading the view.
        
-        let rupee = "\u{20AC}"
-        print(rupee)
+        //[["age" : 22], ["age" : 23]]
        
         self.navigationController?.navigationBar.isHidden = true
         self.btnSignUP.layer.borderWidth = 1

@@ -36,6 +36,7 @@ class MyCartViewController: UIViewController,UITableViewDelegate,UITableViewData
     @IBOutlet weak var checkoutButton: UIButton!
     var count = Int()
     var cartProduct = [getProductDetail]()
+    
     var totalPrice = Int()
      var currentQty = 1
     let minQty = 1
@@ -61,28 +62,34 @@ class MyCartViewController: UIViewController,UITableViewDelegate,UITableViewData
         self.navigationController?.popViewController(animated: true)
     }
     //MARK: getCartViewAPI Methods
-    func getCartViewAPI() {
+    func getCartViewAPI(){
         
         self.totalPrice = 0
         self.cartProduct.removeAll()
         SKActivityIndicator.spinnerColor(UIColor.darkGray)
         SKActivityIndicator.show("Loading...")
-        let requestString = "http://kftsoftwares.com/ecom/recipes/ViewCart/\(Model.sharedInstance.userID)/ZWNvbW1lcmNl/"
-        Alamofire.request(requestString,method: .post, parameters: nil, encoding: JSONEncoding.default, headers: [:]).responseJSON { (response:DataResponse<Any>) in
-            
-            switch(response.result) {
-            case .success(_):
-                DispatchQueue.main.async(execute: {
-                    SKActivityIndicator.dismiss()
-                })
-                if response.result.value != nil{
+        
+        Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecom/recipes/ViewCart/\(Model.sharedInstance.userID)/ZWNvbW1lcmNl/", parameters: nil, headers: nil) { (response:NSDictionary?, error:NSError?) in
+            if error != nil {
+                print(error?.localizedDescription as Any)
+                Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Something Wrong..")
+                return
+            }
+            DispatchQueue.main.async(execute: {
+                SKActivityIndicator.dismiss()
+            })
+            print(response!)
+            if ((response!["message"] as? [String:Any]) != nil){
+                Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: (response?.value(forKey: "message") as! String))
+            }
+            else{
+                
+                if ((response!.value(forKey: "items") != nil) ){
                     
-                    let product = response.result.value as! NSDictionary
-                    print(product)
-                    for item in ((product ).value(forKey: "items") as! NSArray) {
+                    for item in ((response)?.value(forKey: "items") as! NSArray) {
                         print(item)
                         
-                        self.cartProduct.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "Cart_id") as! String), price: ((item as! NSDictionary).value(forKey: "price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String)))
+                        self.cartProduct.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "Cloth_id") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), oldPrice: "", brand: ""))
                     }
                     let defaults = UserDefaults.standard
                     defaults.set(self.cartProduct.count, forKey: "totalCartItem")
@@ -95,22 +102,21 @@ class MyCartViewController: UIViewController,UITableViewDelegate,UITableViewData
                         self.totalPriceLabel.text = String("$\(self.totalPrice)")
                     }
                     DispatchQueue.main.async(execute: {
-                       self.itemsCountLabel.text =  "Total (\(self.cartProduct.count))"
+                        self.itemsCountLabel.text =  "Total (\(self.cartProduct.count))"
                         self.tableView.reloadData()
                     })
                 }
-                break
-                
-            case .failure(_):
-                print("Failure : \(String(describing: response.result.error))")
-                DispatchQueue.main.async(execute: {
-                    SKActivityIndicator.dismiss()
-                })
-                break
-                
+                else {
+                    let defaults = UserDefaults.standard
+                    defaults.removeObject(forKey: "totalCartItem")
+                    defaults.synchronize()
+                     self.tableView.reloadData()
+                    Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: (response?.value(forKey: "message") as! String))
+                }
             }
         }
     }
+
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
@@ -141,7 +147,8 @@ class MyCartViewController: UIViewController,UITableViewDelegate,UITableViewData
         SKActivityIndicator.spinnerColor(UIColor.darkGray)
         SKActivityIndicator.show("Loading...")
         let parameters: Parameters = [
-            "cart_id": cartID,
+            "user_id": Model.sharedInstance.userID,
+            "cloth_id": cartID
             ]
         print(parameters)
         let url = "http://kftsoftwares.com/ecom/recipes/rmcart/ZWNvbW1lcmNl/"
@@ -155,7 +162,12 @@ class MyCartViewController: UIViewController,UITableViewDelegate,UITableViewData
                 })
                 debugPrint(response)
                 
+//                DispatchQueue.main.async(execute: {
+//                    self.tableView.reloadData()
+//                })
                 self.showAlert(msg: (response.result.value as! NSDictionary).value(forKey: "message") as! String)
+                
+                //self.showAlert(msg: (response.result.value as! NSDictionary).value(forKey: "message") as! String)
                 
             case .failure(let error):
                 DispatchQueue.main.async(execute: {
@@ -175,9 +187,10 @@ class MyCartViewController: UIViewController,UITableViewDelegate,UITableViewData
     func showAlert(msg : String){
         let alert = UIAlertController(title: "Alert", message: msg, preferredStyle: UIAlertControllerStyle.alert)
         alert.addAction(UIAlertAction(title: "ok", style: UIAlertActionStyle.default, handler: nil))
-        DispatchQueue.main.async(execute: {
-            self.getCartViewAPI()
-        })
+        self.getCartViewAPI()
+//        DispatchQueue.main.async(execute: {
+//            self.getCartViewAPI()
+//        })
         self.present(alert, animated: true, completion: nil)
     }
 }

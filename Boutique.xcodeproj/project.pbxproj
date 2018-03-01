@@ -40,6 +40,10 @@
 		183D63C3203C268000965E6C /* whitney (1).ttf in Resources */ = {isa = PBXBuildFile; fileRef = 183D63C1203C268000965E6C /* whitney (1).ttf */; };
 		183D63C6203C301B00965E6C /* whitney-medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 183D63C4203C301A00965E6C /* whitney-medium.otf */; };
 		183D63C7203C301B00965E6C /* whitney-bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 183D63C5203C301B00965E6C /* whitney-bold.otf */; };
+		183E3B8F2047C52400FEAA62 /* SizeCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 183E3B8E2047C52400FEAA62 /* SizeCollectionViewCell.swift */; };
+		18515A4920466063001ADA07 /* OrderHistoryTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18515A4720466063001ADA07 /* OrderHistoryTableViewCell.swift */; };
+		18515A4A20466063001ADA07 /* OrderHistoryTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 18515A4820466063001ADA07 /* OrderHistoryTableViewCell.xib */; };
+		18515A4D20466422001ADA07 /* OrderHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18515A4C20466422001ADA07 /* OrderHistoryViewController.swift */; };
 		1860E6B82031A5FA00EB90AC /* MainTabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1860E6B72031A5FA00EB90AC /* MainTabBarViewController.swift */; };
 		18665F2A203159C000F5A5E1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18665F29203159C000F5A5E1 /* AppDelegate.swift */; };
 		18665F2C203159C000F5A5E1 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18665F2B203159C000F5A5E1 /* ViewController.swift */; };
@@ -115,6 +119,10 @@
 		183D63C1203C268000965E6C /* whitney (1).ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "whitney (1).ttf"; sourceTree = "<group>"; };
 		183D63C4203C301A00965E6C /* whitney-medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "whitney-medium.otf"; sourceTree = "<group>"; };
 		183D63C5203C301B00965E6C /* whitney-bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "whitney-bold.otf"; sourceTree = "<group>"; };
+		183E3B8E2047C52400FEAA62 /* SizeCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SizeCollectionViewCell.swift; sourceTree = "<group>"; };
+		18515A4720466063001ADA07 /* OrderHistoryTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderHistoryTableViewCell.swift; sourceTree = "<group>"; };
+		18515A4820466063001ADA07 /* OrderHistoryTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = OrderHistoryTableViewCell.xib; sourceTree = "<group>"; };
+		18515A4C20466422001ADA07 /* OrderHistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderHistoryViewController.swift; sourceTree = "<group>"; };
 		1860E6B72031A5FA00EB90AC /* MainTabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarViewController.swift; sourceTree = "<group>"; };
 		18665F26203159C000F5A5E1 /* Boutique.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Boutique.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		18665F29203159C000F5A5E1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -190,6 +198,7 @@
 			children = (
 				1822F6A320353A4100CC83AE /* ProductDetailViewController.swift */,
 				1822F6A520353FD600CC83AE /* ProductDetailCollectionViewCell.swift */,
+				183E3B8E2047C52400FEAA62 /* SizeCollectionViewCell.swift */,
 			);
 			path = ProductDetailVC;
 			sourceTree = "<group>";
@@ -213,6 +222,7 @@
 		1836E371203294A800997FC1 /* Cell */ = {
 			isa = PBXGroup;
 			children = (
+				18515A462046602C001ADA07 /* HistoryCell */,
 				186A595E203FC87B00E687BA /* PriceCell */,
 				183C90472036E2FD00B1021F /* CartCell */,
 				183D53FE2033EA77003B2651 /* CategoryCell */,
@@ -327,6 +337,23 @@
 			path = CategoryCell;
 			sourceTree = "<group>";
 		};
+		18515A462046602C001ADA07 /* HistoryCell */ = {
+			isa = PBXGroup;
+			children = (
+				18515A4720466063001ADA07 /* OrderHistoryTableViewCell.swift */,
+				18515A4820466063001ADA07 /* OrderHistoryTableViewCell.xib */,
+			);
+			path = HistoryCell;
+			sourceTree = "<group>";
+		};
+		18515A4B204663DD001ADA07 /* OrderHistory */ = {
+			isa = PBXGroup;
+			children = (
+				18515A4C20466422001ADA07 /* OrderHistoryViewController.swift */,
+			);
+			path = OrderHistory;
+			sourceTree = "<group>";
+		};
 		1860E6B42031A36800EB90AC /* MainTabBarVC */ = {
 			isa = PBXGroup;
 			children = (
@@ -416,6 +443,7 @@
 		18665F5C20315A5000F5A5E1 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				18515A4B204663DD001ADA07 /* OrderHistory */,
 				187002782043D1750089156B /* Others */,
 				18269D2E20417F1600ADEC70 /* Payment */,
 				181F0DBA203D5E9600082803 /* UserDetail */,
@@ -637,6 +665,7 @@
 				183D63C2203C268000965E6C /* whitney-book.otf in Resources */,
 				1836E375203294CD00997FC1 /* HomeCollectionViewCell.xib in Resources */,
 				18665F34203159C000F5A5E1 /* Assets.xcassets in Resources */,
+				18515A4A20466063001ADA07 /* OrderHistoryTableViewCell.xib in Resources */,
 				1836E38D2032D67500997FC1 /* WishListTableViewCell.xib in Resources */,
 				186A5962203FC8FD00E687BA /* PriceTableViewCell.xib in Resources */,
 				183D63C6203C301B00965E6C /* whitney-medium.otf in Resources */,
@@ -840,6 +869,7 @@
 				18269D2D2041444800ADEC70 /* MyCartViewController.swift in Sources */,
 				18665F2C203159C000F5A5E1 /* ViewController.swift in Sources */,
 				18665F32203159C000F5A5E1 /* Boutique.xcdatamodeld in Sources */,
+				183E3B8F2047C52400FEAA62 /* SizeCollectionViewCell.swift in Sources */,
 				183D541420342F50003B2651 /* MyExpandableTableViewSectionHeader.swift in Sources */,
 				183D53FD2033EA2C003B2651 /* CategoryViewController.swift in Sources */,
 				1836E3902032E78100997FC1 /* ProfileViewController.swift in Sources */,
@@ -849,6 +879,7 @@
 				187002772043CE420089156B /* Alert.swift in Sources */,
 				18665F2A203159C000F5A5E1 /* AppDelegate.swift in Sources */,
 				1836E370203293B300997FC1 /* HomeViewController.swift in Sources */,
+				18515A4D20466422001ADA07 /* OrderHistoryViewController.swift in Sources */,
 				1836E37F2032BC6F00997FC1 /* SettingTableViewCell.swift in Sources */,
 				187002752043BEB50089156B /* Webservice.swift in Sources */,
 				183C90462036DFFB00B1021F /* CartViewController.swift in Sources */,
@@ -856,6 +887,7 @@
 				18665F62203165BA00F5A5E1 /* SignUpViewController.swift in Sources */,
 				18269D2B204141CE00ADEC70 /* CartCell.swift in Sources */,
 				1836E3932032F82800997FC1 /* ConfirmPasswordViewController.swift in Sources */,
+				18515A4920466063001ADA07 /* OrderHistoryTableViewCell.swift in Sources */,
 				1836E374203294CD00997FC1 /* HomeCollectionViewCell.swift in Sources */,
 				1822F6A620353FD600CC83AE /* ProductDetailCollectionViewCell.swift in Sources */,
 				18269D3020417F2F00ADEC70 /* AddPaymentViewController.swift in Sources */,

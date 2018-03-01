@@ -60,7 +60,7 @@ class CategoryViewController: UIViewController,UITableViewDelegate,UITableViewDa
 //        expandableTableView.expandableTableViewDataSource = self
 //        expandableTableView.expandableTableViewDelegate = self
 //        expandableTableView.tableFooterView = UIView()
-        self.getProductAPI()
+        self.getCategoryAPI()
     }
 
     override func didReceiveMemoryWarning() {
@@ -75,7 +75,7 @@ class CategoryViewController: UIViewController,UITableViewDelegate,UITableViewDa
     }
     
     //MARK: getProductAPI Methods
-   func getProductAPI(){
+   func getCategoryAPI(){
         SKActivityIndicator.spinnerColor(UIColor.darkGray)
         SKActivityIndicator.show("Loading...")
         

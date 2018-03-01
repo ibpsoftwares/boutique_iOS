@@ -17,11 +17,15 @@ class getProduct {
     var price: String
     var image: String
     var id : String
-    init(name: String,price: String,image: String,id: String) {
+    var oldPrice : String
+    var brandName : String
+    init(name: String,price: String,image: String,id: String,oldPrice: String,brandName: String) {
         self.name = name
         self.price = price
         self.image = image
         self.id = id
+         self.oldPrice = oldPrice
+         self.brandName = brandName
     }
 }
 class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,imageSliderDelegate{
@@ -39,9 +43,9 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
     //let urlImages = [String]()
     var wishListProduct = [getProductDetail]()
     
-    let urlImages = ["http://www.kavyaboutique.in/images/contact-us.png","https://s26.postimg.org/65tuz7ek9/two_5_41_53_PM.png","https://s26.postimg.org/7ywrnizqx/three_5_41_53_PM.png","https://s26.postimg.org/6l54s80hl/four.png","https://s26.postimg.org/ioagfsbjt/five.png"]
+//    var urlImages = ["http://www.kavyaboutique.in/images/contact-us.png","https://s26.postimg.org/65tuz7ek9/two_5_41_53_PM.png","https://s26.postimg.org/7ywrnizqx/three_5_41_53_PM.png","https://s26.postimg.org/6l54s80hl/four.png","https://s26.postimg.org/ioagfsbjt/five.png"]
     var localImages =   ["one","two","three","four","five","six"]
-    
+    var urlImages = [String]()
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -83,18 +87,24 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
         self.wishlistCountLabel.layer.cornerRadius = self.wishlistCountLabel.frame.size.height / 2
         self.wishlistCountLabel.clipsToBounds = true
         let defaults = UserDefaults.standard
-        let count = (defaults.value(forKey: "totalCartItem") as! String)
-        var temp1 : String! // This is not optional.
-        temp1 = count 
-        print(temp1)
-        self.wishlistCountLabel.text = temp1
+        if (defaults.value(forKey: "totalCartItem")) != nil {
+            let count = (defaults.value(forKey: "totalCartItem"))
+            var temp1 : String! // This is not optional.
+            temp1 = (String)(describing: count!)
+            print(temp1)
+            self.wishlistCountLabel.text = temp1
+        }
+        else {
+           self.wishlistCountLabel.text = ""
+        }
+        
         
          print(Model.sharedInstance.cartCount)
         if Model.sharedInstance.cartCount > 0{
               self.wishlistCountLabel.text = (String)(Model.sharedInstance.cartCount)
         }
         
-        
+         getProductImages()
         self.wishListProduct.removeAll()
         getWishListAPI()
     }
@@ -107,18 +117,17 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
         self.pageControl.currentPageIndicatorTintColor = UIColor.green
         
         
-        //getProductImages()
+        getProductImages()
        // self.getProductAPI()
     }
-    
-    
+   
     //MARK: getProductImages Methods
     func getProductImages() {
         
         SKActivityIndicator.spinnerColor(UIColor.darkGray)
         SKActivityIndicator.show("Loading...")
         
-        let requestString = "http://kftsoftwares.com/ecom/recipes/allimages/ZWNvbW1lcmNl/"
+        let requestString = "http://kftsoftwares.com/ecom/recipes/get_banner_images/ZWNvbW1lcmNl/"
         
         Alamofire.request(requestString,method: .post, parameters: nil, encoding: JSONEncoding.default, headers: [:]).responseJSON { (response:DataResponse<Any>) in
             
@@ -131,18 +140,17 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
                     
                     let product = response.result.value as! NSDictionary
                     
-                    for item in ((product ).value(forKey: "allimages") as! NSArray) {
+                    for item in ((product ).value(forKey: "bannerImages") as! NSArray) {
                         print(item)
                         
-                        let currency = ((item as! NSDictionary).value(forKey: "img") as! String)
-                        print(currency)
-                        
-                        self.localImages.append(((item as! NSDictionary).value(forKey: "img") as! String))
+                        self.urlImages.append(((item as! NSDictionary).value(forKey: "image") as! String))
                     }
                     
+                    print(self.urlImages)
                     DispatchQueue.main.async(execute: {
-                        self.imgSlider.setUpView(imageSource: .Url(imageArray: self.localImages, placeHolderImage: UIImage (named: "placeHolder")), slideType: .ManualSwipe, isArrowBtnEnabled: true)
+                        //self.imgSlider.setUpView(imageSource: .Url(imageArray: self.localImages, placeHolderImage: UIImage (named: "placeHolder")), slideType: .ManualSwipe, isArrowBtnEnabled: true)
                         
+                        self.imgSlider.setUpView(imageSource: .Url(imageArray: self.urlImages , placeHolderImage: UIImage (named: "placeHolder")), slideType: .ManualSwipe, isArrowBtnEnabled: true)
                         print(self.localImages.count)
                     })
                    
@@ -162,8 +170,9 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
     
     override func viewDidLayoutSubviews() {
         
-        imgSlider.setUpView(imageSource: .Local(imageArray: localImages),slideType: .ManualSwipe,isArrowBtnEnabled: true)
+        //imgSlider.setUpView(imageSource: .Local(imageArray: localImages),slideType: .ManualSwipe,isArrowBtnEnabled: true)
         //imgSlider.setUpView(imageSource: .Url(imageArray: urlImages, placeHolderImage: UIImage (named: "placeHolder")), slideType: .ManualSwipe, isArrowBtnEnabled: true)
+        // self.imgSlider.setUpView(imageSource: .Url(imageArray: self.localImages, placeHolderImage: UIImage (named: "placeHolder")), slideType: .ManualSwipe, isArrowBtnEnabled: true)
     }
     
     func didMovedToIndex(index:Int)
@@ -180,7 +189,7 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
        
         Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecom/recipes/getallcloths/ZWNvbW1lcmNl/", parameters: nil, headers: nil) { (response:NSDictionary?, error:NSError?) in
             if error != nil {
-                print(error?.localizedDescription)
+                print(error?.localizedDescription as Any)
                 Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Something Wrong..")
                 return
             }
@@ -194,13 +203,9 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
             else{
                 for item in (response?.value(forKey: "data1") as! NSArray) {
                     print(item)
+                
                     
-                    let currency = ((item as! NSDictionary).value(forKey: "currency") as! String)
-                    print(currency)
-                    
-                    
-                    
-                    self.product.append(getProduct.init(name:((item as! NSDictionary).value(forKey: "title") as! String), price: ((item as! NSDictionary).value(forKey: "price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), id: ((item as! NSDictionary).value(forKey: "id") as! String)))
+                    self.product.append(getProduct.init(name:((item as! NSDictionary).value(forKey: "title") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), id: ((item as! NSDictionary).value(forKey: "id") as! String), oldPrice: "", brandName: ((item as! NSDictionary).value(forKey: "brand") as! String)))
                 }
                 
                 DispatchQueue.main.async(execute: {
@@ -230,7 +235,18 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
         cell.layer.borderColor = UIColor (red: 204.0/255.0, green: 204.0/255.0, blue: 204/255.0, alpha: 1).cgColor
         cell.layer.borderWidth = 0.5
         cell.productNameLabel.text = self.product[indexPath.row].name
-        cell.productPriceLabel.text = "$\(self.product[indexPath.row].price)"
+        cell.originalPriceLabel.text = "$\(self.product[indexPath.row].price)"
+        
+        if  self.product[indexPath.row].oldPrice != "<null>" {
+            cell.oldPriceLabel.text = self.product[indexPath.row].oldPrice
+        }
+        else{
+            cell.oldPriceLabel.isHidden = true
+            cell.crossLabel.isHidden = true
+        }
+        
+       
+        cell.brandNameLabel.text = self.product[indexPath.row].brandName
         let url = URL(string: self.product[indexPath.row].image)
         cell.productImg.kf.indicatorType = .activity
         cell.productImg.kf.setImage(with: url,placeholder: nil)
@@ -314,7 +330,7 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
                 for item in (response!.value(forKey: "Wishlist") as! NSArray) {
                     print(item)
                     
-                    self.wishListProduct.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "Wishlist_id") as! String), price: ((item as! NSDictionary).value(forKey: "price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String)))
+                    self.wishListProduct.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "Cloth_id") as! String), price: ((item as! NSDictionary).value(forKey: "price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), oldPrice: "", brand: ""))
                 }
                 
                 Model.sharedInstance.badgeValue = (String)(self.wishListProduct.count)
