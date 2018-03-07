@@ -130,7 +130,7 @@ public class CLabsImageSlider:UIView,updateUI
         switch slideType{
         case .Automatic(let timer):
             isGestureEnabled=false
-            Timer.scheduledTimer(timeInterval: timer, target: self, selector: #selector(CLabsImageSlider.moveRight), userInfo: nil, repeats: true)
+            Timer.scheduledTimer(timeInterval: timer, target: self, selector: #selector(CLabsImageSlider.moveLeft), userInfo: nil, repeats: true)
             
         case .ManualSwipe:
             isGestureEnabled=true

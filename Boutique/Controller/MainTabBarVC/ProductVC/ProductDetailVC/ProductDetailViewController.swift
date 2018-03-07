@@ -19,7 +19,7 @@ class getSize {
        self.size = size
     }
 }
-class ProductDetailViewController: UIViewController,UICollectionViewDelegate,UICollectionViewDataSource,SKPhotoBrowserDelegate {
+class ProductDetailViewController: UIViewController,UICollectionViewDelegate,UICollectionViewDataSource,SKPhotoBrowserDelegate,CAAnimationDelegate {
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var sizeCollectionView: UICollectionView!
     @IBOutlet weak var headerView: UIView!
@@ -37,6 +37,13 @@ class ProductDetailViewController: UIViewController,UICollectionViewDelegate,UIC
     @IBOutlet weak var largeSizeBtn: UIButton!
     @IBOutlet weak var exSizeBtn: UIButton!
     @IBOutlet weak var doubleExSizeBtn: UIButton!
+    @IBOutlet weak var productNameLabel: UILabel!
+    @IBOutlet weak var brandNameLabel: UILabel!
+    @IBOutlet weak var originalPriceLabel: UILabel!
+    @IBOutlet weak var oldPriceLabel: UILabel!
+    @IBOutlet weak var crossLabel: UILabel!
+    @IBOutlet weak var cartBtn: UIButton!
+    
     var userid = Model()
     var productID = String()
     var imgArray = NSMutableArray()
@@ -48,6 +55,10 @@ class ProductDetailViewController: UIViewController,UICollectionViewDelegate,UIC
     var count = NSInteger()
     var imgArr = NSMutableArray()
     var selectedIndex = NSInteger()
+    
+    var path : UIBezierPath?
+    var layer: CALayer?
+    var im = UIImageView()
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -97,8 +108,8 @@ class ProductDetailViewController: UIViewController,UICollectionViewDelegate,UIC
         addToWishlistBtn.layer.cornerRadius = 2
         addToCartBtn.layer.borderColor = UIColor (red: 102.0/255.0, green: 102.0/255.0, blue: 103.0/255.0, alpha: 1).cgColor
         
-        priceLabel.layer.cornerRadius = 2
-        priceLabel.layer.borderColor = UIColor (red: 102.0/255.0, green: 102.0/255.0, blue: 103.0/255.0, alpha: 1).cgColor
+//        priceLabel.layer.cornerRadius = 2
+//        priceLabel.layer.borderColor = UIColor (red: 102.0/255.0, green: 102.0/255.0, blue: 103.0/255.0, alpha: 1).cgColor
         
         viewToCartAPI()
         print(count)
@@ -118,7 +129,18 @@ class ProductDetailViewController: UIViewController,UICollectionViewDelegate,UIC
         // Dispose of any resources that can be recreated.
     }
     override func viewWillAppear(_ animated: Bool) {
-        
+        //self.cartCountLabel.text =  (String)(Model.sharedInstance.cartCount)
+//        let defaults = UserDefaults.standard
+//        if (defaults.value(forKey: "totalCartItem")) != nil {
+//            let count = (defaults.value(forKey: "totalCartItem"))
+//            var temp1 : String! // This is not optional.
+//            temp1 = (String)(describing: count!)
+//            print(temp1)
+//            self.cartCountLabel.text = temp1
+//        }
+//        else {
+//            self.cartCountLabel.isHidden = true
+//        }
          viewToCartAPI()
     }
     
@@ -139,7 +161,11 @@ class ProductDetailViewController: UIViewController,UICollectionViewDelegate,UIC
         SKActivityIndicator.show("Loading...")
         self.product.removeAll()
         self.sizeArr.removeAll()
-        Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecom/recipes/getcloth/\(productID)/ZWNvbW1lcmNl/", parameters: nil, headers: nil) { (response:NSDictionary?, error:NSError?) in
+        let parameters: Parameters = [
+            "user_id": Model.sharedInstance.userID,
+        ]
+        print(productID)
+        Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecom/recipes/getcloth/\(productID)/ZWNvbW1lcmNl/", parameters: parameters, headers: nil) { (response:NSDictionary?, error:NSError?) in
             if error != nil {
                 print(error?.localizedDescription as Any)
                 Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Something Wrong..")
@@ -157,9 +183,20 @@ class ProductDetailViewController: UIViewController,UICollectionViewDelegate,UIC
                     
                     self.productID = ((item as! NSDictionary).value(forKey: "id") as! String)
                     
-                    self.product.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "description") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: "", oldPrice: "", brand: ""))
                     
-                   // self.sizeArray.add(((item as! NSDictionary).value(forKey: "size") as! NSArray).object(at: 0))
+                    if (item as! NSDictionary).value(forKey: "offer_price")  is NSNull {
+                        print("empty")
+                        self.product.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "description") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: "", oldPrice: "", brand: ((item as! NSDictionary).value(forKey: "brand") as! String), wishlistID: "", cout: "1"))
+                    }
+                    else {
+                        self.product.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "description") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: "", oldPrice: ((item as! NSDictionary).value(forKey: "offer_price") as! String), brand: ((item as! NSDictionary).value(forKey: "brand") as! String), wishlistID: "", cout: "1"))
+                    }
+
+                    
+                    
+                    
+                    
+                    
                     self.sizeArr.append(getSize.init(size: ((item as! NSDictionary).value(forKey: "size") as! NSArray)))
                    
                     for var i in (0..<(((response!.value(forKey: "cloth") as! NSArray).object(at: 0) as! NSDictionary).value(forKey: "images") as! NSArray).count){
@@ -179,8 +216,16 @@ class ProductDetailViewController: UIViewController,UICollectionViewDelegate,UIC
                 
                 DispatchQueue.main.async(execute: {
                     self.nameLabel.text = self.product[0].name
-                    self.priceLabel.text = "$\(self.product[0].price)"
+                    //self.priceLabel.text = "$\(self.product[0].price)"
                     self.descriptionLabel.text = self.product[0].id
+                    self.originalPriceLabel.text = "$\(self.product[0].price)"
+                    
+                    if  self.product[0].oldPrice != "" {
+                        self.oldPriceLabel.text = self.product[0].oldPrice
+                    }
+                    else{
+                        self.oldPriceLabel.isHidden = true
+                    }
                     self.collectionView.reloadData()
                     self.sizeCollectionView.reloadData()
                 })
@@ -272,8 +317,97 @@ class ProductDetailViewController: UIViewController,UICollectionViewDelegate,UIC
     @IBAction func btnAddToCart(_ sender: UIButton) {
         
        addToCartAPI()
-       
+        
+       // var rect = collectionView.rectForRow(at: sender.tag)
+        //let sss = collectionView.
+       // rect.origin.y -=  200
+        var headRect = CGRect(x:self.collectionView.frame.size.width / 2,y:self.collectionView.frame.size.height / 2,width:150,height:150)
+        headRect.origin.y = 20
+        im.frame = CGRect(x:self.collectionView.frame.size.width / 2,y:self.collectionView.frame.size.height / 2,width:50,height:50)
+        let url = URL(string: self.imgArray[sender.tag] as! String)
+        im.kf.indicatorType = .activity
+        im.kf.setImage(with: url,placeholder: nil)
+    
+       // im.image = UIImage.init(named: "heart")
+        //self.view.addSubview(im)
+        //startAnimation(headRect, iconView: im)
     }
+    
+    fileprivate func groupAnimation() {
+        
+        let animation = CAKeyframeAnimation(keyPath: "position")
+        animation.path = path!.cgPath
+        animation.rotationMode = kCAAnimationRotateAuto
+        
+        let bigAnimation = CABasicAnimation(keyPath: "transform.scale")
+        bigAnimation.duration = 0.5
+        bigAnimation.fromValue = 1
+        bigAnimation.toValue = 2
+        bigAnimation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn)
+        
+        let smallAnimation = CABasicAnimation(keyPath: "transform.scale")
+        smallAnimation.beginTime = 0.5
+        smallAnimation.duration = 1.5
+        smallAnimation.fromValue = 2
+        smallAnimation.toValue = 0.3
+        smallAnimation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseOut)
+        
+        let groupAnimation = CAAnimationGroup()
+        groupAnimation.animations = [animation, bigAnimation, smallAnimation]
+        groupAnimation.duration = 2
+        groupAnimation.isRemovedOnCompletion = false
+        groupAnimation.fillMode = kCAFillModeForwards
+        groupAnimation.delegate = self
+        layer?.add(groupAnimation, forKey: "groupAnimation")
+    }
+    
+    
+    fileprivate func startAnimation(_ rect: CGRect ,iconView:UIImageView) {
+        if layer == nil {
+            layer = CALayer()
+            layer?.contents = iconView.layer.contents
+            layer?.contentsGravity = kCAGravityResizeAspectFill
+            layer?.bounds = rect
+            layer?.cornerRadius = layer!.bounds.height * 0.5
+            layer?.masksToBounds = true
+           // layer?.position = CGPoint(x: iconView.center.x, y: rect.maxY)
+            layer?.position = CGPoint(x: self.view.frame.size.width / 2, y:self.view.frame.size.height / 2)
+            
+            UIApplication.shared.keyWindow?.layer.addSublayer(layer!)
+            path = UIBezierPath()
+            path?.move(to: layer!.position)
+            path?.addQuadCurve(to: CGPoint(x: self.view.frame.size.width - 35, y: 25), controlPoint: CGPoint(x: 10, y: 10))
+            
+        }
+        groupAnimation()
+    }
+    
+    public func animationDidStop(_ anim: CAAnimation, finished flag: Bool){
+        
+        if anim == layer?.animation(forKey: "groupAnimation") {
+            layer?.removeAllAnimations()
+            layer?.removeFromSuperlayer()
+            layer = nil
+            let goodCountAnimation = CATransition()
+            goodCountAnimation.duration = 0.25
+           
+            
+            let cartAnimation = CABasicAnimation(keyPath: "transform.translation.y")
+            cartAnimation.duration = 0.25
+            cartAnimation.fromValue = -5
+            cartAnimation.toValue = 5
+            cartAnimation.autoreverses = true
+            cartBtn.layer.add(cartAnimation, forKey: nil)
+             self.im.removeFromSuperview()
+        }
+    }
+    
+    
+    
+    
+    
+    
+    
     //MARK: addToCartAPI Methods
   func addToCartAPI(){
         
@@ -284,7 +418,8 @@ class ProductDetailViewController: UIViewController,UICollectionViewDelegate,UIC
         
         let parameters: Parameters = [
             "user_id": Model.sharedInstance.userID,
-            "cloth_id": self.productID
+            "cloth_id": self.productID,
+             "quantity": "1"
         ]
         
         print(parameters)
@@ -313,15 +448,15 @@ class ProductDetailViewController: UIViewController,UICollectionViewDelegate,UIC
     //MARK: getCartViewAPI Methods
     func viewToCartAPI() {
     self.cartProduct.removeAll()
-        SKActivityIndicator.spinnerColor(UIColor.darkGray)
-        SKActivityIndicator.show("Loading...")
+       // SKActivityIndicator.spinnerColor(UIColor.darkGray)
+       // SKActivityIndicator.show("Loading...")
         let requestString = "http://kftsoftwares.com/ecom/recipes/ViewCart/\(Model.sharedInstance.userID)/ZWNvbW1lcmNl/"
         Alamofire.request(requestString,method: .post, parameters: nil, encoding: JSONEncoding.default, headers: [:]).responseJSON { (response:DataResponse<Any>) in
             
             switch(response.result) {
             case .success(_):
                 DispatchQueue.main.async(execute: {
-                    SKActivityIndicator.dismiss()
+                   // SKActivityIndicator.dismiss()
                 })
       
                 let product = response.result.value as! NSDictionary
@@ -331,22 +466,23 @@ class ProductDetailViewController: UIViewController,UICollectionViewDelegate,UIC
                     for item in ((product ).value(forKey: "items") as! NSArray) {
                         print(item)
                         
-                        self.cartProduct.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "Cloth_id") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), oldPrice: ((item as! NSDictionary).value(forKey: "image1") as! String), brand: ""))
+                        self.cartProduct.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "Cloth_id") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), oldPrice: ((item as! NSDictionary).value(forKey: "image1") as! String), brand: "", wishlistID: "", cout: "1"))
                     }
-                        let defaults = UserDefaults.standard
-                        defaults.set(self.cartProduct.count, forKey: "totalCartItem")
-                        defaults .synchronize()
-                        Model.sharedInstance.cartCount = self.cartProduct.count
+//                        let defaults = UserDefaults.standard
+//                        defaults.set(self.cartProduct.count, forKey: "totalCartItem")
+//                        defaults .synchronize()
+                       // Model.sharedInstance.cartCount = self.cartProduct.count
                         self.cartCountLabel.text = (String)(self.cartProduct.count)
+                    
                     DispatchQueue.main.async(execute: {
                         self.collectionView.reloadData()
                     })
                 }
                 else{
                    
-                    DispatchQueue.main.async(execute: {
-                        self.collectionView.reloadData()
-                    })
+//                    DispatchQueue.main.async(execute: {
+//                        self.collectionView.reloadData()
+//                    })
                    // Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: ((response.result.value as! NSDictionary).value(forKey: "message") as! String))
                 }
                 

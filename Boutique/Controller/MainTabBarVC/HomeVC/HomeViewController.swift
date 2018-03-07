@@ -19,13 +19,15 @@ class getProduct {
     var id : String
     var oldPrice : String
     var brandName : String
-    init(name: String,price: String,image: String,id: String,oldPrice: String,brandName: String) {
+    var wishlistID : String
+    init(name: String,price: String,image: String,id: String,oldPrice: String,brandName: String,wishlistID : String) {
         self.name = name
         self.price = price
         self.image = image
         self.id = id
          self.oldPrice = oldPrice
          self.brandName = brandName
+        self.wishlistID = wishlistID
     }
 }
 class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,imageSliderDelegate{
@@ -42,6 +44,7 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
     var product = [getProduct]()
     //let urlImages = [String]()
     var wishListProduct = [getProductDetail]()
+    var cartProduct = [getProductDetail]()
     
 //    var urlImages = ["http://www.kavyaboutique.in/images/contact-us.png","https://s26.postimg.org/65tuz7ek9/two_5_41_53_PM.png","https://s26.postimg.org/7ywrnizqx/three_5_41_53_PM.png","https://s26.postimg.org/6l54s80hl/four.png","https://s26.postimg.org/ioagfsbjt/five.png"]
     var localImages =   ["one","two","three","four","five","six"]
@@ -71,7 +74,7 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
        // tableView.register(UINib(nibName: "CategoryTableViewCell", bundle: nil), forCellReuseIdentifier: "categoryCell")
         //tableView.tableFooterView = UIView()
         //filterTableView.tableFooterView = UIView()
-        self.getProductAPI()
+       // self.getProductAPI()
         self.screenheight = self.view.frame.size.width
         imgSlider.sliderDelegate   =   self
         //configurePageControl()
@@ -83,27 +86,29 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        
+        self.product.removeAll()
+        getProductAPI()
         self.wishlistCountLabel.layer.cornerRadius = self.wishlistCountLabel.frame.size.height / 2
         self.wishlistCountLabel.clipsToBounds = true
-        let defaults = UserDefaults.standard
-        if (defaults.value(forKey: "totalCartItem")) != nil {
-            let count = (defaults.value(forKey: "totalCartItem"))
-            var temp1 : String! // This is not optional.
-            temp1 = (String)(describing: count!)
-            print(temp1)
-            self.wishlistCountLabel.text = temp1
-        }
-        else {
-           self.wishlistCountLabel.text = ""
-        }
+     
+//        let defaults = UserDefaults.standard
+//        if (defaults.value(forKey: "totalCartItem")) != nil {
+//            let count = (defaults.value(forKey: "totalCartItem"))
+//            var temp1 : String! // This is not optional.
+//            temp1 = (String)(describing: count!)
+//            print(temp1)
+//            self.wishlistCountLabel.text = temp1
+//        }
+//        else {
+//           self.wishlistCountLabel.isHidden = true
+//        }
         
         
-         print(Model.sharedInstance.cartCount)
-        if Model.sharedInstance.cartCount > 0{
-              self.wishlistCountLabel.text = (String)(Model.sharedInstance.cartCount)
-        }
-        
+//         print(Model.sharedInstance.cartCount)
+//        if Model.sharedInstance.cartCount > 0{
+//              self.wishlistCountLabel.text = (String)(Model.sharedInstance.cartCount)
+//        }
+        getCartViewAPI()
          getProductImages()
         self.wishListProduct.removeAll()
         getWishListAPI()
@@ -120,7 +125,41 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
         getProductImages()
        // self.getProductAPI()
     }
-   
+    //MARK: getCartViewAPI Methods
+    func getCartViewAPI(){
+        
+        self.cartProduct.removeAll()
+        //SKActivityIndicator.spinnerColor(UIColor.darkGray)
+        //SKActivityIndicator.show("Loading...")
+        
+        Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecom/recipes/ViewCart/\(Model.sharedInstance.userID)/ZWNvbW1lcmNl/", parameters: nil, headers: nil) { (response:NSDictionary?, error:NSError?) in
+            if error != nil {
+                print(error?.localizedDescription as Any)
+                Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Something Wrong..")
+                return
+            }
+            DispatchQueue.main.async(execute: {
+                //SKActivityIndicator.dismiss()
+            })
+            print(response!)
+            if ((response!["message"] as? [String:Any]) != nil){
+                Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: (response?.value(forKey: "message") as! String))
+            }
+            else{
+                
+                if ((response!.value(forKey: "items") != nil) ){
+                    
+                    for item in ((response)?.value(forKey: "items") as! NSArray) {
+                        print(item)
+                        
+                        self.cartProduct.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "Cloth_id") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), oldPrice: "", brand: "", wishlistID: "", cout: "1"))
+                    }
+                    
+                    self.wishlistCountLabel.text  = (String)(self.cartProduct.count)
+                }
+            }
+        }
+    }
     //MARK: getProductImages Methods
     func getProductImages() {
         
@@ -150,7 +189,7 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
                     DispatchQueue.main.async(execute: {
                         //self.imgSlider.setUpView(imageSource: .Url(imageArray: self.localImages, placeHolderImage: UIImage (named: "placeHolder")), slideType: .ManualSwipe, isArrowBtnEnabled: true)
                         
-                        self.imgSlider.setUpView(imageSource: .Url(imageArray: self.urlImages , placeHolderImage: UIImage (named: "placeHolder")), slideType: .ManualSwipe, isArrowBtnEnabled: true)
+                        self.imgSlider.setUpView(imageSource: .Url(imageArray: self.urlImages , placeHolderImage: UIImage (named: "placeHolder")), slideType: .Automatic(timeIntervalinSeconds: 2.0), isArrowBtnEnabled: true)
                         print(self.localImages.count)
                     })
                    
@@ -184,10 +223,14 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
     //MARK: getProductAPI Methods
     func getProductAPI(){
         
+        self.product.removeAll()
         SKActivityIndicator.spinnerColor(UIColor.darkGray)
         SKActivityIndicator.show("Loading...")
-       
-        Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecom/recipes/getallcloths/ZWNvbW1lcmNl/", parameters: nil, headers: nil) { (response:NSDictionary?, error:NSError?) in
+        let parameter: Parameters = [
+            "user_id": Model.sharedInstance.userID,
+        ]
+        
+        Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecom/recipes/getallcloths/ZWNvbW1lcmNl/", parameters: parameter, headers: nil) { (response:NSDictionary?, error:NSError?) in
             if error != nil {
                 print(error?.localizedDescription as Any)
                 Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Something Wrong..")
@@ -205,7 +248,16 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
                     print(item)
                 
                     
-                    self.product.append(getProduct.init(name:((item as! NSDictionary).value(forKey: "title") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), id: ((item as! NSDictionary).value(forKey: "id") as! String), oldPrice: "", brandName: ((item as! NSDictionary).value(forKey: "brand") as! String)))
+                    if (item as! NSDictionary).value(forKey: "offer_price")  is NSNull {
+                        print("empty")
+                        self.product.append(getProduct.init(name:((item as! NSDictionary).value(forKey: "title") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), id: ((item as! NSDictionary).value(forKey: "id") as! String), oldPrice: "", brandName: ((item as! NSDictionary).value(forKey: "brand") as! String), wishlistID: ((item as! NSDictionary).value(forKey: "Wishlist") as! String)))
+                    }
+                    else {
+                        print("not null")
+                        self.product.append(getProduct.init(name:((item as! NSDictionary).value(forKey: "title") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), id: ((item as! NSDictionary).value(forKey: "id") as! String), oldPrice: ((item as! NSDictionary).value(forKey: "offer_price") as! String), brandName: ((item as! NSDictionary).value(forKey: "brand") as! String), wishlistID: ((item as! NSDictionary).value(forKey: "Wishlist") as! String)))
+                    }
+                    
+
                 }
                 
                 DispatchQueue.main.async(execute: {
@@ -237,14 +289,21 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
         cell.productNameLabel.text = self.product[indexPath.row].name
         cell.originalPriceLabel.text = "$\(self.product[indexPath.row].price)"
         
-        if  self.product[indexPath.row].oldPrice != "<null>" {
+        if  self.product[indexPath.row].oldPrice != "" {
             cell.oldPriceLabel.text = self.product[indexPath.row].oldPrice
         }
         else{
             cell.oldPriceLabel.isHidden = true
             cell.crossLabel.isHidden = true
         }
-        
+        if self.product[indexPath.row].wishlistID == "1"
+        {
+            cell.wishlistBtn.setImage(UIImage (named: "heart"), for: .normal)
+        }
+        else{
+            
+            cell.wishlistBtn.setImage(UIImage (named: "emptyWishlist"), for: .normal)
+        }
        
         cell.brandNameLabel.text = self.product[indexPath.row].brandName
         let url = URL(string: self.product[indexPath.row].image)
@@ -279,28 +338,57 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
     @objc func addToWishListAPI(sender:UIButton!){
         
         let parameter: Parameters = [
-                        "user_id": Model.sharedInstance.userID,
-                        "cloth_id": self.product[sender.tag].id
-                    ]
-        SKActivityIndicator.spinnerColor(UIColor.darkGray)
-        SKActivityIndicator.show("Loading...")
+            "user_id": Model.sharedInstance.userID,
+            "cloth_id": self.product[sender.tag].id
+        ]
+        if sender.imageView?.image == UIImage (named: "emptyWishlist")
+        {
+//        SKActivityIndicator.spinnerColor(UIColor.darkGray)
+//        SKActivityIndicator.show("Loading...")
         
         Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecom/recipes/addToWishList/ZWNvbW1lcmNl/", parameters: parameter, headers: nil) { (response:NSDictionary?, error:NSError?) in
             if error != nil {
-                print(error?.localizedDescription)
+                print(error?.localizedDescription as Any)
                 Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Something Wrong..")
                 return
             }
             DispatchQueue.main.async(execute: {
-                SKActivityIndicator.dismiss()
+             //   SKActivityIndicator.dismiss()
             })
+            sender.setImage(UIImage(named: "heart"), for: UIControlState.normal)
             print(response!)
             if ((response!["message"] as? [String:Any]) != nil){
-                Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: (response?.value(forKey: "message") as! String))
+                //Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: (response?.value(forKey: "message") as! String))
             }
             else{
                 self.getWishListAPI()
-                Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: (response?.value(forKey: "message") as! String))
+               // Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: (response?.value(forKey: "message") as! String))
+            }
+         }
+        }
+        else  if sender.imageView?.image == UIImage (named: "heart") {
+            
+//            SKActivityIndicator.spinnerColor(UIColor.darkGray)
+//            SKActivityIndicator.show("Loading...")
+            
+            Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecom/recipes/rmwishlist/ZWNvbW1lcmNl/", parameters: parameter, headers: nil) { (response:NSDictionary?, error:NSError?) in
+                if error != nil {
+                    print(error?.localizedDescription as Any)
+                  //  Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Something Wrong..")
+                    return
+                }
+                DispatchQueue.main.async(execute: {
+                  //  SKActivityIndicator.dismiss()
+                })
+                print(response!)
+                sender.setImage(UIImage(named: "emptyWishlist"), for: .normal)
+                if ((response!["message"] as? [String:Any]) != nil){
+                    //Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: (response?.value(forKey: "message") as! String))
+                }
+                else{
+                    self.getWishListAPI()
+                  //  Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: (response?.value(forKey: "message") as! String))
+                }
             }
         }
     }
@@ -308,8 +396,8 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
     //MARK: getWishListAPI Methods
     func getWishListAPI() {
         self.wishListProduct.removeAll()
-        SKActivityIndicator.spinnerColor(UIColor.darkGray)
-        SKActivityIndicator.show("Loading...")
+       // SKActivityIndicator.spinnerColor(UIColor.darkGray)
+       // SKActivityIndicator.show("Loading...")
         
         Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecom/recipes/ViewWishlist/\(Model.sharedInstance.userID)/ZWNvbW1lcmNl/", parameters: nil, headers: nil) { (response:NSDictionary?, error:NSError?) in
             if error != nil {
@@ -318,7 +406,7 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
                 return
             }
             DispatchQueue.main.async(execute: {
-                SKActivityIndicator.dismiss()
+               // SKActivityIndicator.dismiss()
             })
             print(response!)
 //             if (response?.value(forKey: "message") as! String == "Wishlist Empty"){
@@ -330,7 +418,7 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
                 for item in (response!.value(forKey: "Wishlist") as! NSArray) {
                     print(item)
                     
-                    self.wishListProduct.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "Cloth_id") as! String), price: ((item as! NSDictionary).value(forKey: "price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), oldPrice: "", brand: ""))
+                    self.wishListProduct.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "Cloth_id") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), oldPrice: "", brand: "", wishlistID: "", cout: "1"))
                 }
                 
                 Model.sharedInstance.badgeValue = (String)(self.wishListProduct.count)

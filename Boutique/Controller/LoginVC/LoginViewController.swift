@@ -12,10 +12,13 @@ import UIKit
 import Alamofire
 import SKActivityIndicatorView
 import Stripe
+
+
+
 class LoginViewController: UIViewController {
 
     var paymentContext =  STPPaymentContext()
-    
+   
     @IBOutlet var textEmail: UITextField!
     @IBOutlet var textPassword: UITextField!
     @IBOutlet var btnLogin: UIButton!
@@ -26,14 +29,11 @@ class LoginViewController: UIViewController {
 
         // Do any additional setup after loading the view.
        
-        //[["age" : 22], ["age" : 23]]
-       
         self.navigationController?.navigationBar.isHidden = true
         self.btnSignUP.layer.borderWidth = 1
         self.btnSignUP.layer.cornerRadius = 19
         self.btnSignUP.layer.borderColor = UIColor (red: 43.0/255.0, green: 59.0/255.0, blue: 68.0/255.0, alpha: 1).cgColor
         
-       // self.btnLogin.layer.borderWidth = 1
         self.btnLogin.layer.cornerRadius = 19
         
         textEmail.attributedPlaceholder = NSAttributedString(string: "Enter Email",
@@ -45,6 +45,8 @@ class LoginViewController: UIViewController {
                                                              attributes: [NSAttributedStringKey.foregroundColor: UIColor (red: 102.0/255.0, green:  102.0/255.0, blue:  102.0/255.0, alpha: 1)])
         textPassword.font = UIFont(name: "Montserrat SemiBold", size: 20)
         
+        let uuid = UIDevice.current.identifierForVendor?.uuidString
+        print(uuid!)
     }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -120,9 +122,12 @@ class LoginViewController: UIViewController {
             "email": self.textEmail.text!,
             "password": self.textPassword.text!
         ]
-        Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecom/recipes/login/ZWNvbW1lcmNl/", parameters: parameters, headers: nil) { (response:NSDictionary?, error:NSError?) in
+        Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecom/recipes/login", parameters: parameters, headers: nil) { (response:NSDictionary?, error:NSError?) in
             if error != nil {
                 print(error?.localizedDescription as Any)
+                DispatchQueue.main.async(execute: {
+                    SKActivityIndicator.dismiss()
+                })
                 Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Login Failed.Try Again..")
                 return
             }

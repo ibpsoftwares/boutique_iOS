@@ -21,11 +21,6 @@ class SettingsViewController: UIViewController,UITableViewDelegate,UITableViewDa
         
         tableView.register(UINib(nibName: "SettingTableViewCell", bundle: nil), forCellReuseIdentifier: "CustomCell")
         tableView.tableFooterView = UIView()
-        
-        headerView.layer.shadowColor = UIColor.black.cgColor
-        headerView.layer.shadowOpacity = 1
-        headerView.layer.shadowOffset = CGSize.zero
-        headerView.layer.shadowRadius = 10
     }
 
     override func didReceiveMemoryWarning() {
@@ -78,7 +73,7 @@ class SettingsViewController: UIViewController,UITableViewDelegate,UITableViewDa
         }
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 65
+        return 50
     }
     func openURL(_ urlString: String) {
         if let url = URL(string: urlString) {

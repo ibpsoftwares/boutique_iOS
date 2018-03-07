@@ -31,6 +31,9 @@ class CartCell: UITableViewCell {
     @IBOutlet weak var incrementQty: UIButton!
     @IBOutlet weak var decrementQty: UIButton!
     @IBOutlet weak var removeButton: UIButton!
+    
+    @IBOutlet weak var qty: UILabel!
+  
     @IBOutlet weak var itemQuantityStepper:UIStepper?
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -51,14 +54,21 @@ class CartCell: UITableViewCell {
         
     }
     
-    @IBAction func stepperValueChanged(_ sender: AnyObject){
-        let value = Int(itemQuantityStepper!.value)
-        setItemQuantity(value)
-    }
+//    @IBAction func stepperValueChanged(_ sender: AnyObject){
+//        let value = Int(itemQuantityStepper!.value)
+//        setItemQuantity(value)
+//        
+//    }
     
     func setItemQuantity(_ quantity: Int) {
         let itemQuantityText = "\(quantity)"
         qtyLabel?.text = itemQuantityText
+       
+     
+//        let myString = priceLabel.text!
+//        let price = Int(myString)
+//         print(price!)
+//        priceLabel.text = "\(((quantity) * price!))"
         
         itemQuantityStepper?.value = Double(quantity)
         

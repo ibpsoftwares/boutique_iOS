@@ -11,6 +11,25 @@ import Alamofire
 import Kingfisher
 import SKActivityIndicatorView
 
+class Product{
+    var price : Double = 0.0
+    var name: String = ""
+    var id : String
+    var image: String
+    var oldPrice: String
+    var brand: String
+    var wishlistID : String
+    init(price:Double, name:String,id : String,image: String,oldPrice: String,brand:String,wishlistID:String) {
+        self.price = price
+        self.name = name
+        self.id = id
+        self.image = image
+        self.oldPrice = oldPrice
+        self.brand = brand
+        self.wishlistID = wishlistID
+    }
+}
+
 class getProductDetail {
     var name: String
     var price: String
@@ -18,13 +37,18 @@ class getProductDetail {
     var image: String
     var oldPrice: String
     var brand: String
-    init(name: String,id : String,price: String,image: String,oldPrice: String,brand:String) {
+    var wishlistID : String
+    var cout: String
+    init(name: String,id : String,price: String,image: String,oldPrice: String,brand:String,wishlistID:String,cout: String) {
         self.name = name
         self.id = id
         self.price = price
         self.image = image
         self.oldPrice = oldPrice
         self.brand = brand
+         self.wishlistID = wishlistID
+        self.cout = cout
+        
     }
 }
 class getPrice {
@@ -51,12 +75,14 @@ class ProductViewController: UIViewController,UICollectionViewDelegate,UICollect
     var product = [getProductDetail]()
     var price = [getPrice]()
     var categoryID = String()
+    var sortedArray = [Product]()
     @IBOutlet weak var slideView: UIView!
     @IBOutlet weak var slideSortView: UIView!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var filterTableView: UITableView!
     var sortArr =  ["Price :High To Low","Price :Low To High","Newest First","Oldest First"]
     var filterArr =  ["Price : 100 To 500","Price : 500 To 1000","Price : 1000 To 2000","Price : 2000 To 5000"]
+    var check : Bool = false
     var selectedSortIndex = String()
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -91,6 +117,7 @@ class ProductViewController: UIViewController,UICollectionViewDelegate,UICollect
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        self.product.removeAll()
         self.getProductAPI()
     }
     @IBAction func backBtn(_ sender: UIButton) {
@@ -103,8 +130,10 @@ class ProductViewController: UIViewController,UICollectionViewDelegate,UICollect
         SKActivityIndicator.spinnerColor(UIColor.darkGray)
         SKActivityIndicator.show("Loading...")
         print(categoryID)
-        
-        Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecom/recipes/getbycategory/\(categoryID)/ZWNvbW1lcmNl/", parameters: nil, headers: nil) { (response:NSDictionary?, error:NSError?) in
+        let parameters: Parameters = [
+            "user_id": Model.sharedInstance.userID
+        ]
+        Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecom/recipes/getbycategory1/\(categoryID)/ZWNvbW1lcmNl/", parameters: parameters, headers: nil) { (response:NSDictionary?, error:NSError?) in
             if error != nil {
                 print(error?.localizedDescription as Any)
                 Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Something Wrong..")
@@ -124,11 +153,21 @@ class ProductViewController: UIViewController,UICollectionViewDelegate,UICollect
                     for item in (response!.value(forKey: "cloths") as! NSArray) {
                         print(item)
                         
+                        
+                        
                         self.data.append(((item as! NSDictionary).value(forKey: "title") as! String))
                         
-                        self.product.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "id") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: ((item as! NSDictionary).value(forKey: "image") as! String), oldPrice: "", brand: ((item as! NSDictionary).value(forKey: "brand") as! String)))
-                        
+                        if (item as! NSDictionary).value(forKey: "offer_price")  is NSNull {
+                            print("empty")
+                            self.product.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "id") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: ((item as! NSDictionary).value(forKey: "image") as! String), oldPrice: "", brand: ((item as! NSDictionary).value(forKey: "brand") as! String), wishlistID: ((item as! NSDictionary).value(forKey: "wishlist") as! String), cout: "1"))
+                        }
+                        else {
+                            
+                            self.product.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "id") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: ((item as! NSDictionary).value(forKey: "image") as! String), oldPrice: ((item as! NSDictionary).value(forKey: "offer_price") as! String), brand: ((item as! NSDictionary).value(forKey: "brand") as! String), wishlistID: ((item as! NSDictionary).value(forKey: "wishlist") as! String), cout: "1"))
+                            
+                        }
                     }
+                    
                     DispatchQueue.main.async(execute: {
                         self.collectionView.reloadData()
                     })
@@ -142,9 +181,9 @@ class ProductViewController: UIViewController,UICollectionViewDelegate,UICollect
 
     //MARK: CollectionView Delegate and Data Source
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-//        if(searchActive) {
-//            return filtered.count
-//        }
+        if(check) {
+            return sortedArray.count
+        }
         return product.count;
     }
     
@@ -160,17 +199,53 @@ class ProductViewController: UIViewController,UICollectionViewDelegate,UICollect
         cell.layer.borderColor = UIColor (red: 204.0/255.0, green: 204.0/255.0, blue: 204/255.0, alpha: 1).cgColor
         cell.layer.borderWidth = 0.5
         
-//        if(searchActive){
-//           cell.productNameLabel.text = filtered[indexPath.row]
-//            cell.productPriceLabel.text = self.product[indexPath.row].price
-//            let url = URL(string: self.product[indexPath.row].image)
-//            cell.productImg.kf.setImage(with: url,placeholder: nil)
-//        } else {
-           cell.productNameLabel.text = self.product[indexPath.row].name
+        if(check){
+           
+            if  self.sortedArray[indexPath.row].oldPrice != "" {
+                cell.oldPriceLabel.text = self.sortedArray[indexPath.row].oldPrice
+            }
+            else{
+                cell.oldPriceLabel.isHidden = true
+                cell.crossLabel.isHidden = true
+            }
+            if self.sortedArray[indexPath.row].wishlistID == "1"
+            {
+                cell.wishlistBtn.setImage(UIImage (named: "heart"), for: .normal)
+            }
+            else{
+                
+                cell.wishlistBtn.setImage(UIImage (named: "emptyWishlist"), for: .normal)
+            }
+            cell.wishlistBtn.tag = indexPath.row
+            cell.wishlistBtn.addTarget(self,action:#selector(addToWishListAPI(sender:)), for: .touchUpInside)
+            cell.productNameLabel.text = self.sortedArray[indexPath.row].name
+            cell.originalPriceLabel.text = (String)(self.sortedArray[indexPath.row].price)
+            let url = URL(string: self.sortedArray[indexPath.row].image)
+            cell.productImg.kf.setImage(with: url,placeholder: nil)
+        } else {
+        
+        if  self.product[indexPath.row].oldPrice != "" {
+            cell.oldPriceLabel.text = self.product[indexPath.row].oldPrice
+        }
+        else{
+            cell.oldPriceLabel.isHidden = true
+            cell.crossLabel.isHidden = true
+        }
+        if self.product[indexPath.row].wishlistID == "1"
+        {
+            cell.wishlistBtn.setImage(UIImage (named: "heart"), for: .normal)
+        }
+        else{
+            
+            cell.wishlistBtn.setImage(UIImage (named: "emptyWishlist"), for: .normal)
+        }
+            cell.wishlistBtn.tag = indexPath.row
+            cell.wishlistBtn.addTarget(self,action:#selector(addToWishListAPI(sender:)), for: .touchUpInside)
+            cell.productNameLabel.text = self.product[indexPath.row].name
             cell.originalPriceLabel.text = self.product[indexPath.row].price
             let url = URL(string: self.product[indexPath.row].image)
             cell.productImg.kf.setImage(with: url,placeholder: nil)
-        //}
+        }
         return cell
     }
  
@@ -182,10 +257,78 @@ class ProductViewController: UIViewController,UICollectionViewDelegate,UICollect
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let productDetailVC = storyboard.instantiateViewController(withIdentifier: "ProductDetailViewController") as! ProductDetailViewController
-        productDetailVC.productID = self.product[indexPath.row].id
-        navigationController?.pushViewController(productDetailVC, animated: true)
+        if check {
+            
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let productDetailVC = storyboard.instantiateViewController(withIdentifier: "ProductDetailViewController") as! ProductDetailViewController
+            productDetailVC.productID = self.sortedArray[indexPath.row].id
+            navigationController?.pushViewController(productDetailVC, animated: true)
+        }
+        else{
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let productDetailVC = storyboard.instantiateViewController(withIdentifier: "ProductDetailViewController") as! ProductDetailViewController
+            productDetailVC.productID = self.product[indexPath.row].id
+            navigationController?.pushViewController(productDetailVC, animated: true)
+        }
+    }
+    
+    //MARK: addToWishListAPI Methods
+    @objc func addToWishListAPI(sender:UIButton!){
+        
+        let parameter: Parameters = [
+            "user_id": Model.sharedInstance.userID,
+            "cloth_id": self.product[sender.tag].id
+        ]
+        if sender.imageView?.image == UIImage (named: "emptyWishlist")
+        {
+           // SKActivityIndicator.spinnerColor(UIColor.darkGray)
+           // SKActivityIndicator.show("Loading...")
+            
+            Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecom/recipes/addToWishList/ZWNvbW1lcmNl/", parameters: parameter, headers: nil) { (response:NSDictionary?, error:NSError?) in
+                if error != nil {
+                    print(error?.localizedDescription as Any)
+                    Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Something Wrong..")
+                    return
+                }
+                DispatchQueue.main.async(execute: {
+                   // SKActivityIndicator.dismiss()
+                })
+                sender.setImage(UIImage(named: "heart"), for: UIControlState.normal)
+                print(response!)
+                if ((response!["message"] as? [String:Any]) != nil){
+                    Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: (response?.value(forKey: "message") as! String))
+                }
+                else{
+                    //self.getWishListAPI()
+                    Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: (response?.value(forKey: "message") as! String))
+                }
+            }
+        }
+        else  if sender.imageView?.image == UIImage (named: "heart") {
+            
+           // SKActivityIndicator.spinnerColor(UIColor.darkGray)
+            //SKActivityIndicator.show("Loading...")
+            
+            Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecom/recipes/rmwishlist/ZWNvbW1lcmNl/", parameters: parameter, headers: nil) { (response:NSDictionary?, error:NSError?) in
+                if error != nil {
+                    print(error?.localizedDescription as Any)
+                    Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Something Wrong..")
+                    return
+                }
+                DispatchQueue.main.async(execute: {
+                   // SKActivityIndicator.dismiss()
+                })
+                print(response!)
+                sender.setImage(UIImage(named: "emptyWishlist"), for: .normal)
+                if ((response!["message"] as? [String:Any]) != nil){
+                    Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: (response?.value(forKey: "message") as! String))
+                }
+                else{
+                   // self.getWishListAPI()
+                    Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: (response?.value(forKey: "message") as! String))
+                }
+            }
+        }
     }
     //MARK: SearchBar Delegate Methods
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
@@ -248,10 +391,12 @@ class ProductViewController: UIViewController,UICollectionViewDelegate,UICollect
                     
                     self.data.append(((item as! NSDictionary).value(forKey: "title") as! String))
                     
-                    self.product.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "id") as! String), price: ((item as! NSDictionary).value(forKey: "price") as! String), image: ((item as! NSDictionary).value(forKey: "image") as! String), oldPrice: ((item as! NSDictionary).value(forKey: "image") as! String), brand: ""))
+                    self.product.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "category_id") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: ((item as! NSDictionary).value(forKey: "image") as! String), oldPrice: ((item as! NSDictionary).value(forKey: "offer_price") as! String), brand: ((item as! NSDictionary).value(forKey: "brand") as! String), wishlistID: ((item as! NSDictionary).value(forKey: "Wishlist") as! String), cout: "1"))
                     
                 }
                 
+              
+            
                 DispatchQueue.main.async(execute: {
                     self.collectionView.reloadData()
                 })
@@ -360,7 +505,7 @@ class ProductViewController: UIViewController,UICollectionViewDelegate,UICollect
                     print(item)
                     
                     
-                    self.product.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "Cloth_id") as! String), price: ((item as! NSDictionary).value(forKey: "price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), oldPrice: ((item as! NSDictionary).value(forKey: "image1") as! String), brand: ""))
+                    self.product.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "Cloth_id") as! String), price: ((item as! NSDictionary).value(forKey: "price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), oldPrice: ((item as! NSDictionary).value(forKey: "image1") as! String), brand: "", wishlistID: "", cout: "1"))
                     
                 }
                 DispatchQueue.main.async(execute: {
@@ -411,18 +556,146 @@ class ProductViewController: UIViewController,UICollectionViewDelegate,UICollect
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if tableView == self.tableView{
             var priceCell:PriceTableViewCell?
-            priceCell?.selectImageView.image = UIImage (named: "check")
-            priceCell = self.filterTableView.dequeueReusableCell(withIdentifier: "rangeCell") as! PriceTableViewCell!
-            selectedSortIndex = (String)(indexPath.row)
-            sortAPIMethod(sortID: selectedSortIndex)
+           
+            if indexPath.row == 0{
+                 sortProductHighToLow()
+                
+            }
+            if indexPath.row == 1{
+                sortProductLowTOHigh()
+            }
+            if indexPath.row == 2{
+                sortNewestProduct()
+            }
+//            priceCell?.selectImageView.image = UIImage (named: "check")
+//            priceCell = self.filterTableView.dequeueReusableCell(withIdentifier: "rangeCell") as! PriceTableViewCell!
+//            selectedSortIndex = (String)(indexPath.row)
+//            sortAPIMethod(sortID: selectedSortIndex)
         }
         else if tableView == self.filterTableView {
-            var priceCell:PriceTableViewCell?
-            priceCell?.selectImageView.image = UIImage (named: "check")
-            priceCell = self.filterTableView.dequeueReusableCell(withIdentifier: "rangeCell") as! PriceTableViewCell!
-            self.filterByPrice(rangeID: self.price[indexPath.row].id)
+//            var priceCell:PriceTableViewCell?
+//            priceCell?.selectImageView.image = UIImage (named: "check")
+//            priceCell = self.filterTableView.dequeueReusableCell(withIdentifier: "rangeCell") as! PriceTableViewCell!
+//            self.filterByPrice(rangeID: self.price[indexPath.row].id)
+            //sortedArray = self.product.filter($0.price as! Int < 1000)
+            
+            if indexPath.row == 0{
+                
+                sortedArray.removeAll()
+                for i in 0 ..< product.count {
+                    sortedArray.append(Product.init(price: Double(product[i].price)!, name:  product[i].name, id: product[i].id, image: product[i].image, oldPrice: product[i].oldPrice, brand: product[i].brand, wishlistID: product[i].wishlistID))
+                }
+                
+//                sortedArray = sortedArray.filter({
+//                    $0.price > 1000
+//                })
+                print(sortedArray)
+                let filtered = sortedArray.filter({ $0.price >= 1 && $0.price <= 1000 })
+                print(filtered)
+                sortedArray.removeAll()
+                sortedArray = filtered
+                check = true
+                self.filterTableView.isHidden = true
+                self.slideView.isHidden = true
+                self.collectionView.reloadData()
+            }
+            if indexPath.row == 1{
+                
+                sortedArray.removeAll()
+                for i in 0 ..< product.count {
+                    sortedArray.append(Product.init(price: Double(product[i].price)!, name:  product[i].name, id: product[i].id, image: product[i].image, oldPrice: product[i].oldPrice, brand: product[i].brand, wishlistID: product[i].wishlistID))
+                }
+                
+                //                sortedArray = sortedArray.filter({
+                //                    $0.price > 1000
+                //                })
+                print(sortedArray)
+                let filtered = sortedArray.filter({ $0.price >= 1001 && $0.price <= 2000 })
+                print(filtered)
+                sortedArray.removeAll()
+                sortedArray = filtered
+                check = true
+                self.filterTableView.isHidden = true
+                self.slideView.isHidden = true
+                self.collectionView.reloadData()
+            }
+            
+            if indexPath.row == 2{
+                
+                sortedArray.removeAll()
+                for i in 0 ..< product.count {
+                    sortedArray.append(Product.init(price: Double(product[i].price)!, name:  product[i].name, id: product[i].id, image: product[i].image, oldPrice: product[i].oldPrice, brand: product[i].brand, wishlistID: product[i].wishlistID))
+                }
+                
+                //                sortedArray = sortedArray.filter({
+                //                    $0.price > 1000
+                //                })
+                print(sortedArray)
+                let filtered = sortedArray.filter({ $0.price >= 2001 && $0.price <= 5000 })
+                print(filtered)
+                sortedArray.removeAll()
+                sortedArray = filtered
+                check = true
+                self.filterTableView.isHidden = true
+                self.slideView.isHidden = true
+                self.collectionView.reloadData()
+            }
+   
         }
     }
+    
+    //MARK: sortProductLowTOHigh in low to high order
+    func sortProductLowTOHigh(){
+     
+        sortedArray.removeAll()
+        for i in 0 ..< product.count {
+            sortedArray.append(Product.init(price: Double(product[i].price)!, name:  product[i].name, id: product[i].id, image: product[i].image, oldPrice: product[i].oldPrice, brand: product[i].brand, wishlistID: product[i].wishlistID))
+        }
+        
+       print(sortedArray)
+        self.slideSortView.isHidden = true
+        self.tableView.isHidden = true
+        sortedArray = sortedArray.sorted(by: {$0.price < $1.price})
+        print(sortedArray)
+        check = true
+        self.collectionView.reloadData()
+    }
+    //MARK: sortProductLowTOHigh in low to high order
+    func sortProductHighToLow(){
+        
+        sortedArray.removeAll()
+        for i in 0 ..< product.count {
+            sortedArray.append(Product.init(price: Double(product[i].price)!, name:  product[i].name, id: product[i].id, image: product[i].image, oldPrice: product[i].oldPrice, brand: product[i].brand, wishlistID: product[i].wishlistID))
+        }
+        
+        print(sortedArray)
+        self.slideSortView.isHidden = true
+        self.tableView.isHidden = true
+        sortedArray = sortedArray.sorted(by: {$0.price > $1.price})
+        print(sortedArray)
+        check = true
+        self.collectionView.reloadData()
+    }
+    
+    //MARK: newest product
+    func sortNewestProduct(){
+        
+        sortedArray.removeAll()
+        for i in 0 ..< product.count {
+            sortedArray.append(Product.init(price: Double(product[i].price)!, name:  product[i].name, id: product[i].id, image: product[i].image, oldPrice: product[i].oldPrice, brand: product[i].brand, wishlistID: product[i].wishlistID))
+        }
+        
+        print(sortedArray)
+        self.slideSortView.isHidden = true
+        self.tableView.isHidden = true
+        sortedArray = sortedArray.sorted(by: {$0.id < $1.id})
+        print(sortedArray)
+        check = true
+        self.collectionView.reloadData()
+    }
+    
+    
+    
     //MARK: filterByPrice Methods
     func filterByPrice(rangeID : String){
         
@@ -457,7 +730,7 @@ class ProductViewController: UIViewController,UICollectionViewDelegate,UICollect
                         
                         self.data.append(((item as! NSDictionary).value(forKey: "title") as! String))
                         
-                        self.product.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "id") as! String), price: ((item as! NSDictionary).value(forKey: "price") as! String), image: ((item as! NSDictionary).value(forKey: "image") as! String), oldPrice: ((item as! NSDictionary).value(forKey: "image") as! String), brand: ""))
+                        self.product.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "id") as! String), price: ((item as! NSDictionary).value(forKey: "price") as! String), image: ((item as! NSDictionary).value(forKey: "image") as! String), oldPrice: ((item as! NSDictionary).value(forKey: "image") as! String), brand: "", wishlistID: "", cout: "1"))
                         
                     }
                     DispatchQueue.main.async(execute: {
@@ -498,7 +771,7 @@ class ProductViewController: UIViewController,UICollectionViewDelegate,UICollect
     }
     @IBAction func btnFilter(_ sender: UIButton) {
         self.tableView.isHidden = true
-        if sender.tag  == 0{
+       // if sender.tag  == 0{
             self.slideView.isHidden = false
             self.filterTableView.isHidden = false
             let transition = CATransition()
@@ -506,19 +779,19 @@ class ProductViewController: UIViewController,UICollectionViewDelegate,UICollect
             transition.subtype = kCATransitionFromTop
             self.slideView.layer.add(transition, forKey: nil)
             self.view .addSubview(self.slideView)
-            sender.tag = 1
-        }
-        else if sender.tag == 1{
-            let transition = CATransition()
-            transition.type = kCATransitionPush
-            transition.subtype = kCATransitionFromBottom
-            self.slideView.layer.add(transition, forKey: nil)
-            self.view .addSubview(self.slideView)
-            self.slideView.isHidden = true
-            self.filterTableView.isHidden = true
-            self.collectionView.reloadData()
-            sender.tag = 0
-        }
+//            sender.tag = 1
+//        }
+//        else if sender.tag == 1{
+//            let transition = CATransition()
+//            transition.type = kCATransitionPush
+//            transition.subtype = kCATransitionFromBottom
+//            self.slideView.layer.add(transition, forKey: nil)
+//            self.view .addSubview(self.slideView)
+//            self.slideView.isHidden = true
+//            self.filterTableView.isHidden = true
+//            self.collectionView.reloadData()
+//            sender.tag = 0
+//        }
     }
     //MARK: getProductAPI Methods
 //    func getPriceAPI() {

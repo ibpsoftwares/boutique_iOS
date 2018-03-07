@@ -91,7 +91,7 @@ class WishListViewController: UIViewController,UITableViewDelegate,UITableViewDa
                     for item in (response?.value(forKey: "Wishlist") as! NSArray) {
                         print(item)
                         
-                        self.wishListProduct.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "Cloth_id") as! String), price: ((item as! NSDictionary).value(forKey: "price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), oldPrice: "", brand: ""))
+                        self.wishListProduct.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "Cloth_id") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), oldPrice: "", brand: "", wishlistID: "", cout: "1"))
                     }
                     self.bgLabel.isHidden = true
                     Model.sharedInstance.badgeValue = (String)(self.wishListProduct.count)
@@ -164,6 +164,10 @@ class WishListViewController: UIViewController,UITableViewDelegate,UITableViewDa
     // method to run when table view cell is tapped
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print("You tapped cell number \(indexPath.row).")
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let productDetailVC = storyboard.instantiateViewController(withIdentifier: "ProductDetailViewController") as! ProductDetailViewController
+        productDetailVC.productID = self.wishListProduct[indexPath.row].id
+        navigationController?.pushViewController(productDetailVC, animated: true)
         
     }
     @objc func buttonClicked(sender:UIButton!) {
@@ -184,6 +188,7 @@ class WishListViewController: UIViewController,UITableViewDelegate,UITableViewDa
         let parameters: Parameters = [
             "user_id": Model.sharedInstance.userID,
             "cloth_id": wishListProduct[sender.tag].id,
+            "quantity": "1"
         ]
         
         print(parameters)
@@ -198,7 +203,7 @@ class WishListViewController: UIViewController,UITableViewDelegate,UITableViewDa
                 SKActivityIndicator.dismiss()
             })
             print(response!)
-            if ((response!["message"] as? [String:Any]) != nil){
+            if ((response!["message"] as? [String:Any]) == nil){
                 let alert = UIAlertController(title: "Alert", message: (response?.value(forKey: "message") as! String), preferredStyle: UIAlertControllerStyle.alert)
                 alert.addAction(UIAlertAction(title: "ok", style: UIAlertActionStyle.default, handler: nil))
                
@@ -207,6 +212,7 @@ class WishListViewController: UIViewController,UITableViewDelegate,UITableViewDa
             else{
 //                let alert = UIAlertController(title: "Alert", message: (response?.value(forKey: "message") as! String), preferredStyle: UIAlertControllerStyle.alert)
 //                alert.addAction(UIAlertAction(title: "ok", style: UIAlertActionStyle.default, handler: nil))
+                
                 DispatchQueue.main.async(execute: {
                     self.wishListProduct.remove(at: sender.tag)
                     self.tableView.reloadData()
@@ -219,7 +225,6 @@ class WishListViewController: UIViewController,UITableViewDelegate,UITableViewDa
                     }
                     self.self.viewToCartAPI()
                 })
-                
                 //self.present(alert, animated: true, completion: nil)
             }
         }
@@ -248,7 +253,8 @@ class WishListViewController: UIViewController,UITableViewDelegate,UITableViewDa
                 Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: (response?.value(forKey: "message") as! String))
             }
             else{
-                self.cartCountLabel.text = String((response!.value(forKey: "items") as! NSArray).count)
+               // self.cartCountLabel.text = String((response!.value(forKey: "items") as! NSArray).count)
+                 //Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: (response?.value(forKey: "message") as! String))
             }
         }           
     }

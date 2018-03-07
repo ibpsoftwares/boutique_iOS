@@ -12,6 +12,7 @@ import Alamofire
 class MainTabBarViewController: UITabBarController ,UITabBarControllerDelegate{
 
      var wishListProduct = [getProductDetail]()
+    var cartProduct = [getProductDetail]()
     var objectModel = Model.sharedInstance
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -21,12 +22,14 @@ class MainTabBarViewController: UITabBarController ,UITabBarControllerDelegate{
         let attributes = [NSAttributedStringKey.font:UIFont(name: "Whitney-Medium", size: 15.0)]
         appearance.setTitleTextAttributes((attributes as Any as! [NSAttributedStringKey : Any]), for: .normal)
         
-      
+      getCartViewAPI()
         self.navigationController?.navigationBar.barStyle = UIBarStyle.black
-        
-//        self.tabBar.layer.borderWidth = 1
-//        self.tabBar.layer.borderColor = UIColor.white.cgColor
-//        self.tabBar.clipsToBounds = true
+       let numberOfItems = CGFloat(tabBar.items!.count)
+        let tabBarItemSize = CGSize(width: tabBar.frame.width / numberOfItems, height: tabBar.frame.height)
+        tabBar.selectionIndicatorImage = UIImage.imageWithColor(color:  UIColor (red: 39.0/255.0, green: 61.0/255.0, blue: 67.0/255.0, alpha: 1), size: tabBarItemSize).resizableImage(withCapInsets: UIEdgeInsets.zero)
+        // remove default border
+        tabBar.frame.size.width = self.view.frame.width + 4
+        tabBar.frame.origin.x = -2
         
         self.objectModel.badgeValue = ""
         self.wishListProduct.removeAll()
@@ -42,6 +45,7 @@ class MainTabBarViewController: UITabBarController ,UITabBarControllerDelegate{
     override func viewWillAppear(_ animated: Bool) {
          self.wishListProduct.removeAll()
         getWishListAPI()
+        
     }
     //MARK: getCartViewAPI Methods
     func getWishListAPI() {
@@ -69,7 +73,7 @@ class MainTabBarViewController: UITabBarController ,UITabBarControllerDelegate{
                     for item in ((product ).value(forKey: "Wishlist") as! NSArray) {
                         print(item)
                         
-                        self.wishListProduct.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "Cloth_id") as! String), price: ((item as! NSDictionary).value(forKey: "price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), oldPrice: "", brand: ""))
+                        self.wishListProduct.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "Cloth_id") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), oldPrice: "", brand: "", wishlistID: "", cout: "1"))
                     }
                     
                     self.objectModel.badgeValue = (String)(self.wishListProduct.count)
@@ -95,6 +99,42 @@ class MainTabBarViewController: UITabBarController ,UITabBarControllerDelegate{
                 
             }
         }
+    }
+    
+    //MARK: getCartViewAPI Methods
+    func getCartViewAPI(){
+        
+        self.cartProduct.removeAll()
+        //SKActivityIndicator.spinnerColor(UIColor.darkGray)
+        //SKActivityIndicator.show("Loading...")
+        
+        Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecom/recipes/ViewCart/\(Model.sharedInstance.userID)/ZWNvbW1lcmNl/", parameters: nil, headers: nil) { (response:NSDictionary?, error:NSError?) in
+            if error != nil {
+                print(error?.localizedDescription as Any)
+                Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Something Wrong..")
+                return
+            }
+            DispatchQueue.main.async(execute: {
+                //SKActivityIndicator.dismiss()
+            })
+            print(response!)
+            if ((response!["message"] as? [String:Any]) != nil){
+                Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: (response?.value(forKey: "message") as! String))
+            }
+            else{
+                
+                if ((response!.value(forKey: "items") != nil) ){
+                    
+                    for item in ((response)?.value(forKey: "items") as! NSArray) {
+                        print(item)
+                        
+                        self.cartProduct.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "Cloth_id") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), oldPrice: "", brand: "", wishlistID: "", cout: "1"))
+                    }
+                   
+                    Model.sharedInstance.cartCount = self.cartProduct.count
+            }
+        }
+    }
     }
 }
 
@@ -122,3 +162,4 @@ extension UIImage
         return image
     }
 }
+
