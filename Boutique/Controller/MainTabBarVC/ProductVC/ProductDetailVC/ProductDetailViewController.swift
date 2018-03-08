@@ -69,49 +69,16 @@ class ProductDetailViewController: UIViewController,UICollectionViewDelegate,UIC
         imgView.layer.shadowOffset = CGSize.zero
         imgView.layer.shadowRadius = 1
         
-//        desriptionView.layer.shadowColor = UIColor.lightGray.cgColor
-//        desriptionView.layer.shadowOpacity = 1
-//        desriptionView.layer.shadowOffset = CGSize.zero
-//        desriptionView.layer.shadowRadius = 1
-        
         cartCountLabel.layer.cornerRadius = cartCountLabel.frame.size.height / 2
         cartCountLabel.clipsToBounds = true
-        
-//        smallSizeBtn.layer.cornerRadius = smallSizeBtn.frame.size.height / 2
-//        smallSizeBtn.clipsToBounds = true
-//        smallSizeBtn.layer.borderColor = UIColor (red: 204.0/255.0, green: 204.0/255.0, blue: 204/255.0, alpha: 1).cgColor
-//        smallSizeBtn.layer.borderWidth = 0.8
-//
-//        mediumSizeBtn.layer.cornerRadius = mediumSizeBtn.frame.size.height / 2
-//        mediumSizeBtn.clipsToBounds = true
-//        mediumSizeBtn.layer.borderColor = UIColor (red: 204.0/255.0, green: 204.0/255.0, blue: 204/255.0, alpha: 1).cgColor
-//        mediumSizeBtn.layer.borderWidth = 0.8
-//
-//        largeSizeBtn.layer.cornerRadius = largeSizeBtn.frame.size.height / 2
-//        largeSizeBtn.clipsToBounds = true
-//        largeSizeBtn.layer.borderColor = UIColor (red: 204.0/255.0, green: 204.0/255.0, blue: 204/255.0, alpha: 1).cgColor
-//        largeSizeBtn.layer.borderWidth = 0.8
-//
-//        exSizeBtn.layer.cornerRadius = exSizeBtn.frame.size.height / 2
-//        exSizeBtn.clipsToBounds = true
-//        exSizeBtn.layer.borderColor = UIColor (red: 204.0/255.0, green: 204.0/255.0, blue: 204/255.0, alpha: 1).cgColor
-//        exSizeBtn.layer.borderWidth = 0.8
-//
-//        doubleExSizeBtn.layer.cornerRadius = doubleExSizeBtn.frame.size.height / 2
-//        doubleExSizeBtn.clipsToBounds = true
-//        doubleExSizeBtn.layer.borderColor = UIColor (red: 204.0/255.0, green: 204.0/255.0, blue: 204/255.0, alpha: 1).cgColor
-//        doubleExSizeBtn.layer.borderWidth = 0.8
-        
+  
         addToCartBtn.layer.cornerRadius = 2
         addToCartBtn.layer.borderColor = UIColor (red: 237.0/255.0, green: 123.0/255.0, blue: 181.0/255.0, alpha: 1).cgColor
         
         addToWishlistBtn.layer.cornerRadius = 2
         addToCartBtn.layer.borderColor = UIColor (red: 102.0/255.0, green: 102.0/255.0, blue: 103.0/255.0, alpha: 1).cgColor
-        
-//        priceLabel.layer.cornerRadius = 2
-//        priceLabel.layer.borderColor = UIColor (red: 102.0/255.0, green: 102.0/255.0, blue: 103.0/255.0, alpha: 1).cgColor
-        
-        viewToCartAPI()
+       
+        //viewToCartAPI()
         print(count)
         SKCache.sharedCache.imageCache = CustomImageCache()
         let url = URL(string: "http://kftsoftwares.com/ecomm/app/webroot/img/products/1-24.png")

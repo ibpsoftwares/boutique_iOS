@@ -206,6 +206,8 @@
                     <connections>
                         <outlet property="btnLogin" destination="EIO-er-m26" id="GZH-vF-vU8"/>
                         <outlet property="btnSignUP" destination="3qP-6R-Yhd" id="Ex4-Da-Geu"/>
+                        <outlet property="lbl1" destination="HE1-iS-Uoq" id="1aU-g5-MTj"/>
+                        <outlet property="lbl2" destination="QwG-mA-LlY" id="tDk-oz-esi"/>
                         <outlet property="textEmail" destination="10j-Zc-m8h" id="vCO-sg-NoA"/>
                         <outlet property="textPassword" destination="gsF-aC-hhf" id="daw-aN-Fxa"/>
                     </connections>
@@ -1527,7 +1529,7 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pSC-rP-qcG">
                                 <rect key="frame" x="10" y="130" width="355" height="40"/>
                                 <subviews>
-                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Email" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="hFX-u0-ZRD">
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="justin@gmail.com" placeholder="Email" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="hFX-u0-ZRD">
                                         <rect key="frame" x="10" y="11" width="340" height="18"/>
                                         <nil key="textColor"/>
                                         <fontDescription key="fontDescription" name="Whitney-Medium" family="Whitney" pointSize="15"/>
@@ -1547,7 +1549,7 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="U7q-pr-l1I">
                                 <rect key="frame" x="10" y="180" width="355" height="40"/>
                                 <subviews>
-                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Card number..." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="5ea-9H-tMy">
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="4242424242424242" placeholder="Card number..." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="5ea-9H-tMy">
                                         <rect key="frame" x="10" y="11" width="340" height="18"/>
                                         <nil key="textColor"/>
                                         <fontDescription key="fontDescription" name="Whitney-Medium" family="Whitney" pointSize="15"/>
@@ -1567,7 +1569,7 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fJn-St-dkz">
                                 <rect key="frame" x="10" y="230" width="355" height="40"/>
                                 <subviews>
-                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="MM/YYYY" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="khT-h0-ySX">
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="10/10/2018" placeholder="MM/YYYY" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="khT-h0-ySX">
                                         <rect key="frame" x="10" y="11" width="340" height="18"/>
                                         <nil key="textColor"/>
                                         <fontDescription key="fontDescription" name="Whitney-Medium" family="Whitney" pointSize="15"/>
@@ -1587,7 +1589,7 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8Fq-vL-shM">
                                 <rect key="frame" x="10" y="280" width="355" height="40"/>
                                 <subviews>
-                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="CVC" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="UOS-r6-iPF">
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="123" placeholder="CVC" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="UOS-r6-iPF">
                                         <rect key="frame" x="10" y="11" width="340" height="18"/>
                                         <nil key="textColor"/>
                                         <fontDescription key="fontDescription" name="Whitney-Medium" family="Whitney" pointSize="15"/>
@@ -3080,26 +3082,26 @@
                                     <constraint firstItem="iGq-B7-OXz" firstAttribute="centerX" secondItem="Wxb-9O-1Bk" secondAttribute="centerX" id="kEr-ws-0Je"/>
                                 </constraints>
                             </view>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="120" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="fV1-eg-418">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="102" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="fV1-eg-418">
                                 <rect key="frame" x="0.0" y="79" width="375" height="544"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="CartCell" rowHeight="120" id="fA2-fJ-PKh" customClass="CartCell" customModule="Boutique" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="28" width="375" height="120"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="CartCell" rowHeight="102" id="fA2-fJ-PKh" customClass="CartCell" customModule="Boutique" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="28" width="375" height="102"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="fA2-fJ-PKh" id="mSJ-dq-a1g">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="119.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="101.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="six" translatesAutoresizingMaskIntoConstraints="NO" id="1YR-8l-RmX">
-                                                    <rect key="frame" x="10" y="12" width="96" height="96"/>
+                                                    <rect key="frame" x="10" y="11" width="80" height="80"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="width" constant="96" id="6lh-wo-nmx"/>
-                                                        <constraint firstAttribute="height" constant="96" id="fDU-ex-W50"/>
+                                                        <constraint firstAttribute="width" constant="80" id="6lh-wo-nmx"/>
+                                                        <constraint firstAttribute="height" constant="80" id="fDU-ex-W50"/>
                                                     </constraints>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Product Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tK3-lP-Eal">
-                                                    <rect key="frame" x="126" y="12" width="229" height="24"/>
+                                                    <rect key="frame" x="110" y="11" width="245" height="24"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="24" id="whC-LQ-YGJ"/>
                                                     </constraints>
@@ -3108,7 +3110,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="QTY:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ddg-8p-quD">
-                                                    <rect key="frame" x="126" y="50" width="40" height="20"/>
+                                                    <rect key="frame" x="110" y="41" width="40" height="20"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="20" id="Jvm-sm-Yjx"/>
                                                         <constraint firstAttribute="width" constant="40" id="b5c-8l-n7S"/>
@@ -3118,7 +3120,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="QsC-Wf-jcw">
-                                                    <rect key="frame" x="166" y="45" width="15" height="30"/>
+                                                    <rect key="frame" x="150" y="36" width="15" height="30"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="30" id="FPf-Ne-hDr"/>
@@ -3126,7 +3128,7 @@
                                                     </constraints>
                                                 </view>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Product Price" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DNf-mm-lgC">
-                                                    <rect key="frame" x="126" y="84" width="84" height="24"/>
+                                                    <rect key="frame" x="110" y="67" width="84" height="24"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="24" id="esp-c9-d0y"/>
                                                     </constraints>
@@ -3143,7 +3145,7 @@
                                                     <state key="normal" image="Remove"/>
                                                 </button>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iC1-DZ-fxC">
-                                                    <rect key="frame" x="206" y="48" width="20" height="24"/>
+                                                    <rect key="frame" x="190" y="39" width="20" height="24"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="24" id="VBE-P1-QpY"/>
                                                         <constraint firstAttribute="width" constant="20" id="zkZ-3G-jhw"/>
@@ -3151,7 +3153,7 @@
                                                     <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="16"/>
                                                 </label>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zS3-0Y-EVP">
-                                                    <rect key="frame" x="174" y="48" width="24" height="24"/>
+                                                    <rect key="frame" x="158" y="39" width="24" height="24"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="24" id="3Yg-L9-jkh"/>
                                                         <constraint firstAttribute="width" constant="24" id="C2N-Rv-BfZ"/>
@@ -3159,7 +3161,7 @@
                                                     <state key="normal" title="Button" image="Decrement"/>
                                                 </button>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="t0N-Yz-7Oa">
-                                                    <rect key="frame" x="234" y="48" width="24" height="24"/>
+                                                    <rect key="frame" x="218" y="39" width="24" height="24"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="24" id="GbY-Z1-QVn"/>
                                                         <constraint firstAttribute="height" constant="24" id="tWm-mR-KgH"/>
@@ -3668,8 +3670,8 @@
                         <outlet property="cardDetailsView" destination="esH-cm-KWH" id="jzq-P3-nrj"/>
                         <outlet property="cashOnDeliveryButton" destination="Ahs-x1-h9U" id="OAD-Pl-LAo"/>
                         <outlet property="creditCardButton" destination="HFV-af-CL6" id="ZK1-9j-gvr"/>
+                        <outlet property="discountLabel" destination="8tQ-Zr-HEf" id="xoC-9r-rmK"/>
                         <outlet property="itemPriceLabel" destination="LvW-B8-0V2" id="N1D-Jm-p0i"/>
-                        <outlet property="promoPriceLabel" destination="8tQ-Zr-HEf" id="pTt-Wg-Ax0"/>
                         <outlet property="shipmentPriceLabel" destination="uLr-bp-IaC" id="j2t-ba-gKt"/>
                         <outlet property="taxPriceLabel" destination="RfV-R4-Ogb" id="pae-mN-njb"/>
                         <outlet property="totalPriceLabel" destination="WSH-94-Bkv" id="Enu-Qv-4Zt"/>

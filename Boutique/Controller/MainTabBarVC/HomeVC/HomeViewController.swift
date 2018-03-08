@@ -52,14 +52,7 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
-        headerView.layer.shadowColor = UIColor.black.cgColor
-        headerView.layer.shadowOpacity = 1
-        headerView.layer.shadowOffset = CGSize.zero
-        headerView.layer.shadowRadius = 10
-        
-        
-        
+       
         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
         var width = UIScreen.main.bounds.width
         layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
@@ -88,30 +81,16 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
     override func viewWillAppear(_ animated: Bool) {
         self.product.removeAll()
         getProductAPI()
+        
+        
         self.wishlistCountLabel.layer.cornerRadius = self.wishlistCountLabel.frame.size.height / 2
         self.wishlistCountLabel.clipsToBounds = true
      
-//        let defaults = UserDefaults.standard
-//        if (defaults.value(forKey: "totalCartItem")) != nil {
-//            let count = (defaults.value(forKey: "totalCartItem"))
-//            var temp1 : String! // This is not optional.
-//            temp1 = (String)(describing: count!)
-//            print(temp1)
-//            self.wishlistCountLabel.text = temp1
-//        }
-//        else {
-//           self.wishlistCountLabel.isHidden = true
-//        }
-        
-        
-//         print(Model.sharedInstance.cartCount)
-//        if Model.sharedInstance.cartCount > 0{
-//              self.wishlistCountLabel.text = (String)(Model.sharedInstance.cartCount)
-//        }
-        getCartViewAPI()
+
+       // getCartViewAPI()
          getProductImages()
         self.wishListProduct.removeAll()
-        getWishListAPI()
+       // getWishListAPI()
     }
     func configurePageControl() {
         // The total number of pages that are available is based on how many available colors we have.
@@ -161,50 +140,49 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
         }
     }
     //MARK: getProductImages Methods
-    func getProductImages() {
+    
+    func getProductImages (){
+//        var parameter: Parameters = [:]
+//
+//        if Model.sharedInstance.userID != "" {
+//            parameter = ["user_id": Model.sharedInstance.userID]
+//        }
+//        else{
+//            parameter = ["user_id":""]
+//        }
         
-        SKActivityIndicator.spinnerColor(UIColor.darkGray)
-        SKActivityIndicator.show("Loading...")
+      //  print(parameter)
         
-        let requestString = "http://kftsoftwares.com/ecom/recipes/get_banner_images/ZWNvbW1lcmNl/"
-        
-        Alamofire.request(requestString,method: .post, parameters: nil, encoding: JSONEncoding.default, headers: [:]).responseJSON { (response:DataResponse<Any>) in
-            
-            switch(response.result) {
-            case .success(_):
-                DispatchQueue.main.async(execute: {
-                    SKActivityIndicator.dismiss()
-                })
-                if response.result.value != nil{
-                    
-                    let product = response.result.value as! NSDictionary
-                    
-                    for item in ((product ).value(forKey: "bannerImages") as! NSArray) {
-                        print(item)
-                        
-                        self.urlImages.append(((item as! NSDictionary).value(forKey: "image") as! String))
-                    }
-                    
-                    print(self.urlImages)
-                    DispatchQueue.main.async(execute: {
-                        //self.imgSlider.setUpView(imageSource: .Url(imageArray: self.localImages, placeHolderImage: UIImage (named: "placeHolder")), slideType: .ManualSwipe, isArrowBtnEnabled: true)
-                        
-                        self.imgSlider.setUpView(imageSource: .Url(imageArray: self.urlImages , placeHolderImage: UIImage (named: "placeHolder")), slideType: .Automatic(timeIntervalinSeconds: 2.0), isArrowBtnEnabled: true)
-                        print(self.localImages.count)
-                    })
-                   
-                }
-                break
-                
-            case .failure(_):
-                print("Failure : \(String(describing: response.result.error))")
-                DispatchQueue.main.async(execute: {
-                    SKActivityIndicator.dismiss()
-                })
-                break
-                
+        Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecom/recipes/getBannerImages", parameters:nil, headers: nil, completionHandler: { (response:NSDictionary?, error:NSError?) in
+            if error != nil {
+                print(error?.localizedDescription as Any)
+                Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Something Wrong..")
+                return
             }
-        }
+            DispatchQueue.main.async(execute: {
+                SKActivityIndicator.dismiss()
+            })
+            print(response!)
+            if ((response!["message"] as? [String:Any]) != nil){
+                Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: (response?.value(forKey: "message") as! String))
+            }
+            else{
+
+                for item in (response?.value(forKey: "bannerImages") as! NSArray) {
+                    print(item)
+
+                    self.urlImages.append(((item as! NSDictionary).value(forKey: "image") as! String))
+                }
+
+                print(self.urlImages)
+                DispatchQueue.main.async(execute: {
+                    //self.imgSlider.setUpView(imageSource: .Url(imageArray: self.localImages, placeHolderImage: UIImage (named: "placeHolder")), slideType: .ManualSwipe, isArrowBtnEnabled: true)
+
+                    self.imgSlider.setUpView(imageSource: .Url(imageArray: self.urlImages , placeHolderImage: UIImage (named: "placeHolder")), slideType: .Automatic(timeIntervalinSeconds: 2.0), isArrowBtnEnabled: true)
+                    print(self.localImages.count)
+                })
+            }
+        })
     }
     
     override func viewDidLayoutSubviews() {
@@ -219,18 +197,24 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
         print("did moved at Index : ",index)
         // pageControl.currentPage = Int(index)
     }
- 
-    //MARK: getProductAPI Methods
-    func getProductAPI(){
+ //MARK: getProductAPI Methods
+    func getProductAPI (){
         
         self.product.removeAll()
         SKActivityIndicator.spinnerColor(UIColor.darkGray)
         SKActivityIndicator.show("Loading...")
-        let parameter: Parameters = [
-            "user_id": Model.sharedInstance.userID,
-        ]
+        var parameter: Parameters = [:]
         
-        Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecom/recipes/getallcloths/ZWNvbW1lcmNl/", parameters: parameter, headers: nil) { (response:NSDictionary?, error:NSError?) in
+        if Model.sharedInstance.userID != "" {
+            parameter = ["user_id": Model.sharedInstance.userID]
+        }
+        else{
+            parameter = ["user_id":""]
+        }
+        
+        print(parameter)
+        
+        Webservice.apiPost(serviceName:"http://kftsoftwares.com/ecom/recipes/getallcloths/", parameters:parameter, headers: nil, completionHandler: { (response:NSDictionary?, error:NSError?) in
             if error != nil {
                 print(error?.localizedDescription as Any)
                 Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Something Wrong..")
@@ -241,12 +225,12 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
             })
             print(response!)
             if ((response!["message"] as? [String:Any]) != nil){
-                 Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: (response?.value(forKey: "message") as! String))
+                Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: (response?.value(forKey: "message") as! String))
             }
             else{
                 for item in (response?.value(forKey: "data1") as! NSArray) {
                     print(item)
-                
+                    
                     
                     if (item as! NSDictionary).value(forKey: "offer_price")  is NSNull {
                         print("empty")
@@ -257,7 +241,7 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
                         self.product.append(getProduct.init(name:((item as! NSDictionary).value(forKey: "title") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), id: ((item as! NSDictionary).value(forKey: "id") as! String), oldPrice: ((item as! NSDictionary).value(forKey: "offer_price") as! String), brandName: ((item as! NSDictionary).value(forKey: "brand") as! String), wishlistID: ((item as! NSDictionary).value(forKey: "Wishlist") as! String)))
                     }
                     
-
+                    
                 }
                 
                 DispatchQueue.main.async(execute: {
@@ -265,7 +249,7 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
                     self.collectionView.reloadData()
                 })
             }
-        }
+        })
     }
     
     //MARK: CollectionView Delegate and Data Source

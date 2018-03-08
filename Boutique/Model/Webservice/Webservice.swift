@@ -14,6 +14,8 @@ struct FV_API
     //URL is http://www.stack.com/index.php/signup
     static let appBaseURL = "http://kftsoftwares.com/ecom/recipes/"  // assign your base url suppose:  http://www.stack.com/index.php
     static let apiLogin = "login/"   // assign signup i.e: signup
+    static let accessToken = "Bearer ZWNvbW1lcmNl"
+    
 }
 
 class Webservice: NSObject
@@ -58,26 +60,54 @@ class Webservice: NSObject
         }
   }
     
-     //MARK:- POST APIs
-    class func apiPost(serviceName:String,parameters: [String:Any]?,headers:[String:Any]?, completionHandler: @escaping (NSDictionary,_ Error:NSError?) -> ()) {
+    class func apiPost (serviceName:String,parameters: [String:Any]?,headers:[String:Any]?, completionHandler: @escaping (NSDictionary,_ Error:NSError?) -> ()){
         
-        Alamofire.request(serviceName, method: .post, parameters: parameters, encoding: URLEncoding.default, headers: nil).responseJSON { (response:DataResponse<Any>) in
+        let headers = ["Authorization":"Bearer ZWNvbW1lcmNl"]
+        
+        Alamofire.request(serviceName, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
+//            print("Request  \(String(describing: response.request))")
+//            print("RESPONSE \(String(describing: response.result.value))")
+//            print("RESPONSE \(response.result)")
+            print("RESPONSE \(response)")
             
             switch(response.result) {
             case .success(_):
-                if let data = response.result.value  {
-                    completionHandler(response.result.value as! NSDictionary ,nil)
+                if response.result.value != nil{
+                    completionHandler(response.result.value as! NSDictionary,nil)
                 }
                 break
+                
             case .failure(_):
-              
-                completionHandler([:],response.result.error as NSError?)
-                //completionHandler(response.result.value as! NSDictionary,response.result.error as NSError?)
+                completionHandler(response.result.value as! NSDictionary,response.result.error as NSError?)
                 break
                 
-            }
-        }
+            }        }
     }
+    
+    
+    
+    
+    
+     //MARK:- POST APIs
+//    class func apiPost(serviceName:String,parameters: [String:Any]?,headers:[String:Any]?, completionHandler: @escaping (NSDictionary,_ Error:NSError?) -> ()) {
+//        
+//        Alamofire.request(serviceName, method: .post, parameters: parameters, encoding: URLEncoding.default, headers: nil).responseJSON { (response:DataResponse<Any>) in
+//            
+//            switch(response.result) {
+//            case .success(_):
+//                if response.result.value != nil  {
+//                    completionHandler(response.result.value as! NSDictionary ,nil)
+//                }
+//                break
+//            case .failure(_):
+//              
+//                completionHandler([:],response.result.error as NSError?)
+//                //completionHandler(response.result.value as! NSDictionary,response.result.error as NSError?)
+//                break
+//                
+//            }
+//        }
+//    }
     
      //MARK:- GET APIs
     class func apiGet(serviceName:String,parameters: [String:Any]?, completionHandler: @escaping (NSDictionary, NSError?) -> ()) {
@@ -86,7 +116,7 @@ class Webservice: NSObject
             
             switch(response.result) {
             case .success(_):
-                if let data = response.result.value{
+                if response.result.value != nil{
                     completionHandler(response.result.value as! NSDictionary,nil)
                 }
                 break

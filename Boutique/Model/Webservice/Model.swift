@@ -22,5 +22,7 @@ final class Model {
     var userID = String()
     var badgeValue = String()
     var cartCount = Int()
+    var totalPrice = Double()
+  
     
 }

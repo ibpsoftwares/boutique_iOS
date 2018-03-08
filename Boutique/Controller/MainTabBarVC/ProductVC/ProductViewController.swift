@@ -395,8 +395,6 @@ class ProductViewController: UIViewController,UICollectionViewDelegate,UICollect
                     
                 }
                 
-              
-            
                 DispatchQueue.main.async(execute: {
                     self.collectionView.reloadData()
                 })
@@ -657,8 +655,13 @@ class ProductViewController: UIViewController,UICollectionViewDelegate,UICollect
         self.tableView.isHidden = true
         sortedArray = sortedArray.sorted(by: {$0.price < $1.price})
         print(sortedArray)
-        check = true
-        self.collectionView.reloadData()
+        if sortedArray.count >  0{
+            check = true
+            self.collectionView.reloadData()
+        }
+        else {
+            Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Data not found!")
+        }
     }
     //MARK: sortProductLowTOHigh in low to high order
     func sortProductHighToLow(){

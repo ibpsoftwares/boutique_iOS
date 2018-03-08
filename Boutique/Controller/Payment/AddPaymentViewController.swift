@@ -18,12 +18,23 @@ class AddPaymentViewController: UIViewController {
     @IBOutlet weak var creditCardButton: UIButton!
     @IBOutlet weak var cashOnDeliveryButton: UIButton!
     @IBOutlet weak var cardDetailsView: UIView!
-    @IBOutlet weak var cardNumberLabel: UILabel!
+    @IBOutlet weak var discountLabel: UILabel!
     @IBOutlet weak var cardExpiryDateLabel: UILabel!
+    
+     var checkCash : Bool = false
+     var checkCard : Bool = false
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
+        
+        print(Model.sharedInstance.totalPrice)
+        itemPriceLabel.text = String(Model.sharedInstance.totalPrice)
+        shipmentPriceLabel.text = "0.0"
+        taxPriceLabel.text = "0.0"
+        discountLabel.text = "- 0.0"
+        totalPriceLabel.text = String("$\(Model.sharedInstance.totalPrice)")
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -32,16 +43,33 @@ class AddPaymentViewController: UIViewController {
     }
     @IBAction func completeOrder(_ sender: UIButton) {
         
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let abcViewController = storyboard.instantiateViewController(withIdentifier: "StripePaymentViewController") as! StripePaymentViewController
-        navigationController?.pushViewController(abcViewController, animated: true)
+        if checkCard {
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let abcViewController = storyboard.instantiateViewController(withIdentifier: "StripePaymentViewController") as! StripePaymentViewController
+            navigationController?.pushViewController(abcViewController, animated: true)
+        }
+        else if checkCash {
+            
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let abcViewController = storyboard.instantiateViewController(withIdentifier: "SuccessViewController") as! SuccessViewController
+            navigationController?.pushViewController(abcViewController, animated: true)
+        }
+        else {
+            Alert.showAlertMessage(vc: self, titleStr:"Alert!", messageStr: "Choose Payment Method")
+        }
     }
 
     @IBAction func setCreditCardPaymentMode(_ sender: UIButton) {
-       
+        checkCash = false
+        checkCard = true
+        creditCardButton.setImage(UIImage.init(named: "CheckFilled"), for: .normal)
+        cashOnDeliveryButton.setImage(UIImage.init(named: "CheckUnfilled"), for: .normal)
     }
     @IBAction func setCashOnDeliveryPaymentMode(_ sender: UIButton) {
-        
+        checkCash = true
+        checkCard = false
+        cashOnDeliveryButton.setImage(UIImage.init(named: "CheckFilled"), for: .normal)
+         creditCardButton.setImage(UIImage.init(named: "CheckUnfilled"), for: .normal)
     }
     @IBAction func backBtn(_ sender: UIButton) {
         

@@ -23,6 +23,8 @@ class LoginViewController: UIViewController {
     @IBOutlet var textPassword: UITextField!
     @IBOutlet var btnLogin: UIButton!
      @IBOutlet var btnSignUP: UIButton!
+     @IBOutlet var lbl1: UILabel!
+     @IBOutlet var lbl2: UILabel!
     var objectModel = Model.sharedInstance
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,6 +37,9 @@ class LoginViewController: UIViewController {
         self.btnSignUP.layer.borderColor = UIColor (red: 43.0/255.0, green: 59.0/255.0, blue: 68.0/255.0, alpha: 1).cgColor
         
         self.btnLogin.layer.cornerRadius = 19
+        
+         self.lbl1.layer.cornerRadius = 5
+         self.lbl2.layer.cornerRadius = 5
         
         textEmail.attributedPlaceholder = NSAttributedString(string: "Enter Email",
                                                                attributes: [NSAttributedStringKey.foregroundColor: UIColor (red: 102.0/255.0, green:  102.0/255.0, blue:  102.0/255.0, alpha: 1)])

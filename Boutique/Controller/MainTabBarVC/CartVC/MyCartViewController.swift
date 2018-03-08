@@ -100,6 +100,7 @@ class MyCartViewController: UIViewController,UITableViewDelegate,UITableViewData
                         print(total)
                         self.totalPrice += total
                         self.totalPriceLabel.text = String("$\(self.totalPrice)")
+                        Model.sharedInstance.totalPrice = Double(self.totalPrice)
                     }
                     DispatchQueue.main.async(execute: {
                         self.itemsCountLabel.text =  "Total (\(self.cartProduct.count))"
@@ -173,7 +174,7 @@ class MyCartViewController: UIViewController,UITableViewDelegate,UITableViewData
         print(totalPrice)
         self.totalPrice += Int(total)
         self.totalPriceLabel.text = String("$\(self.totalPrice)")
-        
+        Model.sharedInstance.totalPrice = Double(self.totalPrice)
         return count
     }
     
@@ -212,6 +213,7 @@ class MyCartViewController: UIViewController,UITableViewDelegate,UITableViewData
             print(totalPrice)
             self.totalPrice -= Int(total)
             self.totalPriceLabel.text = String("$\(self.totalPrice)")
+            Model.sharedInstance.totalPrice = Double(self.totalPrice)
         }
    
         return count
