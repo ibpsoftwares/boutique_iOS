@@ -79,7 +79,7 @@ class CategoryViewController: UIViewController,UITableViewDelegate,UITableViewDa
         SKActivityIndicator.spinnerColor(UIColor.darkGray)
         SKActivityIndicator.show("Loading...")
         
-    Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecom/recipes/viewCategories/ZWNvbW1lcmNl/", parameters: nil, headers: nil) { (response:NSDictionary?, error:NSError?) in
+    Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecom/recipes/viewCategories/", parameters: nil, headers: nil) { (response:NSDictionary?, error:NSError?) in
             if error != nil {
                 print(error?.localizedDescription as Any)
                 Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Something Wrong..")
@@ -119,9 +119,14 @@ class CategoryViewController: UIViewController,UITableViewDelegate,UITableViewDa
     // method to run when table view cell is tapped
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let categoryViewController = storyboard.instantiateViewController(withIdentifier: "ProductViewController") as! ProductViewController
-        categoryViewController.categoryID = self.categoryName[indexPath.row].id
-        navigationController?.pushViewController(categoryViewController, animated: true)
+        if #available(iOS 10.0, *) {
+            let categoryViewController = storyboard.instantiateViewController(withIdentifier: "ProductViewController") as! ProductViewController
+            categoryViewController.categoryID = self.categoryName[indexPath.row].id
+            navigationController?.pushViewController(categoryViewController, animated: true)
+        } else {
+            // Fallback on earlier versions
+        }
+        
 
     }
     

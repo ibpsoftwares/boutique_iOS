@@ -22,18 +22,25 @@ class MainTabBarViewController: UITabBarController ,UITabBarControllerDelegate{
         let attributes = [NSAttributedStringKey.font:UIFont(name: "Whitney-Medium", size: 15.0)]
         appearance.setTitleTextAttributes((attributes as Any as! [NSAttributedStringKey : Any]), for: .normal)
         
-      getCartViewAPI()
+      //getCartViewAPI()
         self.navigationController?.navigationBar.barStyle = UIBarStyle.black
-//       let numberOfItems = CGFloat(tabBar.items!.count)
-//        let tabBarItemSize = CGSize(width: tabBar.frame.width / numberOfItems, height: tabBar.frame.height)
-//        tabBar.selectionIndicatorImage = UIImage.imageWithColor(color:  UIColor (red: 39.0/255.0, green: 61.0/255.0, blue: 67.0/255.0, alpha: 1), size: tabBarItemSize).resizableImage(withCapInsets: UIEdgeInsets.zero)
-//        // remove default border
-//        tabBar.frame.size.width = self.view.frame.width + 4
-//        tabBar.frame.origin.x = -2
-        
+       
         self.objectModel.badgeValue = ""
-        self.wishListProduct.removeAll()
+       // self.wishListProduct.removeAll()
          tabBar.inActiveTintColor()
+        
+      
+    //}
+        
+//        if let tabBarController = self.tabBarController {
+//            let indexToRemove = 4
+//            if indexToRemove < (tabBarController.viewControllers?.count)! {
+//                var viewControllers = tabBarController.viewControllers
+//                viewControllers?.remove(at: indexToRemove)
+//                tabBarController.viewControllers = viewControllers
+//            }
+//        }
+        
         
     }
     
@@ -58,7 +65,7 @@ class MainTabBarViewController: UITabBarController ,UITabBarControllerDelegate{
     func getWishListAPI() {
         
         self.wishListProduct.removeAll()
-        let requestString = "http://kftsoftwares.com/ecom/recipes/ViewWishlist/\(Model.sharedInstance.userID)/ZWNvbW1lcmNl/"
+        let requestString = "http://kftsoftwares.com/ecom/recipes/viewWishlist/\(Model.sharedInstance.userID)/"
         print(requestString)
         Alamofire.request(requestString,method: .get, parameters: nil, encoding: JSONEncoding.default, headers: [:]).responseJSON { (response:DataResponse<Any>) in
             

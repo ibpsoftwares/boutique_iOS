@@ -10,6 +10,7 @@ import UIKit
 import Alamofire
 import Kingfisher
 import SKActivityIndicatorView
+import CoreData
 
 class Product{
     var price : Double = 0.0
@@ -62,6 +63,7 @@ class getPrice {
         
     }
 }
+@available(iOS 10.0, *)
 class ProductViewController: UIViewController,UICollectionViewDelegate,UICollectionViewDataSource, UISearchBarDelegate , UICollectionViewDelegateFlowLayout,UITableViewDelegate,UITableViewDataSource{
 
     @IBOutlet weak var collectionView: UICollectionView!
@@ -84,6 +86,9 @@ class ProductViewController: UIViewController,UICollectionViewDelegate,UICollect
     var filterArr =  ["Price : 100 To 500","Price : 500 To 1000","Price : 1000 To 2000","Price : 2000 To 5000"]
     var check : Bool = false
     var selectedSortIndex = String()
+    var wishlist: [NSManagedObject] = []
+    var productlocal = [getProduct]()
+    var seletedIndex = NSInteger()
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -116,9 +121,32 @@ class ProductViewController: UIViewController,UICollectionViewDelegate,UICollect
         // Dispose of any resources that can be recreated.
     }
     
+ 
     override func viewWillAppear(_ animated: Bool) {
         self.product.removeAll()
-        self.getProductAPI()
+       
+        self.productlocal.removeAll()
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+            return
+        }
+        
+        let managedContext = appDelegate.persistentContainer.viewContext
+        
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Wishlist")
+        do {
+            wishlist = try managedContext.fetch(fetchRequest)
+        } catch let error as NSError {
+            print("Could not fetch. \(error), \(error.userInfo)")
+        }
+        
+        if wishlist.count > 0{
+            for row in 0...wishlist.count - 1{
+                let person = wishlist[row]
+                self.productlocal.append(getProduct.init(name: (person.value(forKeyPath: "name") as! String), price: (person.value(forKeyPath: "price") as! String) , image: (person.value(forKeyPath: "image") as! String) , id:  (person.value(forKeyPath: "id") as! String), oldPrice: (person.value(forKeyPath: "oldPrice") as! String), brandName: (person.value(forKeyPath: "brand") as! String), wishlistID: person.value(forKeyPath: "wishlistID") as! String))
+            }
+        }
+        
+         self.getProductAPI()
     }
     @IBAction func backBtn(_ sender: UIButton) {
         
@@ -130,10 +158,17 @@ class ProductViewController: UIViewController,UICollectionViewDelegate,UICollect
         SKActivityIndicator.spinnerColor(UIColor.darkGray)
         SKActivityIndicator.show("Loading...")
         print(categoryID)
-        let parameters: Parameters = [
-            "user_id": Model.sharedInstance.userID
-        ]
-        Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecom/recipes/getbycategory1/\(categoryID)/ZWNvbW1lcmNl/", parameters: parameters, headers: nil) { (response:NSDictionary?, error:NSError?) in
+       var parameter: Parameters = [:]
+        if Model.sharedInstance.userID != "" {
+            parameter = ["user_id": Model.sharedInstance.userID,"category_id":categoryID]
+            
+        }
+        else{
+            parameter = ["user_id":"","category_id":categoryID]
+        }
+        print(parameter)
+        
+        Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecom/recipes/getByCategory/", parameters: parameter, headers: nil) { (response:NSDictionary?, error:NSError?) in
             if error != nil {
                 print(error?.localizedDescription as Any)
                 Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Something Wrong..")
@@ -167,7 +202,33 @@ class ProductViewController: UIViewController,UICollectionViewDelegate,UICollect
                             
                         }
                     }
-                    
+                    if Model.sharedInstance.userID == "" {
+                        
+                        if self.product.count > 0{
+                            for row in 0...self.product.count - 1{
+                                
+                                if self.product.count <= self.productlocal.count {
+                                    print("index :\(row)")
+                                }
+                                else{
+                                    self.productlocal.append(getProduct.init(name: "", price: "" , image: "" , id:  "", oldPrice: "", brandName: "", wishlistID: ""))
+                                }
+                            }
+                        }
+                        
+                        for section in 0...self.product.count - 1 {
+                            
+                            if let i = self.product.index(where: { $0.id == self.productlocal[section].id }) {
+                                print(i)
+                                self.product[i].wishlistID = "1"
+                                // return i
+                                print("Section: match found")
+                            }
+                            else{
+                                print("Section: match not found")
+                            }
+                        }
+                    }
                     DispatchQueue.main.async(execute: {
                         self.collectionView.reloadData()
                     })
@@ -179,6 +240,7 @@ class ProductViewController: UIViewController,UICollectionViewDelegate,UICollect
         }
     }
 
+    
     //MARK: CollectionView Delegate and Data Source
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if(check) {
@@ -275,61 +337,112 @@ class ProductViewController: UIViewController,UICollectionViewDelegate,UICollect
     //MARK: addToWishListAPI Methods
     @objc func addToWishListAPI(sender:UIButton!){
         
-        let parameter: Parameters = [
-            "user_id": Model.sharedInstance.userID,
-            "cloth_id": self.product[sender.tag].id
-        ]
+        seletedIndex = sender.tag
         if sender.imageView?.image == UIImage (named: "emptyWishlist")
         {
-           // SKActivityIndicator.spinnerColor(UIColor.darkGray)
-           // SKActivityIndicator.show("Loading...")
-            
-            Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecom/recipes/addToWishList/ZWNvbW1lcmNl/", parameters: parameter, headers: nil) { (response:NSDictionary?, error:NSError?) in
-                if error != nil {
-                    print(error?.localizedDescription as Any)
-                    Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Something Wrong..")
-                    return
-                }
-                DispatchQueue.main.async(execute: {
-                   // SKActivityIndicator.dismiss()
-                })
+            //saveData()
+            if #available(iOS 10.0, *) {
                 sender.setImage(UIImage(named: "heart"), for: UIControlState.normal)
-                print(response!)
-                if ((response!["message"] as? [String:Any]) != nil){
-                    Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: (response?.value(forKey: "message") as! String))
-                }
-                else{
-                    //self.getWishListAPI()
-                    Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: (response?.value(forKey: "message") as! String))
-                }
+                
+                save()
+            } else {
+                // Fallback on earlier versions
             }
         }
         else  if sender.imageView?.image == UIImage (named: "heart") {
             
-           // SKActivityIndicator.spinnerColor(UIColor.darkGray)
-            //SKActivityIndicator.show("Loading...")
-            
-            Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecom/recipes/rmwishlist/ZWNvbW1lcmNl/", parameters: parameter, headers: nil) { (response:NSDictionary?, error:NSError?) in
-                if error != nil {
-                    print(error?.localizedDescription as Any)
-                    Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Something Wrong..")
-                    return
-                }
-                DispatchQueue.main.async(execute: {
-                   // SKActivityIndicator.dismiss()
-                })
-                print(response!)
-                sender.setImage(UIImage(named: "emptyWishlist"), for: .normal)
-                if ((response!["message"] as? [String:Any]) != nil){
-                    Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: (response?.value(forKey: "message") as! String))
-                }
-                else{
-                   // self.getWishListAPI()
-                    Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: (response?.value(forKey: "message") as! String))
-                }
-            }
+            sender.setImage(UIImage(named: "emptyWishlist"), for: .normal)
+            self.productlocal.remove(at: sender.tag)
         }
+        
+        
+        
+//        let parameter: Parameters = [
+//            "user_id": Model.sharedInstance.userID,
+//            "cloth_id": self.product[sender.tag].id
+//        ]
+//        if sender.imageView?.image == UIImage (named: "emptyWishlist")
+//        {
+//           // SKActivityIndicator.spinnerColor(UIColor.darkGray)
+//           // SKActivityIndicator.show("Loading...")
+//
+//            Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecom/recipes/addToWishlist/", parameters: parameter, headers: nil) { (response:NSDictionary?, error:NSError?) in
+//                if error != nil {
+//                    print(error?.localizedDescription as Any)
+//                    Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Something Wrong..")
+//                    return
+//                }
+//                DispatchQueue.main.async(execute: {
+//                   // SKActivityIndicator.dismiss()
+//                })
+//                sender.setImage(UIImage(named: "heart"), for: UIControlState.normal)
+//                print(response!)
+//                if ((response!["message"] as? [String:Any]) != nil){
+//                    Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: (response?.value(forKey: "message") as! String))
+//                }
+//                else{
+//                    //self.getWishListAPI()
+//                   // Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: (response?.value(forKey: "message") as! String))
+//                }
+//            }
+//        }
+//        else  if sender.imageView?.image == UIImage (named: "heart") {
+//
+//           // SKActivityIndicator.spinnerColor(UIColor.darkGray)
+//            //SKActivityIndicator.show("Loading...")
+//
+//            Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecom/recipes/rmWishlist/", parameters: parameter, headers: nil) { (response:NSDictionary?, error:NSError?) in
+//                if error != nil {
+//                    print(error?.localizedDescription as Any)
+//                    Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Something Wrong..")
+//                    return
+//                }
+//                DispatchQueue.main.async(execute: {
+//                   // SKActivityIndicator.dismiss()
+//                })
+//                print(response!)
+//                sender.setImage(UIImage(named: "emptyWishlist"), for: .normal)
+//                if ((response!["message"] as? [String:Any]) != nil){
+//                    Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: (response?.value(forKey: "message") as! String))
+//                }
+//                else{
+//                   // self.getWishListAPI()
+//                   // Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: (response?.value(forKey: "message") as! String))
+//                }
+//            }
+//        }
     }
+    
+    func save() {
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+            return
+        }
+        
+        let managedContext = appDelegate.persistentContainer.viewContext
+        
+        let entity = NSEntityDescription.entity(forEntityName: "Wishlist",
+                                                in: managedContext)!
+        let person = NSManagedObject(entity: entity,
+                                     insertInto: managedContext)
+        
+        person.setValue(self.product[seletedIndex].id, forKeyPath: "id")
+        person.setValue(self.product[seletedIndex].name, forKeyPath: "name")
+        person.setValue(self.product[seletedIndex].price, forKeyPath: "price")
+        person.setValue(self.product[seletedIndex].oldPrice, forKeyPath: "oldPrice")
+        person.setValue(self.product[seletedIndex].brand, forKeyPath: "brand")
+        person.setValue(self.product[seletedIndex].image, forKeyPath: "image")
+        person.setValue("1", forKeyPath: "wishlistID")
+        
+        print(person)
+        do {
+            try managedContext.save()
+            wishlist.append(person)
+        } catch let error as NSError {
+            print("Could not save. \(error), \(error.userInfo)")
+        }
+        self.product[seletedIndex].wishlistID = "1"
+    }
+
     //MARK: SearchBar Delegate Methods
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         searchActive = true;
@@ -372,7 +485,7 @@ class ProductViewController: UIViewController,UICollectionViewDelegate,UICollect
         let parameters: Parameters = [
                         "product_name": itemName
         ]
-        Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecom/recipes/getbycategory/\(categoryID)/ZWNvbW1lcmNl/", parameters: parameters, headers: nil) { (response:NSDictionary?, error:NSError?) in
+        Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecom/recipes/getByCategory/\(categoryID)/ZWNvbW1lcmNl/", parameters: parameters, headers: nil) { (response:NSDictionary?, error:NSError?) in
             if error != nil {
                 print(error?.localizedDescription as Any)
                 Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Something Wrong..")
@@ -841,7 +954,7 @@ class ProductViewController: UIViewController,UICollectionViewDelegate,UICollect
         SKActivityIndicator.spinnerColor(UIColor.darkGray)
         SKActivityIndicator.show("Loading...")
         
-        Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecom/recipes/getpricerange/ZWNvbW1lcmNl/", parameters: nil, headers: nil) { (response:NSDictionary?, error:NSError?) in
+        Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecom/recipes/getPriceRange/", parameters: nil, headers: nil) { (response:NSDictionary?, error:NSError?) in
             if error != nil {
                 print(error?.localizedDescription as Any)
                 Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Something Wrong..")

@@ -27,6 +27,8 @@ class OrderHistoryViewController: UIViewController,UITableViewDelegate,UITableVi
         
         tableView.register(UINib(nibName: "OrderHistoryTableViewCell", bundle: nil), forCellReuseIdentifier: "historyCell")
         tableView.tableFooterView = UIView()
+        
+        self.tabBarController?.tabBar.isHidden = true
     }
 
     override func didReceiveMemoryWarning() {
@@ -61,5 +63,18 @@ class OrderHistoryViewController: UIViewController,UITableViewDelegate,UITableVi
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print("You tapped cell number \(indexPath.row).")
         
+    }
+}
+extension UITabBarController {
+    func setTabBarVisible(visible:Bool, animated:Bool) {
+        let frame = self.tabBar.frame
+        let height = frame.size.height
+        let offsetY = (visible ? -height : height)
+        UIView.animate(withDuration: animated ? 0.3 : 0.0) {
+            //self.tabBar.frame = CGRect.offsetBy(frame, 0)
+            self.view.frame = CGRect(x:0,y: 0, width:self.view.frame.width,height: self.view.frame.height + offsetY)
+            self.view.setNeedsDisplay()
+            self.view.layoutIfNeeded()
+        }
     }
 }

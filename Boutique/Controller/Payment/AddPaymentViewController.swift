@@ -34,12 +34,21 @@ class AddPaymentViewController: UIViewController {
         taxPriceLabel.text = "0.0"
         discountLabel.text = "- 0.0"
         totalPriceLabel.text = String("$\(Model.sharedInstance.totalPrice)")
-        
+         self.tabBarController?.tabBar.isHidden = true
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        self.tabBarController?.tabBar.isHidden = true
+    }
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.tabBarController?.tabBar.isHidden = false
+        
     }
     @IBAction func completeOrder(_ sender: UIButton) {
         

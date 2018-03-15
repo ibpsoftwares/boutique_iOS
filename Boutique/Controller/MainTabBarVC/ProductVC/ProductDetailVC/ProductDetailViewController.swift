@@ -12,13 +12,36 @@ import Kingfisher
 import SKPhotoBrowser
 import SDWebImage
 import SKActivityIndicatorView
-
+import CoreData
 class getSize {
     var size = NSArray()
     init(size: NSArray) {
        self.size = size
     }
 }
+class getSingleProductDetail {
+    var name: String
+    var price: String
+    var id : String
+    var image: String
+    var oldPrice: String
+    var brand: String
+    var wishlistID : String
+    var cout: String
+    var desc: String
+    init(name: String,id : String,price: String,image: String,oldPrice: String,brand:String,wishlistID:String,cout: String,desc: String) {
+        self.name = name
+        self.id = id
+        self.price = price
+        self.image = image
+        self.oldPrice = oldPrice
+        self.brand = brand
+        self.wishlistID = wishlistID
+        self.cout = cout
+        self.desc = desc
+    }
+}
+@available(iOS 10.0, *)
 class ProductDetailViewController: UIViewController,UICollectionViewDelegate,UICollectionViewDataSource,SKPhotoBrowserDelegate,CAAnimationDelegate {
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var sizeCollectionView: UICollectionView!
@@ -50,7 +73,7 @@ class ProductDetailViewController: UIViewController,UICollectionViewDelegate,UIC
     var sizeArray = NSMutableArray()
      var images = [SKPhotoProtocol]()
     var cartProduct = [getProductDetail]()
-    var product = [getProductDetail]()
+    var product = [getSingleProductDetail]()
     var sizeArr = [getSize]()
     var count = NSInteger()
     var imgArr = NSMutableArray()
@@ -59,6 +82,7 @@ class ProductDetailViewController: UIViewController,UICollectionViewDelegate,UIC
     var path : UIBezierPath?
     var layer: CALayer?
     var im = UIImageView()
+    var wishlist: [NSManagedObject] = []
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -86,7 +110,7 @@ class ProductDetailViewController: UIViewController,UICollectionViewDelegate,UIC
             guard let url = imageURL?.absoluteString else { return }
             SKCache.sharedCache.setImage(image!, forKey: url)
         }
-        
+        self.tabBarController?.tabBar.isHidden = true
         
         self.getProductAPI()
     }
@@ -95,7 +119,13 @@ class ProductDetailViewController: UIViewController,UICollectionViewDelegate,UIC
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.tabBarController?.tabBar.isHidden = false
+        
+    }
     override func viewWillAppear(_ animated: Bool) {
+         self.tabBarController?.tabBar.isHidden = true
         //self.cartCountLabel.text =  (String)(Model.sharedInstance.cartCount)
 //        let defaults = UserDefaults.standard
 //        if (defaults.value(forKey: "totalCartItem")) != nil {
@@ -128,11 +158,18 @@ class ProductDetailViewController: UIViewController,UICollectionViewDelegate,UIC
         SKActivityIndicator.show("Loading...")
         self.product.removeAll()
         self.sizeArr.removeAll()
-        let parameters: Parameters = [
-            "user_id": Model.sharedInstance.userID,
-        ]
-        print(productID)
-        Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecom/recipes/getcloth/\(productID)/ZWNvbW1lcmNl/", parameters: parameters, headers: nil) { (response:NSDictionary?, error:NSError?) in
+        
+        var parameter: Parameters = [:]
+        if Model.sharedInstance.userID != "" {
+            parameter = ["user_id": Model.sharedInstance.userID,"cloth_id" : productID]
+        }
+        else{
+            parameter = ["user_id": "" , "cloth_id" : productID]
+        }
+        
+        print(parameter)
+        
+        Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecom/recipes/getCloth/", parameters: parameter, headers: nil) { (response:NSDictionary?, error:NSError?) in
             if error != nil {
                 print(error?.localizedDescription as Any)
                 Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Something Wrong..")
@@ -150,13 +187,13 @@ class ProductDetailViewController: UIViewController,UICollectionViewDelegate,UIC
                     
                     self.productID = ((item as! NSDictionary).value(forKey: "id") as! String)
                     
-                    
                     if (item as! NSDictionary).value(forKey: "offer_price")  is NSNull {
                         print("empty")
-                        self.product.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "description") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: "", oldPrice: "", brand: ((item as! NSDictionary).value(forKey: "brand") as! String), wishlistID: "", cout: "1"))
+                       
+                        self.product.append(getSingleProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "id") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: "", oldPrice: "", brand: ((item as! NSDictionary).value(forKey: "brand") as! String), wishlistID: "", cout: "1", desc: ((item as! NSDictionary).value(forKey: "description") as! String)))
                     }
                     else {
-                        self.product.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "description") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: "", oldPrice: ((item as! NSDictionary).value(forKey: "offer_price") as! String), brand: ((item as! NSDictionary).value(forKey: "brand") as! String), wishlistID: "", cout: "1"))
+                        self.product.append(getSingleProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "id") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: "", oldPrice: ((item as! NSDictionary).value(forKey: "offer_price") as! String), brand: ((item as! NSDictionary).value(forKey: "brand") as! String), wishlistID: "", cout: "1", desc: ((item as! NSDictionary).value(forKey: "description") as! String)))
                     }
 
                     
@@ -391,7 +428,7 @@ class ProductDetailViewController: UIViewController,UICollectionViewDelegate,UIC
         
         print(parameters)
         
-        Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecom/recipes/addToCart/ZWNvbW1lcmNl/", parameters: parameters, headers: nil) { (response:NSDictionary?, error:NSError?) in
+        Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecom/recipes/addToCart/", parameters: parameters, headers: nil) { (response:NSDictionary?, error:NSError?) in
             if error != nil {
                 print(error?.localizedDescription as Any)
                 Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Something Wrong..")
@@ -417,8 +454,13 @@ class ProductDetailViewController: UIViewController,UICollectionViewDelegate,UIC
     self.cartProduct.removeAll()
        // SKActivityIndicator.spinnerColor(UIColor.darkGray)
        // SKActivityIndicator.show("Loading...")
-        let requestString = "http://kftsoftwares.com/ecom/recipes/ViewCart/\(Model.sharedInstance.userID)/ZWNvbW1lcmNl/"
-        Alamofire.request(requestString,method: .post, parameters: nil, encoding: JSONEncoding.default, headers: [:]).responseJSON { (response:DataResponse<Any>) in
+        
+        let parameters: Parameters = [
+            "user_id": Model.sharedInstance.userID,
+        ]
+        
+        let requestString = "http://kftsoftwares.com/ecom/recipes/ViewCart/"
+        Alamofire.request(requestString,method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: [:]).responseJSON { (response:DataResponse<Any>) in
             
             switch(response.result) {
             case .success(_):
@@ -477,11 +519,14 @@ class ProductDetailViewController: UIViewController,UICollectionViewDelegate,UIC
         SKActivityIndicator.show("Loading...")
         print(Model.sharedInstance.userID)
         print(self.productID)
-        
-        let parameters: Parameters = [
-            "user_id": Model.sharedInstance.userID,
-            "cloth_id": self.productID
-        ]
+          var parameters: Parameters = [:]
+        if Model.sharedInstance.userID != "" {
+             parameters = ["user_id": Model.sharedInstance.userID,"cloth_id": self.productID]
+        }
+        else{
+            save()
+        }
+
         print(parameters)
         
         Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecom/recipes/addToWishList/ZWNvbW1lcmNl/", parameters: parameters, headers: nil) { (response:NSDictionary?, error:NSError?) in
@@ -495,12 +540,42 @@ class ProductDetailViewController: UIViewController,UICollectionViewDelegate,UIC
             })
             print(response!)
             if ((response!["message"] as? [String:Any]) != nil){
-                Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: (response?.value(forKey: "message") as! String))
+                //Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: (response?.value(forKey: "message") as! String))
             }
             else{
-                Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: (response?.value(forKey: "message") as! String))
+                //Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: (response?.value(forKey: "message") as! String))
             }
         }
+    }
+    @available(iOS 10.0, *)
+    func save() {
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+            return
+        }
+        
+        let managedContext = appDelegate.persistentContainer.viewContext
+        
+        let entity = NSEntityDescription.entity(forEntityName: "Wishlist",
+                                                in: managedContext)!
+        
+        let person = NSManagedObject(entity: entity,
+                                     insertInto: managedContext)
+        
+        person.setValue(self.product[0].id, forKeyPath: "id")
+        person.setValue(self.product[0].name, forKeyPath: "name")
+        person.setValue(self.product[0].price, forKeyPath: "price")
+        person.setValue(self.product[0].oldPrice, forKeyPath: "oldPrice")
+        person.setValue(self.product[0].brand, forKeyPath: "brand")
+        person.setValue(self.imgArray[0] as! String, forKeyPath: "image")
+        person.setValue("1", forKeyPath: "wishlistID")
+        print(person)
+        do {
+            try managedContext.save()
+            wishlist.append(person)
+        } catch let error as NSError {
+            print("Could not save. \(error), \(error.userInfo)")
+        }
+        
     }
 //    //MARK: addToWishListAPI Methods
 //    func addToWishListAPI(){
@@ -594,6 +669,8 @@ class ProductDetailViewController: UIViewController,UICollectionViewDelegate,UIC
 // }
 }
 // MARK: - SKPhotoBrowserDelegate
+
+@available(iOS 10.0, *)
 extension ProductDetailViewController {
     func didDismissAtPageIndex(_ index: Int) {
     }
@@ -609,6 +686,7 @@ extension ProductDetailViewController {
 
 // MARK: - private
 
+@available(iOS 10.0, *)
 private extension ProductDetailViewController {
     func createWebPhotos() -> [SKPhotoProtocol] {
         return (0..<count).map { (i: Int) -> SKPhotoProtocol in

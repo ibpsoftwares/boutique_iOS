@@ -144,8 +144,14 @@ class LoginViewController: UIViewController {
                  Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: (response?.value(forKey: "message") as! String))
             }
             else{
-                self.objectModel.userID = (response?.value(forKey: "userid") as! String)
-                print(self.objectModel.userID)
+                for item in (response!.value(forKey: "user") as! NSArray) {
+                    print(item)
+                    self.objectModel.userID = ((item as! NSDictionary).value(forKey: "userid") as! String)
+                    print(self.objectModel.userID)
+                }
+                UserDefaults.standard.set("loginIn", forKey: "loggedIn")
+                UserDefaults.standard.synchronize()
+                
                 let storyboard = UIStoryboard(name: "Main", bundle: nil)
                 let abcViewController = storyboard.instantiateViewController(withIdentifier: "MainTabBarViewController") as! MainTabBarViewController
                 self.navigationController?.pushViewController(abcViewController, animated: true)

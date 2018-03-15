@@ -18,7 +18,9 @@ import UIKit
 import Kingfisher
 import SKActivityIndicatorView
 import Alamofire
+import CoreData
 
+@available(iOS 10.0, *)
 class MyCartViewController: UIViewController,UITableViewDelegate,UITableViewDataSource {
     
     enum STATE {
@@ -44,6 +46,7 @@ class MyCartViewController: UIViewController,UITableViewDelegate,UITableViewData
     var lblCount = String()
     var lblprice = String()
     var selectIndex = NSInteger()
+    var cartlist: [NSManagedObject] = []
     override func viewDidLoad() {
         super.viewDidLoad()
         count = 1
@@ -51,11 +54,31 @@ class MyCartViewController: UIViewController,UITableViewDelegate,UITableViewData
         tableView.tableFooterView = UIView()
         checkoutButton.layer.borderWidth = 0.5
        // checkoutButton.layer.borderColor = UIColor.secondary.cgColor
+        self.tabBarController?.tabBar.isHidden = true
         getCartViewAPI()
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.tabBarController?.tabBar.isHidden = false
+        
+    }
     override func viewWillAppear(_ animated: Bool) {
         //fetchCartDetails()
+        self.tabBarController?.tabBar.isHidden = true
+        
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+            return
+        }
+        let managedContext = appDelegate.persistentContainer.viewContext
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Wishlist")
+        do {
+            cartlist = try managedContext.fetch(fetchRequest)
+        } catch let error as NSError {
+            print("Could not fetch. \(error), \(error.userInfo)")
+        }
+        print(cartlist.count)
+        
     }
     @IBAction func backBtn(_ sender: UIButton) {
         
@@ -69,7 +92,18 @@ class MyCartViewController: UIViewController,UITableViewDelegate,UITableViewData
         SKActivityIndicator.spinnerColor(UIColor.darkGray)
         SKActivityIndicator.show("Loading...")
         
-        Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecom/recipes/ViewCart/\(Model.sharedInstance.userID)/ZWNvbW1lcmNl/", parameters: nil, headers: nil) { (response:NSDictionary?, error:NSError?) in
+                var parameter: Parameters = [:]
+        
+                if Model.sharedInstance.userID != "" {
+                    parameter = ["user_id": Model.sharedInstance.userID]
+                }
+                else{
+                    parameter = ["user_id":""]
+                }
+        
+          print(parameter)
+        
+        Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecom/recipes/ViewCart/", parameters: parameter, headers: nil) { (response:NSDictionary?, error:NSError?) in
             if error != nil {
                 print(error?.localizedDescription as Any)
                 Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Something Wrong..")
@@ -250,47 +284,49 @@ class MyCartViewController: UIViewController,UITableViewDelegate,UITableViewData
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print("You tapped cell number \(indexPath.row).")
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let productDetailVC = storyboard.instantiateViewController(withIdentifier: "ProductDetailViewController") as! ProductDetailViewController
-        productDetailVC.productID = self.cartProduct[indexPath.row].id
-        navigationController?.pushViewController(productDetailVC, animated: true)
+        if #available(iOS 10.0, *) {
+            let productDetailVC = storyboard.instantiateViewController(withIdentifier: "ProductDetailViewController") as! ProductDetailViewController
+            productDetailVC.productID = self.cartProduct[indexPath.row].id
+            navigationController?.pushViewController(productDetailVC, animated: true)
+        } else {
+            // Fallback on earlier versions
+        }
+       
         
     }
     @objc func remove(sender:UIButton!) {
         self.deleteItemFromCart(cartID: self.cartProduct[sender.tag].id)
     }
+    
     //MARK: deleteItemFromCart Methods
-    func deleteItemFromCart( cartID : String) {
+    func deleteItemFromCart( cartID : String){
         
-        SKActivityIndicator.spinnerColor(UIColor.darkGray)
-        SKActivityIndicator.show("Loading...")
-        let parameters: Parameters = [
-            "user_id": Model.sharedInstance.userID,
-            "cloth_id": cartID
-            ]
-        print(parameters)
-        let url = "http://kftsoftwares.com/ecom/recipes/rmcart/ZWNvbW1lcmNl/"
+        var parameter: Parameters = [:]
+        if Model.sharedInstance.userID != "" {
+            parameter = ["user_id": Model.sharedInstance.userID, "cloth_id": cartID]
+        }
+        else{
+            parameter = ["user_id":"", "cloth_id": cartID]
+        }
+        print(parameter)
         
-        Alamofire.request(url, method:.post, parameters:parameters, headers:nil).responseJSON { response in
-            switch response.result {
-                
-            case .success:
-                DispatchQueue.main.async(execute: {
-                    SKActivityIndicator.dismiss()
-                })
-                debugPrint(response)
-                
-//                DispatchQueue.main.async(execute: {
-//                    self.tableView.reloadData()
-//                })
-                self.showAlert(msg: (response.result.value as! NSDictionary).value(forKey: "message") as! String)
-                
-                //self.showAlert(msg: (response.result.value as! NSDictionary).value(forKey: "message") as! String)
-                
-            case .failure(let error):
-                DispatchQueue.main.async(execute: {
-                    SKActivityIndicator.dismiss()
-                })
-                print(error)
+        Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecom/recipes/rmcart/", parameters: parameter, headers: nil) { (response:NSDictionary?, error:NSError?) in
+            if error != nil {
+                print(error?.localizedDescription as Any)
+                Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Something Wrong..")
+                return
+            }
+            DispatchQueue.main.async(execute: {
+                SKActivityIndicator.dismiss()
+            })
+            print(response!)
+            if ((response!["message"] as? [String:Any]) != nil){
+                Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: (response?.value(forKey: "message") as! String))
+            }
+            else
+            {
+                Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: (response?.value(forKey: "message") as! String))
+                self.getCartViewAPI()
             }
         }
     }

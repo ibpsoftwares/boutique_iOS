@@ -83,7 +83,7 @@ class UserDetailViewController: UIViewController ,UIPickerViewDelegate,UIPickerV
         textName.inputAccessoryView = toolBar
         
         picker.isHidden = true
-        
+        self.tabBarController?.tabBar.isHidden = true
         let countryCodes: [AnyObject] = NSLocale.isoCountryCodes as [AnyObject]
         
         let countries: NSMutableArray = NSMutableArray(capacity: countryCodes.count)
@@ -105,7 +105,14 @@ class UserDetailViewController: UIViewController ,UIPickerViewDelegate,UIPickerV
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
+    override func viewWillAppear(_ animated: Bool) {
+        self.tabBarController?.tabBar.isHidden = true
+    }
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.tabBarController?.tabBar.isHidden = false
+        
+    }
     @IBAction func backBtn(_ sender: UIButton) {
         
         self.navigationController?.popViewController(animated: true)

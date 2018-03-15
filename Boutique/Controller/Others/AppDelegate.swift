@@ -17,11 +17,12 @@ import IQKeyboardManagerSwift
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-
+    var isLoggedIn: Bool? // Get From user defaults
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
+        isLoggedIn = true
         IQKeyboardManager.sharedManager().enable = true
         // Stripe Configuration
         Stripe.setDefaultPublishableKey("pk_test_hgdZjDGqsgqvnoYv3qjb8fCR")
@@ -32,6 +33,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         //UITabBar.appearance().isTranslucent = false
         UITabBar.appearance().barTintColor = UIColor (red: 67.0/255.0, green: 140.0/255.0, blue: 234.0/255.0, alpha: 1)
         UITabBar.appearance().tintColor = UIColor.white
+        
+        
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let loginViewController = storyboard.instantiateViewController(withIdentifier: "LoginViewController") as! LoginViewController
+        let homeViewController = storyboard.instantiateViewController(withIdentifier: "MainTabBarViewController") as! MainTabBarViewController
+        
+        if isLoggedIn! {
+            self.window?.rootViewController = homeViewController
+        }
+        else {
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let vc = storyboard.instantiateViewController(withIdentifier: "LoginViewController") as! LoginViewController
+            let nc = UINavigationController(rootViewController: vc)
+            self.window?.rootViewController = nc
+        }
         
         return true
     }

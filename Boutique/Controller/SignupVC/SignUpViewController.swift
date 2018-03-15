@@ -91,7 +91,7 @@ class SignUpViewController: UIViewController,UIImagePickerControllerDelegate,UIN
             "email": self.textEmail.text!,
             "password": self.textPasssword.text!
         ]
-        Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecom/recipes/Signup", parameters: parameters, headers: nil) { (response:NSDictionary?, error:NSError?) in
+        Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecom/recipes/signup", parameters: parameters, headers: nil) { (response:NSDictionary?, error:NSError?) in
             if error != nil {
                 print(error?.localizedDescription as Any)
                 Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Login Failed.Try Again..")
