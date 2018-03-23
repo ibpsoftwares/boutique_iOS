@@ -35,19 +35,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UITabBar.appearance().tintColor = UIColor.white
         
         
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let loginViewController = storyboard.instantiateViewController(withIdentifier: "LoginViewController") as! LoginViewController
-        let homeViewController = storyboard.instantiateViewController(withIdentifier: "MainTabBarViewController") as! MainTabBarViewController
+//        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+//        let loginViewController = storyboard.instantiateViewController(withIdentifier: "LoginViewController") as! LoginViewController
+//        let homeViewController = storyboard.instantiateViewController(withIdentifier: "MainTabBarViewController") as! MainTabBarViewController
         
-        if isLoggedIn! {
-            self.window?.rootViewController = homeViewController
-        }
-        else {
+       // if isLoggedIn! {
+           // self.window?.rootViewController = homeViewController
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let vc = storyboard.instantiateViewController(withIdentifier: "LoginViewController") as! LoginViewController
-            let nc = UINavigationController(rootViewController: vc)
+            let vc = storyboard.instantiateViewController(withIdentifier: "MainTabBarViewController") as! MainTabBarViewController
+             let nc = UINavigationController(rootViewController: vc)
             self.window?.rootViewController = nc
-        }
+//        }
+//        else {
+//            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+//            let vc = storyboard.instantiateViewController(withIdentifier: "LoginViewController") as! LoginViewController
+//           // let nc = UINavigationController(rootViewController: vc)
+//            self.window?.rootViewController = vc
+//        }
         
         return true
     }

@@ -55,7 +55,7 @@
                             <constraint firstAttribute="height" constant="27" id="wTu-Wb-CWI"/>
                         </constraints>
                         <fontDescription key="fontDescription" name="Whitney-Medium" family="Whitney" pointSize="13"/>
-                        <state key="normal" title="AddTo Cart">
+                        <state key="normal" title="Move To Cart">
                             <color key="titleColor" red="0.99975961540000002" green="0.99975961540000002" blue="0.99975961540000002" alpha="1" colorSpace="calibratedRGB"/>
                         </state>
                     </button>

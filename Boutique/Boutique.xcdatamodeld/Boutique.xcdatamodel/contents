@@ -7,6 +7,8 @@
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="oldPrice" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="price" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="size" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sizeID" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="wishlistID" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="Wishlist" representedClassName="Wishlist" syncable="YES" codeGenerationType="class">
@@ -19,7 +21,7 @@
         <attribute name="wishlistID" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <elements>
+        <element name="Cartlist" positionX="-63" positionY="36" width="128" height="180"/>
         <element name="Wishlist" positionX="-63" positionY="-18" width="128" height="150"/>
-        <element name="Cartlist" positionX="-63" positionY="36" width="128" height="150"/>
     </elements>
 </model>

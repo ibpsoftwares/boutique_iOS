@@ -27,6 +27,7 @@ class CartCell: UITableViewCell {
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var priceLabel: UILabel!
     @IBOutlet weak var qtyLabel: UILabel!
+    @IBOutlet weak var sizeLabel: UILabel!
     @IBOutlet weak var thumbImageView: UIImageView!
     @IBOutlet weak var incrementQty: UIButton!
     @IBOutlet weak var decrementQty: UIButton!

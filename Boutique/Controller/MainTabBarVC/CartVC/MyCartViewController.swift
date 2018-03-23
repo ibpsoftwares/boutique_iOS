@@ -55,7 +55,7 @@ class MyCartViewController: UIViewController,UITableViewDelegate,UITableViewData
         checkoutButton.layer.borderWidth = 0.5
        // checkoutButton.layer.borderColor = UIColor.secondary.cgColor
         self.tabBarController?.tabBar.isHidden = true
-        getCartViewAPI()
+        
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -65,28 +65,92 @@ class MyCartViewController: UIViewController,UITableViewDelegate,UITableViewData
     }
     override func viewWillAppear(_ animated: Bool) {
         //fetchCartDetails()
-        self.tabBarController?.tabBar.isHidden = true
-        
+        self.cartProduct.removeAll()
+        //self.tabBarController?.tabBar.isHidden = true
+        if Model.sharedInstance.userID != "" {
+            getCartViewAPI()
+        }else{
+            fetchCartData()
+            //deleteRecords()
+        }
+    }
+    
+    
+    
+    func deleteRecords() -> Void {
+            
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
             return
         }
         let managedContext = appDelegate.persistentContainer.viewContext
-        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Wishlist")
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Cartlist")
         do {
             cartlist = try managedContext.fetch(fetchRequest)
         } catch let error as NSError {
             print("Could not fetch. \(error), \(error.userInfo)")
         }
         print(cartlist.count)
+        for row in 0...cartlist.count - 1{
+            let note = cartlist[row]
+            managedContext.delete(note)
+            
+            do {
+                try managedContext.save()
+            } catch let error as NSError {
+                print("Error While Deleting Note: \(error.userInfo)")
+                }
+            }
+         fetchCartData()
+         }
+  
+    
+    
+    //MARK: Fetch Cart Data From Core Data
+    func fetchCartData(){
+        self.cartProduct.removeAll()
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+            return
+        }
+        let managedContext = appDelegate.persistentContainer.viewContext
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Cartlist")
+        do {
+            cartlist = try managedContext.fetch(fetchRequest)
+        } catch let error as NSError {
+            print("Could not fetch. \(error), \(error.userInfo)")
+        }
+        print(cartlist.count)
+        self.itemsCountLabel.text =  "Total (0)"
+        self.totalPriceLabel.text = String("$\(0)")
+        if cartlist.count > 0{
+            
+            for row in 0...cartlist.count - 1{
+                let person = cartlist[row]
+                if (person.value(forKeyPath: "name") as! String) == ""{
+                    
+                }else{
+                    self.cartProduct.append(getProductDetail.init(name: (person.value(forKeyPath: "name") as! String), id:  (person.value(forKeyPath: "id") as! String), price: (person.value(forKeyPath: "price") as! String) , image: (person.value(forKeyPath: "image") as! String), oldPrice: (person.value(forKeyPath: "oldPrice") as! String), brand: (person.value(forKeyPath: "brand") as! String), wishlistID: person.value(forKeyPath: "wishlistID") as! String, cout: "1", sizeID: (person.value(forKeyPath: "size") as! String)))
+                }
+            }
         
+        self.itemsCountLabel.text =  "Total (\(self.cartProduct.count))"
+        for var i in (0..<(self.cartProduct.count)){
+            let total = (Int)(self.cartProduct[i].price)!
+            print(total)
+            self.totalPrice += total
+            self.totalPriceLabel.text = String("$\(self.totalPrice)")
+            Model.sharedInstance.totalPrice = Double(self.totalPrice)
+        }
+     }
+         self.tableView.reloadData()
     }
+    
     @IBAction func backBtn(_ sender: UIButton) {
         
         self.navigationController?.popViewController(animated: true)
     }
     //MARK: getCartViewAPI Methods
     func getCartViewAPI(){
-        
+        self.cartProduct.removeAll()
         self.totalPrice = 0
         self.cartProduct.removeAll()
         SKActivityIndicator.spinnerColor(UIColor.darkGray)
@@ -103,7 +167,7 @@ class MyCartViewController: UIViewController,UITableViewDelegate,UITableViewData
         
           print(parameter)
         
-        Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecom/recipes/ViewCart/", parameters: parameter, headers: nil) { (response:NSDictionary?, error:NSError?) in
+        Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecom/recipes/viewCart/", parameters: parameter, headers: nil) { (response:NSDictionary?, error:NSError?) in
             if error != nil {
                 print(error?.localizedDescription as Any)
                 Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Something Wrong..")
@@ -123,7 +187,7 @@ class MyCartViewController: UIViewController,UITableViewDelegate,UITableViewData
                     for item in ((response)?.value(forKey: "items") as! NSArray) {
                         print(item)
                         
-                        self.cartProduct.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "Cloth_id") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), oldPrice: "", brand: "", wishlistID: "", cout: "1"))
+                        self.cartProduct.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "cloth_id") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), oldPrice: "", brand: "", wishlistID: "", cout: "1", sizeID: ""))
                     }
                     let defaults = UserDefaults.standard
                     defaults.set(self.cartProduct.count, forKey: "totalCartItem")
@@ -160,23 +224,19 @@ class MyCartViewController: UIViewController,UITableViewDelegate,UITableViewData
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "CartCell", for: indexPath) as! CartCell
-        let url = URL(string: self.cartProduct[indexPath.row].image)
-        cell.thumbImageView.kf.setImage(with: url,placeholder: nil)
+       
         cell.thumbImageView.layer.cornerRadius = cell.thumbImageView.frame.size.height / 2
         cell.thumbImageView.clipsToBounds = true
         
         cell.nameLabel.text = cartProduct[indexPath.row].name
         cell.priceLabel.text = "\(cartProduct[indexPath.row].price)"
-        
+        let url = URL(string: self.cartProduct[indexPath.row].image)
+        cell.thumbImageView.kf.setImage(with: url,placeholder: nil)
+        cell.sizeLabel.text = cartProduct[indexPath.row].sizeID
         cell.removeButton.tag = indexPath.row
          cell.removeButton.addTarget(self,action:#selector(remove(sender:)), for: .touchUpInside)
-        cell.itemQuantityStepper?.tag = indexPath.row
-        cell.itemQuantityStepper?.addTarget(self, action: #selector(stepperValueChanged(_:)), for: .valueChanged)
-        
-        
         cell.incrementQty.addTarget(self,action:#selector(addBtn(sender:)), for: .touchUpInside)
         cell.incrementQty.tag = indexPath.row
-        
         cell.decrementQty.addTarget(self,action:#selector(subBtn(sender:)), for: .touchUpInside)
         cell.decrementQty?.tag = indexPath.row
         return cell
@@ -253,32 +313,6 @@ class MyCartViewController: UIViewController,UITableViewDelegate,UITableViewData
         return count
     }
     
-    @objc func stepperValueChanged(_ stepper: UIStepper) {
-        
-        
-        print(stepper.tag)
-         print("You tapped cell number \(stepper.value).")
-        
-        check = true
-        
-        lblCount = String(format: "%.0f", stepper.value)
-        print(lblCount)
-       
-        
-        let myDouble = Double(self.cartProduct[stepper.tag].price)
-        print(myDouble!)
-        
-        let total = myDouble! * stepper.value
-        print(total)
-        lblprice = String(format: "%.0f", total)
-//        tableView.reloadData()
-        let indexPath = IndexPath(item: stepper.tag, section: 0)
-//        tableView.reloadRows(at: [indexPath], with: .none)
-        
-        tableView.beginUpdates()
-        tableView.reloadRows(at: [indexPath], with: .automatic)
-        tableView.endUpdates()
-    }
     
     // method to run when table view cell is tapped
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -291,11 +325,25 @@ class MyCartViewController: UIViewController,UITableViewDelegate,UITableViewData
         } else {
             // Fallback on earlier versions
         }
-       
-        
     }
     @objc func remove(sender:UIButton!) {
-        self.deleteItemFromCart(cartID: self.cartProduct[sender.tag].id)
+        if Model.sharedInstance.userID != "" {
+            self.deleteItemFromCart(cartID: self.cartProduct[sender.tag].id)
+        }
+        else{
+             if cartlist.count > 0{
+            let managedContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+            let note = cartlist[sender.tag]
+            managedContext.delete(note)
+            
+            do {
+                try managedContext.save()
+            } catch let error as NSError {
+                print("Error While Deleting Note: \(error.userInfo)")
+            }
+        }
+        }
+         self.fetchCartData()
     }
     
     //MARK: deleteItemFromCart Methods
@@ -304,9 +352,6 @@ class MyCartViewController: UIViewController,UITableViewDelegate,UITableViewData
         var parameter: Parameters = [:]
         if Model.sharedInstance.userID != "" {
             parameter = ["user_id": Model.sharedInstance.userID, "cloth_id": cartID]
-        }
-        else{
-            parameter = ["user_id":"", "cloth_id": cartID]
         }
         print(parameter)
         

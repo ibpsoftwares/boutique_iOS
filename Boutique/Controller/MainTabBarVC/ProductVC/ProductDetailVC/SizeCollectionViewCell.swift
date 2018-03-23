@@ -10,4 +10,5 @@ import UIKit
 
 class SizeCollectionViewCell: UICollectionViewCell {
      @IBOutlet weak var sizeBtn: UIButton!
+     @IBOutlet weak var sizeLabel: UILabel!
 }

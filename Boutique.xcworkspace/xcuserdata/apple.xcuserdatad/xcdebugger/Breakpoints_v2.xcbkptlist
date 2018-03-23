@@ -10,7 +10,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Boutique/Controller/ConfirmPasswordVC/ConfirmPasswordViewController.swift"
-            timestampString = "542807793.780368"
+            timestampString = "542894375.272815"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "108"
@@ -26,7 +26,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Boutique/Controller/ConfirmPasswordVC/ConfirmPasswordViewController.swift"
-            timestampString = "542807793.780427"
+            timestampString = "542894375.272885"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "94"
@@ -42,7 +42,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Boutique/Controller/ConfirmPasswordVC/ConfirmPasswordViewController.swift"
-            timestampString = "542807793.780467"
+            timestampString = "542894375.272925"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "112"
@@ -57,13 +57,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Boutique/Controller/MainTabBarVC/ProductVC/ProductDetailVC/ProductDetailViewController.swift"
-            timestampString = "542807793.7805361"
+            filePath = "Boutique/Controller/MainTabBarVC/WishlistVC/WishListViewController.swift"
+            timestampString = "543495300.82656"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "372"
-            endingLineNumber = "372"
-            landmarkName = "startAnimation(_:iconView:)"
+            startingLineNumber = "181"
+            endingLineNumber = "181"
+            landmarkName = "getWishListAPI()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -73,13 +73,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Boutique/Controller/MainTabBarVC/CartVC/MyCartViewController.swift"
-            timestampString = "542807793.780622"
+            filePath = "Boutique/Controller/MainTabBarVC/HomeVC/HomeViewController.swift"
+            timestampString = "543495300.826622"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "146"
-            endingLineNumber = "146"
-            landmarkName = "getCartViewAPI()"
+            startingLineNumber = "588"
+            endingLineNumber = "588"
+            landmarkName = "addToWishListAPI(sender:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -89,13 +89,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Boutique/Controller/MainTabBarVC/CartVC/MyCartViewController.swift"
-            timestampString = "542807793.7809401"
+            filePath = "Boutique/Controller/MainTabBarVC/HomeVC/HomeViewController.swift"
+            timestampString = "543495300.8266619"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "197"
-            endingLineNumber = "197"
-            landmarkName = "addBtn(sender:)"
+            startingLineNumber = "684"
+            endingLineNumber = "684"
+            landmarkName = "getWishListAPI()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -105,13 +105,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Boutique/Controller/MainTabBarVC/ProductVC/ProductViewController.swift"
-            timestampString = "542807793.781171"
+            filePath = "Boutique/Controller/MainTabBarVC/HomeVC/HomeViewController.swift"
+            timestampString = "543495300.826697"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "281"
-            endingLineNumber = "281"
-            landmarkName = "collectionView(_:cellForItemAt:)"
+            startingLineNumber = "676"
+            endingLineNumber = "676"
+            landmarkName = "getWishListAPI()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -121,13 +121,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Boutique/Controller/MainTabBarVC/ProductVC/ProductViewController.swift"
-            timestampString = "542807793.781262"
+            filePath = "Boutique/Controller/MainTabBarVC/HomeVC/HomeViewController.swift"
+            timestampString = "543495300.82673"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "98"
-            endingLineNumber = "98"
-            landmarkName = "viewDidLoad()"
+            startingLineNumber = "680"
+            endingLineNumber = "680"
+            landmarkName = "getWishListAPI()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -137,13 +137,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Boutique/Controller/MainTabBarVC/SettingsVC/SettingsViewController.swift"
-            timestampString = "542807793.7813669"
+            filePath = "Boutique/Controller/MainTabBarVC/HomeVC/HomeViewController.swift"
+            timestampString = "543495300.826773"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "68"
-            endingLineNumber = "68"
-            landmarkName = "tableView(_:didSelectRowAt:)"
+            startingLineNumber = "686"
+            endingLineNumber = "686"
+            landmarkName = "getWishListAPI()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -153,45 +153,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Boutique/Controller/MainTabBarVC/ProductVC/ProductDetailVC/ProductDetailViewController.swift"
-            timestampString = "542807793.781412"
+            filePath = "Boutique/Controller/MainTabBarVC/HomeVC/HomeViewController.swift"
+            timestampString = "543495300.826811"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "556"
-            endingLineNumber = "556"
-            landmarkName = "save()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Boutique/Controller/MainTabBarVC/ProductVC/ProductDetailVC/ProductDetailViewController.swift"
-            timestampString = "542807793.7814651"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "574"
-            endingLineNumber = "574"
-            landmarkName = "save()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Boutique/Controller/MainTabBarVC/ProductVC/ProductDetailVC/ProductDetailViewController.swift"
-            timestampString = "542807793.781525"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "571"
-            endingLineNumber = "571"
-            landmarkName = "save()"
+            startingLineNumber = "698"
+            endingLineNumber = "698"
+            landmarkName = "getWishListAPI()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -202,12 +170,188 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Boutique/Controller/LoginVC/LoginViewController.swift"
-            timestampString = "542797462.397496"
+            timestampString = "543495300.826846"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "142"
-            endingLineNumber = "142"
-            landmarkName = "loginMethod()"
+            startingLineNumber = "282"
+            endingLineNumber = "282"
+            landmarkName = "wishlistAndCart()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Boutique/Controller/MainTabBarVC/ProductVC/ProductDetailVC/ProductDetailViewController.swift"
+            timestampString = "543396936.511423"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "215"
+            endingLineNumber = "215"
+            landmarkName = "getProductAPI()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Boutique/Controller/MainTabBarVC/ProductVC/ProductDetailVC/ProductDetailViewController.swift"
+            timestampString = "543396936.5114681"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "561"
+            endingLineNumber = "561"
+            landmarkName = "addToCartCoreData()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Boutique/Controller/MainTabBarVC/ProductVC/ProductDetailVC/ProductDetailViewController.swift"
+            timestampString = "543396936.511508"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "552"
+            endingLineNumber = "552"
+            landmarkName = "addToCartCoreData()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Boutique.ProductDetailViewController.addToCartCoreData() -&gt; ()"
+                  moduleName = "Boutique"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/apple/Documents/boutique_iOS/Boutique/Controller/MainTabBarVC/ProductVC/ProductDetailVC/ProductDetailViewController.swift"
+                  timestampString = "543495301.181473"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "553"
+                  endingLineNumber = "553"
+                  offsetFromSymbolStart = "9563">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Boutique.ProductDetailViewController.addToCartCoreData() -&gt; ()"
+                  moduleName = "Boutique"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/apple/Documents/boutique_iOS/Boutique/Controller/MainTabBarVC/ProductVC/ProductDetailVC/ProductDetailViewController.swift"
+                  timestampString = "543495301.183138"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "553"
+                  endingLineNumber = "553"
+                  offsetFromSymbolStart = "17271">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Boutique/Controller/MainTabBarVC/ProductVC/ProductDetailVC/ProductDetailViewController.swift"
+            timestampString = "543396936.511546"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "518"
+            endingLineNumber = "518"
+            landmarkName = "addToCartCoreData()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Boutique/Controller/SignupVC/SignUpViewController.swift"
+            timestampString = "543495300.827219"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "105"
+            endingLineNumber = "105"
+            landmarkName = "signupAPI()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Boutique/Controller/SignupVC/SignUpViewController.swift"
+            timestampString = "543495300.827262"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "95"
+            endingLineNumber = "95"
+            landmarkName = "signupAPI()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Boutique/Controller/UserDetail/UserDetailViewController.swift"
+            timestampString = "543495300.827301"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "208"
+            endingLineNumber = "208"
+            landmarkName = "userDetailsAPI()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Boutique/Controller/UserDetail/UserDetailViewController.swift"
+            timestampString = "543495300.827343"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "198"
+            endingLineNumber = "198"
+            landmarkName = "userDetailsAPI()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Boutique/Controller/MainTabBarVC/WishlistVC/WishListViewController.swift"
+            timestampString = "543495300.8274029"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "446"
+            endingLineNumber = "446"
+            landmarkName = "addToCartAPI(sender:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -218,12 +362,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Boutique/Controller/LoginVC/LoginViewController.swift"
-            timestampString = "542797462.397534"
+            timestampString = "543495300.827442"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "147"
-            endingLineNumber = "147"
-            landmarkName = "loginMethod()"
+            startingLineNumber = "304"
+            endingLineNumber = "304"
+            landmarkName = "btnForgetPass(_:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -234,28 +378,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Boutique/Controller/LoginVC/LoginViewController.swift"
-            timestampString = "542797462.397567"
+            timestampString = "543495300.827634"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "155"
-            endingLineNumber = "155"
-            landmarkName = "loginMethod()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Boutique/Controller/MainTabBarVC/CartVC/MyCartViewController.swift"
-            timestampString = "542807793.781654"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "80"
-            endingLineNumber = "80"
-            landmarkName = "viewWillAppear(_:)"
+            startingLineNumber = "330"
+            endingLineNumber = "330"
+            landmarkName = "forgetPassAPI(email:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

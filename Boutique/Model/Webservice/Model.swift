@@ -25,6 +25,7 @@ final class Model {
     var totalPrice = Double()
     var tempData = NSMutableDictionary()
      var lacalDataArr = NSMutableArray()
+    var loginData = NSMutableDictionary()
     
     
     
@@ -49,5 +50,9 @@ final class localDatabase {
         self.oldPrice = oldPrice
         self.brandName = brandName
         self.wishlistID = wishlistID
+    }
+    
+    func myFunction() -> String {
+        return ""
     }
 }

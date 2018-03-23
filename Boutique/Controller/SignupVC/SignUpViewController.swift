@@ -18,7 +18,7 @@ class SignUpViewController: UIViewController,UIImagePickerControllerDelegate,UIN
     @IBOutlet var textUserName: UITextField!
     @IBOutlet var textEmail: UITextField!
     @IBOutlet var textPasssword: UITextField!
-    @IBOutlet var textConPasssword: UITextField!
+    @IBOutlet var textPhoneNo: UITextField!
     var picker = UIImagePickerController()
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,9 +46,9 @@ class SignUpViewController: UIViewController,UIImagePickerControllerDelegate,UIN
                                                              attributes: [NSAttributedStringKey.foregroundColor: UIColor (red: 102.0/255.0, green:  102.0/255.0, blue:  102.0/255.0, alpha: 1)])
         textPasssword.font = UIFont(name: "Montserrat SemiBold", size: 20)
         
-        textConPasssword.attributedPlaceholder = NSAttributedString(string: "Enter Confirm Password",
+        textPhoneNo.attributedPlaceholder = NSAttributedString(string: "Enter Phone Number",
                                                              attributes: [NSAttributedStringKey.foregroundColor: UIColor (red: 102.0/255.0, green:  102.0/255.0, blue:  102.0/255.0, alpha: 1)])
-        textConPasssword.font = UIFont(name: "Montserrat SemiBold", size: 20)
+        textPhoneNo.font = UIFont(name: "Montserrat SemiBold", size: 20)
     }
 
     override func didReceiveMemoryWarning() {
@@ -70,15 +70,15 @@ class SignUpViewController: UIViewController,UIImagePickerControllerDelegate,UIN
         else if (self.textPasssword.text?.isEmpty)! {
             Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Enter Password")
         }
-        else if (self.textConPasssword.text?.isEmpty)! {
-            Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Enter Confirm Password")
+        else if (self.textPhoneNo.text?.isEmpty)! {
+            Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Enter Phone Number")
         }
         else{
-            if self.textPasssword.text == self.textConPasssword.text{
+            if self.textPasssword.text != ""{
                 signupAPI()
             }
             else{
-                Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Password doesn't match!")
+                Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Password Password")
             }
         }
     }
@@ -89,9 +89,11 @@ class SignUpViewController: UIViewController,UIImagePickerControllerDelegate,UIN
         let parameters: Parameters = [
             "username": self.textUserName.text!,
             "email": self.textEmail.text!,
+            "contact": self.textPhoneNo.text!,
             "password": self.textPasssword.text!
         ]
-        Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecom/recipes/signup", parameters: parameters, headers: nil) { (response:NSDictionary?, error:NSError?) in
+        print(parameters)
+        Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecomm/recipes/signup/", parameters: parameters, headers: nil) { (response:NSDictionary?, error:NSError?) in
             if error != nil {
                 print(error?.localizedDescription as Any)
                 Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Login Failed.Try Again..")

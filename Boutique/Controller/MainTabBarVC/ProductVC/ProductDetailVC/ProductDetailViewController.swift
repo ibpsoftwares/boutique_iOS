@@ -15,6 +15,7 @@ import SKActivityIndicatorView
 import CoreData
 class getSize {
     var size = NSArray()
+    var size_id = NSArray()
     init(size: NSArray) {
        self.size = size
     }
@@ -69,6 +70,9 @@ class ProductDetailViewController: UIViewController,UICollectionViewDelegate,UIC
     
     var userid = Model()
     var productID = String()
+    var sizeID = String()
+     var check_SizeID = String()
+    var passDict = NSMutableDictionary()
     var imgArray = NSMutableArray()
     var sizeArray = NSMutableArray()
      var images = [SKPhotoProtocol]()
@@ -78,16 +82,23 @@ class ProductDetailViewController: UIViewController,UICollectionViewDelegate,UIC
     var count = NSInteger()
     var imgArr = NSMutableArray()
     var selectedIndex = NSInteger()
-    
+    var size_id = String()
+    var size = String()
     var path : UIBezierPath?
     var layer: CALayer?
     var im = UIImageView()
     var wishlist: [NSManagedObject] = []
+    var check : Bool = false
+     var duplicateCheck : Bool = false
+    var productlocal = [getProduct]()
+    var cartLocal = [getProduct]()
+     var cartlist: [NSManagedObject] = []
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        selectedIndex = 200
         // Do any additional setup after loading the view.
-        
+        check = true
         imgView.layer.shadowColor = UIColor.lightGray.cgColor
         imgView.layer.shadowOpacity = 1
         imgView.layer.shadowOffset = CGSize.zero
@@ -126,19 +137,59 @@ class ProductDetailViewController: UIViewController,UICollectionViewDelegate,UIC
     }
     override func viewWillAppear(_ animated: Bool) {
          self.tabBarController?.tabBar.isHidden = true
-        //self.cartCountLabel.text =  (String)(Model.sharedInstance.cartCount)
-//        let defaults = UserDefaults.standard
-//        if (defaults.value(forKey: "totalCartItem")) != nil {
-//            let count = (defaults.value(forKey: "totalCartItem"))
-//            var temp1 : String! // This is not optional.
-//            temp1 = (String)(describing: count!)
-//            print(temp1)
-//            self.cartCountLabel.text = temp1
-//        }
-//        else {
-//            self.cartCountLabel.isHidden = true
-//        }
-         viewToCartAPI()
+       
+        if Model.sharedInstance.userID != "" {
+             viewToCartAPI()
+        }else{
+            fetchWishlistFromCoreData()
+            fetchCartData()
+        }
+        
+    }
+   
+    //MARK: Fetch Cart Data From Core Data
+    func fetchCartData(){
+        cartLocal.removeAll()
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+            return
+        }
+        let managedContext = appDelegate.persistentContainer.viewContext
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Cartlist")
+        do {
+            cartlist = try managedContext.fetch(fetchRequest)
+        } catch let error as NSError {
+            print("Could not fetch. \(error), \(error.userInfo)")
+        }
+        if cartlist.count > 0{
+            for row in 0...cartlist.count - 1{
+                let person = cartlist[row]
+                self.cartLocal.append(getProduct.init(name: (person.value(forKeyPath: "name") as! String), price: (person.value(forKeyPath: "price") as! String) , image: (person.value(forKeyPath: "image") as! String) , id:  (person.value(forKeyPath: "id") as! String), oldPrice: (person.value(forKeyPath: "oldPrice") as! String), brandName: (person.value(forKeyPath: "brand") as! String), wishlistID: person.value(forKeyPath: "wishlistID") as! String, sizeID:(person.value(forKeyPath: "sizeID") as! String) ))
+            }
+        }
+        self.cartCountLabel.text  = (String)(self.cartlist.count)
+    }
+    //MARK: Fetch Wishlist from Core Data
+    
+    func fetchWishlistFromCoreData(){
+        self.productlocal.removeAll()
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+            return
+        }
+        let managedContext = appDelegate.persistentContainer.viewContext
+        
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Wishlist")
+        do {
+            wishlist = try managedContext.fetch(fetchRequest)
+        } catch let error as NSError {
+            print("Could not fetch. \(error), \(error.userInfo)")
+        }
+        
+        if wishlist.count > 0{
+            for row in 0...wishlist.count - 1{
+                let person = wishlist[row]
+                self.productlocal.append(getProduct.init(name: (person.value(forKeyPath: "name") as! String), price: (person.value(forKeyPath: "price") as! String) , image: (person.value(forKeyPath: "image") as! String) , id:  (person.value(forKeyPath: "id") as! String), oldPrice: (person.value(forKeyPath: "oldPrice") as! String), brandName: (person.value(forKeyPath: "brand") as! String), wishlistID: person.value(forKeyPath: "wishlistID") as! String, sizeID: ""))
+            }
+        }
     }
     
     @IBAction func backBtn(_ sender: UIButton) {
@@ -196,11 +247,6 @@ class ProductDetailViewController: UIViewController,UICollectionViewDelegate,UIC
                         self.product.append(getSingleProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "id") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: "", oldPrice: ((item as! NSDictionary).value(forKey: "offer_price") as! String), brand: ((item as! NSDictionary).value(forKey: "brand") as! String), wishlistID: "", cout: "1", desc: ((item as! NSDictionary).value(forKey: "description") as! String)))
                     }
 
-                    
-                    
-                    
-                    
-                    
                     self.sizeArr.append(getSize.init(size: ((item as! NSDictionary).value(forKey: "size") as! NSArray)))
                    
                     for var i in (0..<(((response!.value(forKey: "cloth") as! NSArray).object(at: 0) as! NSDictionary).value(forKey: "images") as! NSArray).count){
@@ -213,7 +259,7 @@ class ProductDetailViewController: UIViewController,UICollectionViewDelegate,UIC
                         self.images.append(photo)
                     }
                 }
-                print(self.sizeArr.count)
+                print(self.sizeArr)
                 print(self.sizeArr)
                 self.count = self.imgArr.count
                 print(self.imgArr.count)
@@ -221,7 +267,7 @@ class ProductDetailViewController: UIViewController,UICollectionViewDelegate,UIC
                 DispatchQueue.main.async(execute: {
                     self.nameLabel.text = self.product[0].name
                     //self.priceLabel.text = "$\(self.product[0].price)"
-                    self.descriptionLabel.text = self.product[0].id
+                    self.descriptionLabel.text = self.product[0].desc
                     self.originalPriceLabel.text = "$\(self.product[0].price)"
                     
                     if  self.product[0].oldPrice != "" {
@@ -278,20 +324,22 @@ class ProductDetailViewController: UIViewController,UICollectionViewDelegate,UIC
                 cell.sizeBtn.clipsToBounds = true
                 let size = (((sizeArr[0].size)[indexPath.row] as! NSDictionary).value(forKey: "size") as! String)
                 print(size)
-                cell.sizeBtn.setTitle(size, for: .normal)
-                cell.sizeBtn.titleLabel?.textColor = UIColor.black
+                let value:String?
+                value = size
+                print(value!)
+                cell.sizeLabel.text = value
+                cell.sizeLabel.textColor = UIColor.black
                 cell.sizeBtn.layer.borderColor = UIColor (red: 204.0/255.0, green: 204.0/255.0, blue: 204/255.0, alpha: 1).cgColor
                 cell.sizeBtn.layer.borderWidth = 0.8
                 
-                if selectedIndex == indexPath.row
-                {
+                if selectedIndex == indexPath.row                {
                     cell.sizeBtn.backgroundColor = UIColor (red: 43.0/255.0, green: 59.0/255.0, blue: 68.0/255.0, alpha: 1)
-                    cell.sizeBtn.setTitleColor(UIColor.white, for: .normal)
+                    cell.sizeLabel.textColor = UIColor.white
+                    selectedIndex = 200
                 }
-                else
-                {
+                else{
                     cell.sizeBtn.backgroundColor = UIColor.white
-                    
+                    cell.sizeBtn.setTitleColor(UIColor.black, for: .normal)
                 }
                 cell.sizeBtn.tag = indexPath.row
                 cell.sizeBtn.addTarget(self,action:#selector(selectSize(sender:)), for: .touchUpInside)
@@ -301,6 +349,8 @@ class ProductDetailViewController: UIViewController,UICollectionViewDelegate,UIC
     }
     @objc func selectSize(sender:UIButton!){
         self.selectedIndex = sender.tag
+         size_id = ((sizeArr[0].size)[selectedIndex] as! NSDictionary).value(forKey: "size") as! String
+         size = ((sizeArr[0].size)[selectedIndex] as! NSDictionary).value(forKey: "size") as! String
         self.sizeCollectionView.reloadData()
         
     }
@@ -311,6 +361,7 @@ class ProductDetailViewController: UIViewController,UICollectionViewDelegate,UIC
         browser.initializePageIndex(indexPath.row)
         browser.delegate = self
         present(browser, animated: true, completion: nil)
+        
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets
     {
@@ -320,8 +371,17 @@ class ProductDetailViewController: UIViewController,UICollectionViewDelegate,UIC
     
     @IBAction func btnAddToCart(_ sender: UIButton) {
         
-       addToCartAPI()
-        
+        if size_id == "" {
+            Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Please Select Size !")
+        }
+        else{
+        if Model.sharedInstance.userID != ""{
+              addToCartAPI()
+        }
+        else{
+            addToCartCoreData()
+        }
+        }
        // var rect = collectionView.rectForRow(at: sender.tag)
         //let sss = collectionView.
        // rect.origin.y -=  200
@@ -406,15 +466,10 @@ class ProductDetailViewController: UIViewController,UICollectionViewDelegate,UIC
         }
     }
     
-    
-    
-    
-    
-    
-    
     //MARK: addToCartAPI Methods
   func addToCartAPI(){
-        
+    
+    if Model.sharedInstance.userID != "" {
         SKActivityIndicator.spinnerColor(UIColor.darkGray)
         SKActivityIndicator.show("Loading...")
         print(Model.sharedInstance.userID)
@@ -423,7 +478,7 @@ class ProductDetailViewController: UIViewController,UICollectionViewDelegate,UIC
         let parameters: Parameters = [
             "user_id": Model.sharedInstance.userID,
             "cloth_id": self.productID,
-             "quantity": "1"
+            "quantity": "1"
         ]
         
         print(parameters)
@@ -447,66 +502,163 @@ class ProductDetailViewController: UIViewController,UICollectionViewDelegate,UIC
             }
         }
     }
+   
+}
  
+    //MARK: Add to cart in core data
+    func addToCartCoreData(){
+        
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+            return
+        }
+    //&& (((sizeArr[0].size)[row] as! NSDictionary).value(forKey: "id") as! String) == sizeID
+        if self.cartLocal.count > 0{
+            for row in 0...self.cartLocal.count - 1{
 
-    //MARK: getCartViewAPI Methods
-    func viewToCartAPI() {
-    self.cartProduct.removeAll()
-       // SKActivityIndicator.spinnerColor(UIColor.darkGray)
-       // SKActivityIndicator.show("Loading...")
-        
-        let parameters: Parameters = [
-            "user_id": Model.sharedInstance.userID,
-        ]
-        
-        let requestString = "http://kftsoftwares.com/ecom/recipes/ViewCart/"
-        Alamofire.request(requestString,method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: [:]).responseJSON { (response:DataResponse<Any>) in
-            
-            switch(response.result) {
-            case .success(_):
-                DispatchQueue.main.async(execute: {
-                   // SKActivityIndicator.dismiss()
-                })
-      
-                let product = response.result.value as! NSDictionary
-                print(product)
-                if ((product.value(forKey: "items") != nil)){
+                print(self.cartLocal[row].id)
+                print(self.productID)
+                print(self.cartLocal[row].sizeID)
+                print(size)
+                count = 0
+                if (self.cartLocal[row].id == self.productID && self.cartLocal[row].sizeID == size ){
+                   count = 1
+                    break
+                   Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Item Is Already Exits.")
+                }
+            }
+                if(count == 1){
                     
-                    for item in ((product ).value(forKey: "items") as! NSArray) {
-                        print(item)
-                        
-                        self.cartProduct.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "Cloth_id") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), oldPrice: ((item as! NSDictionary).value(forKey: "image1") as! String), brand: "", wishlistID: "", cout: "1"))
-                    }
-//                        let defaults = UserDefaults.standard
-//                        defaults.set(self.cartProduct.count, forKey: "totalCartItem")
-//                        defaults .synchronize()
-                       // Model.sharedInstance.cartCount = self.cartProduct.count
-                        self.cartCountLabel.text = (String)(self.cartProduct.count)
-                    
-                    DispatchQueue.main.async(execute: {
-                        self.collectionView.reloadData()
-                    })
                 }
                 else{
-                   
-//                    DispatchQueue.main.async(execute: {
-//                        self.collectionView.reloadData()
-//                    })
-                   // Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: ((response.result.value as! NSDictionary).value(forKey: "message") as! String))
+                        let managedCon = appDelegate.persistentContainer.viewContext
+                        
+                        let entity = NSEntityDescription.entity(forEntityName: "Cartlist",
+                                                                in: managedCon)!
+                        
+                        let cart = NSManagedObject(entity: entity,
+                                                   insertInto: managedCon)
+                        cart.setValue(passDict.value(forKey: "id"), forKeyPath: "id")
+                        cart.setValue(passDict.value(forKey: "name"), forKeyPath: "name")
+                        cart.setValue(passDict.value(forKey: "price"), forKeyPath: "price")
+                        cart.setValue(passDict.value(forKey: "oldPrice"), forKeyPath: "oldPrice")
+                        cart.setValue(passDict.value(forKey: "brand"), forKeyPath: "brand")
+                        cart.setValue(passDict.value(forKey: "image"), forKeyPath: "image")
+                        cart.setValue(size_id, forKeyPath: "sizeID")
+                        cart.setValue(size, forKeyPath: "size")
+                        cart.setValue("1", forKeyPath: "wishlistID")
+                        print(cart)
+                        do {
+                            try managedCon.save()
+                            // addToCart.append(cart)
+                        } catch let error as NSError {
+                            print("Could not save. \(error), \(error.userInfo)")
+                    }
                 }
-                
-                break
-                
-            case .failure(_):
-                print("Failure : \(String(describing: response.result.error))")
+           // }
+        }
+        else{
+            let managedCon = appDelegate.persistentContainer.viewContext
+            
+            let entity = NSEntityDescription.entity(forEntityName: "Cartlist",
+                                                    in: managedCon)!
+            
+            let cart = NSManagedObject(entity: entity,
+                                       insertInto: managedCon)
+            cart.setValue(passDict.value(forKey: "id"), forKeyPath: "id")
+            cart.setValue(passDict.value(forKey: "name"), forKeyPath: "name")
+            cart.setValue(passDict.value(forKey: "price"), forKeyPath: "price")
+            cart.setValue(passDict.value(forKey: "oldPrice"), forKeyPath: "oldPrice")
+            cart.setValue(passDict.value(forKey: "brand"), forKeyPath: "brand")
+            cart.setValue(passDict.value(forKey: "image"), forKeyPath: "image")
+            cart.setValue(size_id, forKeyPath: "sizeID")
+            cart.setValue(size, forKeyPath: "size")
+            cart.setValue("1", forKeyPath: "wishlistID")
+            print(cart)
+            do {
+                try managedCon.save()
+                // addToCart.append(cart)
+            } catch let error as NSError {
+                print("Could not save. \(error), \(error.userInfo)")
+            }
+            
+        }
+//        if self.cartLocal.count > 0 {
+//        for section in 0...self.cartLocal.count - 1 {
+//
+//            if let i = self.cartLocal.index(where: { $0.id == self.productID }) {
+//                print(i)
+//                Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Item Is Already Exits.")
+//             }
+//            }
+//        }
+//        else{
+//        let managedCon = appDelegate.persistentContainer.viewContext
+//
+//        let entity = NSEntityDescription.entity(forEntityName: "Cartlist",
+//                                                in: managedCon)!
+//
+//        let cart = NSManagedObject(entity: entity,
+//                                   insertInto: managedCon)
+//        cart.setValue(passDict.value(forKey: "id"), forKeyPath: "id")
+//        cart.setValue(passDict.value(forKey: "name"), forKeyPath: "name")
+//        cart.setValue(passDict.value(forKey: "price"), forKeyPath: "price")
+//        cart.setValue(passDict.value(forKey: "oldPrice"), forKeyPath: "oldPrice")
+//        cart.setValue(passDict.value(forKey: "brand"), forKeyPath: "brand")
+//        cart.setValue(passDict.value(forKey: "image"), forKeyPath: "image")
+//        cart.setValue(size_id, forKeyPath: "sizeID")
+//        cart.setValue(size, forKeyPath: "size")
+//        cart.setValue("1", forKeyPath: "wishlistID")
+//        print(cart)
+//        do {
+//            try managedCon.save()
+//           // addToCart.append(cart)
+//        } catch let error as NSError {
+//            print("Could not save. \(error), \(error.userInfo)")
+//        }
+//    }
+       fetchCartData()
+        
+}
+    
+    //MARK: getCartViewAPI Methods
+    func viewToCartAPI(){
+        SKActivityIndicator.spinnerColor(UIColor.darkGray)
+        SKActivityIndicator.show("Loading...")
+        self.cartProduct.removeAll()
+        var parameter: Parameters = [:]
+        if Model.sharedInstance.userID != "" {
+            parameter = ["user_id": Model.sharedInstance.userID]
+        }
+        print(parameter)
+        
+        Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecom/recipes/viewCart/", parameters: parameter, headers: nil) { (response:NSDictionary?, error:NSError?) in
+            if error != nil {
+                print(error?.localizedDescription as Any)
+                Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Something Wrong..")
+                return
+            }
+            DispatchQueue.main.async(execute: {
+                SKActivityIndicator.dismiss()
+            })
+            print(response!)
+            if ((response!["message"] as? [String:Any]) != nil){
+                Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: (response?.value(forKey: "message") as! String))
+            }
+            else{
+                for item in (response!.value(forKey: "items") as! NSArray) {
+                    
+                    self.cartProduct.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "cloth_id") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), oldPrice: ((item as! NSDictionary).value(forKey: "image1") as! String), brand: "", wishlistID: "", cout: "1", sizeID: ""))
+                }
+               
                 DispatchQueue.main.async(execute: {
-                    SKActivityIndicator.dismiss()
+                    
+                    self.collectionView.reloadData()
                 })
-                break
-                
             }
         }
+        
     }
+    
     @IBAction func btnAddToWishList(_ sender: UIButton) {
         
         addToWishListAPI()
@@ -515,18 +667,13 @@ class ProductDetailViewController: UIViewController,UICollectionViewDelegate,UIC
     //MARK: addToWishListAPI Methods
     func addToWishListAPI(){
         
+        if Model.sharedInstance.userID != "" {
         SKActivityIndicator.spinnerColor(UIColor.darkGray)
         SKActivityIndicator.show("Loading...")
         print(Model.sharedInstance.userID)
         print(self.productID)
           var parameters: Parameters = [:]
-        if Model.sharedInstance.userID != "" {
-             parameters = ["user_id": Model.sharedInstance.userID,"cloth_id": self.productID]
-        }
-        else{
-            save()
-        }
-
+        parameters = ["user_id": Model.sharedInstance.userID,"cloth_id": self.productID]
         print(parameters)
         
         Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecom/recipes/addToWishList/ZWNvbW1lcmNl/", parameters: parameters, headers: nil) { (response:NSDictionary?, error:NSError?) in
@@ -543,38 +690,52 @@ class ProductDetailViewController: UIViewController,UICollectionViewDelegate,UIC
                 //Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: (response?.value(forKey: "message") as! String))
             }
             else{
-                //Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: (response?.value(forKey: "message") as! String))
+                Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: (response?.value(forKey: "message") as! String))
             }
+        }
+        }else{
+              save()
         }
     }
     @available(iOS 10.0, *)
+    //MARK: Add item wishlist in core data
     func save() {
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
             return
         }
         
-        let managedContext = appDelegate.persistentContainer.viewContext
-        
-        let entity = NSEntityDescription.entity(forEntityName: "Wishlist",
-                                                in: managedContext)!
-        
-        let person = NSManagedObject(entity: entity,
-                                     insertInto: managedContext)
-        
-        person.setValue(self.product[0].id, forKeyPath: "id")
-        person.setValue(self.product[0].name, forKeyPath: "name")
-        person.setValue(self.product[0].price, forKeyPath: "price")
-        person.setValue(self.product[0].oldPrice, forKeyPath: "oldPrice")
-        person.setValue(self.product[0].brand, forKeyPath: "brand")
-        person.setValue(self.imgArray[0] as! String, forKeyPath: "image")
-        person.setValue("1", forKeyPath: "wishlistID")
-        print(person)
-        do {
-            try managedContext.save()
-            wishlist.append(person)
-        } catch let error as NSError {
-            print("Could not save. \(error), \(error.userInfo)")
+        for section in 0...self.productlocal.count - 1 {
+            
+            if let i = self.productlocal.index(where: { $0.id == self.productID }) {
+                print(i)
+                Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Item Is Already Exits.")
+            }
+            else{
+                let managedContext = appDelegate.persistentContainer.viewContext
+                
+                let entity = NSEntityDescription.entity(forEntityName: "Wishlist",
+                                                        in: managedContext)!
+                
+                let person = NSManagedObject(entity: entity,
+                                             insertInto: managedContext)
+                person.setValue(self.product[0].id, forKeyPath: "id")
+                person.setValue(self.product[0].name, forKeyPath: "name")
+                person.setValue(self.product[0].price, forKeyPath: "price")
+                person.setValue(self.product[0].oldPrice, forKeyPath: "oldPrice")
+                person.setValue(self.product[0].brand, forKeyPath: "brand")
+                person.setValue(self.imgArray[0] as! String, forKeyPath: "image")
+                person.setValue("1", forKeyPath: "wishlistID")
+                print(person)
+                do {
+                    try managedContext.save()
+                    wishlist.append(person)
+                } catch let error as NSError {
+                    print("Could not save. \(error), \(error.userInfo)")
+                }
+                fetchWishlistFromCoreData()
+            }
         }
+        
         
     }
 //    //MARK: addToWishListAPI Methods

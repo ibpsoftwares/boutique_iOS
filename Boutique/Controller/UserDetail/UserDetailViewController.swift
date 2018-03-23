@@ -7,21 +7,33 @@
 //
 
 import UIKit
+import Alamofire
+import SKActivityIndicatorView
 
 class UserDetailViewController: UIViewController ,UIPickerViewDelegate,UIPickerViewDataSource,UITextFieldDelegate{
 
     @IBOutlet weak var countryView: UIView!
     @IBOutlet weak var nameView: UIView!
-     @IBOutlet weak var addressView: UIView!
-    @IBOutlet weak var addressView1: UIView!
+     @IBOutlet weak var addressTextView: UITextView!
+    @IBOutlet weak var localityView: UIView!
      @IBOutlet weak var cityView: UIView!
     @IBOutlet weak var zipCodeView: UIView!
     @IBOutlet weak var phoneNumberView: UIView!
     @IBOutlet weak var emailView: UIView!
-    
+    @IBOutlet weak var homeButton: UIButton!
+    @IBOutlet weak var commercialButton: UIButton!
     @IBOutlet weak var textName: UITextField!
+    @IBOutlet weak var textCountry: UITextField!
+    @IBOutlet weak var textCity: UITextField!
+    @IBOutlet weak var textZipCode: UITextField!
+    @IBOutlet weak var textMobile: UITextField!
+    @IBOutlet weak var textLocality: UITextField!
     var countryName = [NSMutableArray]()
     var picker = UIPickerView()
+    @IBOutlet weak var btnSaturday: UIButton!
+    @IBOutlet weak var btnSunday: UIButton!
+     @IBOutlet weak var checkSatImgView: UIImageView!
+     @IBOutlet weak var checkSanImgView: UIImageView!
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -30,34 +42,29 @@ class UserDetailViewController: UIViewController ,UIPickerViewDelegate,UIPickerV
         countryView.layer.borderWidth = 0.8
        // countryView.layer.cornerRadius = 2
         
+        btnSaturday.layer.borderColor = UIColor (red: 204.0/255.0, green: 204.0/255.0, blue: 204/255.0, alpha: 1).cgColor
+        btnSaturday.layer.borderWidth = 0.8
+        
+        btnSunday.layer.borderColor = UIColor (red: 204.0/255.0, green: 204.0/255.0, blue: 204/255.0, alpha: 1).cgColor
+        btnSunday.layer.borderWidth = 0.8
+        
         nameView.layer.borderColor = UIColor (red: 204.0/255.0, green: 204.0/255.0, blue: 204/255.0, alpha: 1).cgColor
         nameView.layer.borderWidth = 0.8
-        //nameView.layer.cornerRadius = 2
         
-        addressView.layer.borderColor = UIColor (red: 204.0/255.0, green: 204.0/255.0, blue: 204/255.0, alpha: 1).cgColor
-        addressView.layer.borderWidth = 0.8
-        //addressView.layer.cornerRadius = 2
-        
-        addressView1.layer.borderColor = UIColor (red: 204.0/255.0, green: 204.0/255.0, blue: 204/255.0, alpha: 1).cgColor
-        addressView1.layer.borderWidth = 0.8
-        //addressView1.layer.cornerRadius = 2
-        
+        addressTextView.layer.borderColor = UIColor (red: 204.0/255.0, green: 204.0/255.0, blue: 204/255.0, alpha: 1).cgColor
+        addressTextView.layer.borderWidth = 0.8
+     
         cityView.layer.borderColor = UIColor (red: 204.0/255.0, green: 204.0/255.0, blue: 204/255.0, alpha: 1).cgColor
         cityView.layer.borderWidth = 0.8
-        //cityView.layer.cornerRadius = 2
         
         zipCodeView.layer.borderColor = UIColor (red: 204.0/255.0, green: 204.0/255.0, blue: 204/255.0, alpha: 1).cgColor
         zipCodeView.layer.borderWidth = 0.8
-        //zipCodeView.layer.cornerRadius = 2
         
         phoneNumberView.layer.borderColor = UIColor (red: 204.0/255.0, green: 204.0/255.0, blue: 204/255.0, alpha: 1).cgColor
         phoneNumberView.layer.borderWidth = 0.8
-        //phoneNumberView.layer.cornerRadius = 2
-        
-        emailView.layer.borderColor = UIColor (red: 204.0/255.0, green: 204.0/255.0, blue: 204/255.0, alpha: 1).cgColor
-        emailView.layer.borderWidth = 0.8
-       // emailView.layer.cornerRadius = 2
-        
+     
+        localityView.layer.borderColor = UIColor (red: 204.0/255.0, green: 204.0/255.0, blue: 204/255.0, alpha: 1).cgColor
+        localityView.layer.borderWidth = 0.8
         
         picker = UIPickerView(frame: CGRect(x:0, y:0, width:view.frame.width,height: 200))
         picker.backgroundColor = .white
@@ -66,7 +73,7 @@ class UserDetailViewController: UIViewController ,UIPickerViewDelegate,UIPickerV
         picker.delegate = self
         picker.dataSource = self
         //self.view.addSubview(picker)
-        textName.inputView = picker
+        textCountry.inputView = picker
         // ToolBar
         let toolBar = UIToolbar()
         toolBar.barStyle = .default
@@ -80,7 +87,7 @@ class UserDetailViewController: UIViewController ,UIPickerViewDelegate,UIPickerV
         let cancelButton = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(cancelClick))
         toolBar.setItems([cancelButton, spaceButton, doneButton], animated: false)
         toolBar.isUserInteractionEnabled = true
-        textName.inputAccessoryView = toolBar
+        textCountry.inputAccessoryView = toolBar
         
         picker.isHidden = true
         self.tabBarController?.tabBar.isHidden = true
@@ -105,6 +112,27 @@ class UserDetailViewController: UIViewController ,UIPickerViewDelegate,UIPickerV
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+   
+    @IBAction func setHometMode(_ sender: UIButton) {
+        
+        homeButton.setImage(UIImage.init(named: "fillImg"), for: .normal)
+        commercialButton.setImage(UIImage.init(named: "emptyImg"), for: .normal)
+    }
+    @IBAction func setCommercialMode(_ sender: UIButton) {
+        commercialButton.setImage(UIImage.init(named: "fillImg"), for: .normal)
+        homeButton.setImage(UIImage.init(named: "emptyImg"), for: .normal)
+    }
+    @IBAction func setSaturdayMode(_ sender: UIButton) {
+        sender.backgroundColor = UIColor.white
+        checkSatImgView.image = UIImage(named: "check")
+        checkSanImgView.image = UIImage(named: "")
+    }
+    @IBAction func setSundayMode(_ sender: UIButton) {
+         sender.backgroundColor = UIColor.white
+        checkSanImgView.image = UIImage(named: "check")
+        checkSatImgView.image = UIImage(named: "")
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         self.tabBarController?.tabBar.isHidden = true
     }
@@ -119,6 +147,7 @@ class UserDetailViewController: UIViewController ,UIPickerViewDelegate,UIPickerV
     }
     @IBAction func btnNext(_ sender: UIButton) {
         
+       // userDetailsAPI()
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let abcViewController = storyboard.instantiateViewController(withIdentifier: "AddPaymentViewController") as! AddPaymentViewController
         navigationController?.pushViewController(abcViewController, animated: true)
@@ -135,13 +164,12 @@ class UserDetailViewController: UIViewController ,UIPickerViewDelegate,UIPickerV
         return (((self.countryName as NSArray).object(at: 0) as! NSArray)[row] as! String)
     }
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        self.textName.text = (((self.countryName as NSArray).object(at: 0) as! NSArray)[row] as! String)
+        self.textCountry.text = (((self.countryName as NSArray).object(at: 0) as! NSArray)[row] as! String)
     }
     //MARK:- TextFiled Delegate
-    
     func textFieldDidBeginEditing(_ textField: UITextField) {
          picker.isHidden = false
-        self.textName.becomeFirstResponder()
+        self.textCountry.becomeFirstResponder()
     }
     
     @objc func doneClick() {
@@ -153,15 +181,39 @@ class UserDetailViewController: UIViewController ,UIPickerViewDelegate,UIPickerV
          self.view.endEditing(true)
     }
     
-   
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    //MARK: userDetails Methods
+    func userDetailsAPI(){
+        SKActivityIndicator.spinnerColor(UIColor.darkGray)
+        SKActivityIndicator.show("Loading...")
+        let parameters: Parameters = [
+            "address": self.addressTextView.text!,
+            "state": self.textCity.text!,
+            "userdetail_id": (Model.sharedInstance.loginData.value(forKey: "userdetail_id") as! String),
+            "availability": "saturday"+","+"sunday",
+            "zip_code" : textZipCode.text!,
+            "user_id" :Model.sharedInstance.userID,
+            "contact" : textMobile.text!,
+            "username" : textName.text!
+        ]
+        print(parameters)
+        Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecomm/recipes/shippingDetail/", parameters: parameters, headers: nil) { (response:NSDictionary?, error:NSError?) in
+            if error != nil {
+                print(error?.localizedDescription as Any)
+                Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Failed.Try Again..")
+                return
+            }
+            DispatchQueue.main.async(execute: {
+                SKActivityIndicator.dismiss()
+            })
+            print(response!)
+            if (response?.value(forKey: "message") as! String) == "Invalid Email or Password "{
+                Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: (response?.value(forKey: "message") as! String))
+            }
+            else{
+                
+            }
+        }
     }
-    */
+    
 
 }

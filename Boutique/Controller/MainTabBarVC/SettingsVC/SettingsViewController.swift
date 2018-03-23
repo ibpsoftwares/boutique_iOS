@@ -12,7 +12,7 @@ class SettingsViewController: UIViewController,UITableViewDelegate,UITableViewDa
 
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var headerView: UIView!
-    let items = ["Help", "Contact Us", "Change Password", "History","Sign out"]
+    let items = ["Help", "Profile", "Change Password", "History","Sign out"]
     let images = ["help", "profileImg", "setting1", "history","signout"]
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,15 +28,15 @@ class SettingsViewController: UIViewController,UITableViewDelegate,UITableViewDa
         // Dispose of any resources that can be recreated.
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        self.tabBarController?.tabBar.isHidden = false
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        self.tabBarController?.tabBar.isHidden = true
-        
-    }
+//    override func viewWillAppear(_ animated: Bool) {
+//        self.tabBarController?.tabBar.isHidden = false
+//    }
+//
+//    override func viewWillDisappear(_ animated: Bool) {
+//        super.viewWillDisappear(animated)
+//        self.tabBarController?.tabBar.isHidden = true
+//
+//    }
     //MARK: TableView Delegate and Data Source
     // number of rows in table view
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -63,7 +63,10 @@ class SettingsViewController: UIViewController,UITableViewDelegate,UITableViewDa
             openURL("http://www.vinsol.com")
         }
         else if indexPath.row == 1{
-            openURL("http://www.vinsol.com/contact")
+            //openURL("http://www.vinsol.com/contact")
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let abcViewController = storyboard.instantiateViewController(withIdentifier: "ProfileViewController") as! ProfileViewController
+            navigationController?.pushViewController(abcViewController, animated: true)
         }
         if indexPath.row == 2{
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -77,8 +80,13 @@ class SettingsViewController: UIViewController,UITableViewDelegate,UITableViewDa
         }
        else if indexPath.row == 4{
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let abcViewController = storyboard.instantiateViewController(withIdentifier: "LoginViewController") as! LoginViewController
-            navigationController?.pushViewController(abcViewController, animated: true)
+            if #available(iOS 10.0, *) {
+                let abcViewController = storyboard.instantiateViewController(withIdentifier: "LoginViewController") as! LoginViewController
+                navigationController?.pushViewController(abcViewController, animated: true)
+            } else {
+                // Fallback on earlier versions
+            }
+            
         }
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

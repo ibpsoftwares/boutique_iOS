@@ -29,19 +29,6 @@ class MainTabBarViewController: UITabBarController ,UITabBarControllerDelegate{
        // self.wishListProduct.removeAll()
          tabBar.inActiveTintColor()
         
-      
-    //}
-        
-//        if let tabBarController = self.tabBarController {
-//            let indexToRemove = 4
-//            if indexToRemove < (tabBarController.viewControllers?.count)! {
-//                var viewControllers = tabBarController.viewControllers
-//                viewControllers?.remove(at: indexToRemove)
-//                tabBarController.viewControllers = viewControllers
-//            }
-//        }
-        
-        
     }
     
     override func didReceiveMemoryWarning() {
@@ -87,7 +74,7 @@ class MainTabBarViewController: UITabBarController ,UITabBarControllerDelegate{
                     for item in ((product ).value(forKey: "Wishlist") as! NSArray) {
                         print(item)
                         
-                        self.wishListProduct.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "Cloth_id") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), oldPrice: "", brand: "", wishlistID: "", cout: "1"))
+                        self.wishListProduct.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "cloth_id") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), oldPrice: "", brand: "", wishlistID: "", cout: "1", sizeID: ""))
                     }
                     
                     self.objectModel.badgeValue = (String)(self.wishListProduct.count)
@@ -95,12 +82,12 @@ class MainTabBarViewController: UITabBarController ,UITabBarControllerDelegate{
                         
                        // let tabItem = tabItems![4] as! UITabBarItem
                        // tabItem.badgeValue = (String)(self.wishListProduct.count)
-                        self.tabBar.items?[4].badgeValue =  self.objectModel.badgeValue
+                        //self.tabBar.items?[3].badgeValue =  self.objectModel.badgeValue
                     }
                         
                     }
                     else{
-                           self.tabBar.items?[4].badgeValue =  nil
+                          // self.tabBar.items?[3].badgeValue =  nil
                           //  Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: (product.value(forKey: "message") as! String))
                         }
                 }
@@ -122,7 +109,7 @@ class MainTabBarViewController: UITabBarController ,UITabBarControllerDelegate{
         //SKActivityIndicator.spinnerColor(UIColor.darkGray)
         //SKActivityIndicator.show("Loading...")
         
-        Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecom/recipes/ViewCart/\(Model.sharedInstance.userID)/ZWNvbW1lcmNl/", parameters: nil, headers: nil) { (response:NSDictionary?, error:NSError?) in
+        Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecom/recipes/viewCart/\(Model.sharedInstance.userID)/ZWNvbW1lcmNl/", parameters: nil, headers: nil) { (response:NSDictionary?, error:NSError?) in
             if error != nil {
                 print(error?.localizedDescription as Any)
                 Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Something Wrong..")
@@ -142,7 +129,7 @@ class MainTabBarViewController: UITabBarController ,UITabBarControllerDelegate{
                     for item in ((response)?.value(forKey: "items") as! NSArray) {
                         print(item)
                         
-                        self.cartProduct.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "Cloth_id") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), oldPrice: "", brand: "", wishlistID: "", cout: "1"))
+                        self.cartProduct.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "cloth_id") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), oldPrice: "", brand: "", wishlistID: "", cout: "1", sizeID: ""))
                     }
                    
                     Model.sharedInstance.cartCount = self.cartProduct.count
