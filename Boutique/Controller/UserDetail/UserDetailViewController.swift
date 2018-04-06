@@ -19,7 +19,7 @@ class UserDetailViewController: UIViewController ,UIPickerViewDelegate,UIPickerV
      @IBOutlet weak var cityView: UIView!
     @IBOutlet weak var zipCodeView: UIView!
     @IBOutlet weak var phoneNumberView: UIView!
-    @IBOutlet weak var emailView: UIView!
+    @IBOutlet weak var stateView: UIView!
     @IBOutlet weak var homeButton: UIButton!
     @IBOutlet weak var commercialButton: UIButton!
     @IBOutlet weak var textName: UITextField!
@@ -28,6 +28,7 @@ class UserDetailViewController: UIViewController ,UIPickerViewDelegate,UIPickerV
     @IBOutlet weak var textZipCode: UITextField!
     @IBOutlet weak var textMobile: UITextField!
     @IBOutlet weak var textLocality: UITextField!
+    @IBOutlet weak var textState: UITextField!
     var countryName = [NSMutableArray]()
     var picker = UIPickerView()
     @IBOutlet weak var btnSaturday: UIButton!
@@ -66,8 +67,11 @@ class UserDetailViewController: UIViewController ,UIPickerViewDelegate,UIPickerV
         localityView.layer.borderColor = UIColor (red: 204.0/255.0, green: 204.0/255.0, blue: 204/255.0, alpha: 1).cgColor
         localityView.layer.borderWidth = 0.8
         
-        picker = UIPickerView(frame: CGRect(x:0, y:0, width:view.frame.width,height: 200))
-        picker.backgroundColor = .white
+        stateView.layer.borderColor = UIColor (red: 204.0/255.0, green: 204.0/255.0, blue: 204/255.0, alpha: 1).cgColor
+        stateView.layer.borderWidth = 0.8
+        
+        picker = UIPickerView(frame: CGRect(x:0, y:0, width:view.frame.width,height: 220))
+        picker.backgroundColor = .gray
         
         picker.showsSelectionIndicator = true
         picker.delegate = self
@@ -188,6 +192,7 @@ class UserDetailViewController: UIViewController ,UIPickerViewDelegate,UIPickerV
         let parameters: Parameters = [
             "address": self.addressTextView.text!,
             "state": self.textCity.text!,
+            "country" : textCountry.text!,
             "userdetail_id": (Model.sharedInstance.loginData.value(forKey: "userdetail_id") as! String),
             "availability": "saturday"+","+"sunday",
             "zip_code" : textZipCode.text!,

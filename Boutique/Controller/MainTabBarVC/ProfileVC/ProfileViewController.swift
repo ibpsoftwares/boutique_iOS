@@ -75,7 +75,9 @@ class ProfileViewController: UIViewController,UIImagePickerControllerDelegate,UI
         toolBar.isUserInteractionEnabled = true
         textGender.inputAccessoryView = toolBar
         
-        setProfile()
+        if Model.sharedInstance.userID != ""{
+             setProfile()
+        }
     }
     func setProfile(){
         

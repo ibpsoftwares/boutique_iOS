@@ -78,6 +78,8 @@ class Webservice: NSObject
                 break
                 
             case .failure(_):
+                
+                 print("RESPONSE \(response.result)")
                 completionHandler(response.result.value as! NSDictionary,response.result.error as NSError?)
                 break
                 

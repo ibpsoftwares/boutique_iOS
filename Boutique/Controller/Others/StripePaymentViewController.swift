@@ -89,9 +89,9 @@ class StripePaymentViewController: UIViewController,UITextFieldDelegate {
             else if let token = token {
                 print(token)
                 
-                self.showAlert(msg: "Token created: \(token)")
+              //  self.showAlert(msg: "Token created: \(token)")
              
-                //self.postStripeToken(token: token)
+                self.postStripeToken(token: token)
             }
         })
     }
@@ -102,21 +102,21 @@ class StripePaymentViewController: UIViewController,UITextFieldDelegate {
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let abcViewController = storyboard.instantiateViewController(withIdentifier: "SuccessViewController") as! SuccessViewController
             self.navigationController?.pushViewController(abcViewController, animated: true)
-        self.present(alert, animated: true, completion: nil)
+            self.present(alert, animated: true, completion: nil)
     }
     
     func postStripeToken(token:STPToken){
         let parameters: Parameters = [
-            "stripeToken": ("\(token.tokenId)"),
+            "token": ("\(token.tokenId)"),
             "amount": "200",
-            "currency": "usd",
-            "description": "testRun"
+//            "currency": "usd",
+//            "description": "testRun"
         ]
-        
         print(parameters)
-        let url = "https://thawing-inlet-46474.herokuapp.com/charge.php"
-        
-        Alamofire.request(url, method:.post, parameters:parameters, headers:nil).responseJSON { response in
+         let headers = ["Authorization":"Bearer ZWNvbW1lcmNl"]
+        //let url = "https://thawing-inlet-46474.herokuapp.com/charge.php"
+        let url = "http://kftsoftwares.com/ecomm/recipes/payment/"
+        Alamofire.request(url, method:.post, parameters:parameters, headers:headers).responseJSON { response in
             switch response.result {
                 
             case .success:

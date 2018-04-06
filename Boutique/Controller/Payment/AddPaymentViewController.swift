@@ -8,7 +8,7 @@
 
 import UIKit
 
-class AddPaymentViewController: UIViewController {
+class AddPaymentViewController: UIViewController,UITableViewDelegate,UITableViewDataSource{
 
     @IBOutlet weak var itemPriceLabel: UILabel!
     @IBOutlet weak var taxPriceLabel: UILabel!
@@ -20,7 +20,7 @@ class AddPaymentViewController: UIViewController {
     @IBOutlet weak var cardDetailsView: UIView!
     @IBOutlet weak var discountLabel: UILabel!
     @IBOutlet weak var cardExpiryDateLabel: UILabel!
-    
+     @IBOutlet weak var tableView: UITableView!
      var checkCash : Bool = false
      var checkCard : Bool = false
     override func viewDidLoad() {
@@ -31,10 +31,13 @@ class AddPaymentViewController: UIViewController {
         print(Model.sharedInstance.totalPrice)
         itemPriceLabel.text = String(Model.sharedInstance.totalPrice)
         shipmentPriceLabel.text = "0.0"
-        taxPriceLabel.text = "0.0"
-        discountLabel.text = "- 0.0"
+        //taxPriceLabel.text = "0.0"
+        //discountLabel.text = "- 0.0"
         totalPriceLabel.text = String("$\(Model.sharedInstance.totalPrice)")
          self.tabBarController?.tabBar.isHidden = true
+        self.navigationController?.navigationBar.isHidden = true
+        tableView.register(UINib(nibName: "AddressTableViewCell", bundle: nil), forCellReuseIdentifier: "addressCell")
+        tableView.tableFooterView = UIView()
     }
 
     override func didReceiveMemoryWarning() {
@@ -50,6 +53,30 @@ class AddPaymentViewController: UIViewController {
         self.tabBarController?.tabBar.isHidden = false
         
     }
+    
+    //MARK: TableView Delegate and Data Source
+    // number of rows in table view
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 1
+    }
+    
+    // create a cell for each table view row
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        // create a new cell if needed or reuse an old one
+        let cell:AddressTableViewCell = self.tableView.dequeueReusableCell(withIdentifier: "addressCell") as! AddressTableViewCell!
+       
+        return cell
+    }
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 90
+    }
+    // method to run when table view cell is tapped
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        print("You tapped cell number \(indexPath.row).")
+        
+    }
+
     @IBAction func completeOrder(_ sender: UIButton) {
         
         if checkCard {

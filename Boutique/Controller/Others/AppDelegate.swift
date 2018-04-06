@@ -25,7 +25,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         isLoggedIn = true
         IQKeyboardManager.sharedManager().enable = true
         // Stripe Configuration
-        Stripe.setDefaultPublishableKey("pk_test_hgdZjDGqsgqvnoYv3qjb8fCR")
+        
+        Stripe.setDefaultPublishableKey("pk_test_zUAsoiGmAgvLpzYruFVCr5Ej")
+        //Stripe.setDefaultPublishableKey("pk_test_hgdZjDGqsgqvnoYv3qjb8fCR")
         //STPPaymentConfiguration.shared().publishableKey = "pk_test_xfBdFEL0TOvvCb5k2QXWbYBj"
         
         UIApplication.statusBarBackgroundColor = UIColor (red: 57.0/255.0, green: 88.0/255.0, blue: 101.0/255.0, alpha: 1)

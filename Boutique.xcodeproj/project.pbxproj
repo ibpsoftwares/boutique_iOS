@@ -59,6 +59,8 @@
 		186A5962203FC8FD00E687BA /* PriceTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 186A5960203FC8FD00E687BA /* PriceTableViewCell.xib */; };
 		187002752043BEB50089156B /* Webservice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 187002742043BEB50089156B /* Webservice.swift */; };
 		187002772043CE420089156B /* Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 187002762043CE420089156B /* Alert.swift */; };
+		187E21CC2066030D00360F10 /* AddressTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 187E21CA2066030D00360F10 /* AddressTableViewCell.swift */; };
+		187E21CD2066030D00360F10 /* AddressTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 187E21CB2066030D00360F10 /* AddressTableViewCell.xib */; };
 		18F074A9203EC30600E7E706 /* StripeTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18F074A8203EC30600E7E706 /* StripeTableViewController.swift */; };
 		18F074AB203EC99100E7E706 /* StripePaymentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18F074AA203EC99100E7E706 /* StripePaymentViewController.swift */; };
 		18F074AD203ED54C00E7E706 /* SuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18F074AC203ED54C00E7E706 /* SuccessViewController.swift */; };
@@ -138,12 +140,14 @@
 		18665F48203159C000F5A5E1 /* BoutiqueUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BoutiqueUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		18665F4C203159C000F5A5E1 /* BoutiqueUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoutiqueUITests.swift; sourceTree = "<group>"; };
 		18665F4E203159C100F5A5E1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		18665F5E20315DF100F5A5E1 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		18665F5E20315DF100F5A5E1 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; wrapsLines = 0; };
 		18665F61203165BA00F5A5E1 /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		186A595F203FC8FD00E687BA /* PriceTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PriceTableViewCell.swift; sourceTree = "<group>"; };
 		186A5960203FC8FD00E687BA /* PriceTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PriceTableViewCell.xib; sourceTree = "<group>"; };
 		187002742043BEB50089156B /* Webservice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Webservice.swift; sourceTree = "<group>"; };
 		187002762043CE420089156B /* Alert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alert.swift; sourceTree = "<group>"; };
+		187E21CA2066030D00360F10 /* AddressTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressTableViewCell.swift; sourceTree = "<group>"; };
+		187E21CB2066030D00360F10 /* AddressTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AddressTableViewCell.xib; sourceTree = "<group>"; };
 		18F074A8203EC30600E7E706 /* StripeTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeTableViewController.swift; sourceTree = "<group>"; };
 		18F074AA203EC99100E7E706 /* StripePaymentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripePaymentViewController.swift; sourceTree = "<group>"; };
 		18F074AC203ED54C00E7E706 /* SuccessViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessViewController.swift; sourceTree = "<group>"; };
@@ -222,6 +226,7 @@
 		1836E371203294A800997FC1 /* Cell */ = {
 			isa = PBXGroup;
 			children = (
+				187E21C9206602C300360F10 /* PaymentCell */,
 				18515A462046602C001ADA07 /* HistoryCell */,
 				186A595E203FC87B00E687BA /* PriceCell */,
 				183C90472036E2FD00B1021F /* CartCell */,
@@ -518,6 +523,15 @@
 			path = Font;
 			sourceTree = "<group>";
 		};
+		187E21C9206602C300360F10 /* PaymentCell */ = {
+			isa = PBXGroup;
+			children = (
+				187E21CA2066030D00360F10 /* AddressTableViewCell.swift */,
+				187E21CB2066030D00360F10 /* AddressTableViewCell.xib */,
+			);
+			path = PaymentCell;
+			sourceTree = "<group>";
+		};
 		220160D76D63B94D00DFA327 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -659,6 +673,7 @@
 			files = (
 				183D541320342F50003B2651 /* MyExpandableTableViewSectionHeader.xib in Resources */,
 				1836E3802032BC6F00997FC1 /* SettingTableViewCell.xib in Resources */,
+				187E21CD2066030D00360F10 /* AddressTableViewCell.xib in Resources */,
 				18665F37203159C000F5A5E1 /* LaunchScreen.storyboard in Resources */,
 				183D63C7203C301B00965E6C /* whitney-bold.otf in Resources */,
 				183D63C3203C268000965E6C /* whitney (1).ttf in Resources */,
@@ -874,6 +889,7 @@
 				183D53FD2033EA2C003B2651 /* CategoryViewController.swift in Sources */,
 				1836E3902032E78100997FC1 /* ProfileViewController.swift in Sources */,
 				1836E3832032C12500997FC1 /* ProductViewController.swift in Sources */,
+				187E21CC2066030D00360F10 /* AddressTableViewCell.swift in Sources */,
 				1860E6B82031A5FA00EB90AC /* MainTabBarViewController.swift in Sources */,
 				1836E38C2032D67500997FC1 /* WishListTableViewCell.swift in Sources */,
 				187002772043CE420089156B /* Alert.swift in Sources */,

@@ -82,6 +82,7 @@ class SettingsViewController: UIViewController,UITableViewDelegate,UITableViewDa
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             if #available(iOS 10.0, *) {
                 let abcViewController = storyboard.instantiateViewController(withIdentifier: "LoginViewController") as! LoginViewController
+                 Model.sharedInstance.userID = ""
                 navigationController?.pushViewController(abcViewController, animated: true)
             } else {
                 // Fallback on earlier versions

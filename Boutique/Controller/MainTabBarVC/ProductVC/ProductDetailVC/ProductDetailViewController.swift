@@ -168,8 +168,8 @@ class ProductDetailViewController: UIViewController,UICollectionViewDelegate,UIC
         }
         self.cartCountLabel.text  = (String)(self.cartlist.count)
     }
-    //MARK: Fetch Wishlist from Core Data
     
+    //MARK: Fetch Wishlist from Core Data
     func fetchWishlistFromCoreData(){
         self.productlocal.removeAll()
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
@@ -260,7 +260,6 @@ class ProductDetailViewController: UIViewController,UICollectionViewDelegate,UIC
                     }
                 }
                 print(self.sizeArr)
-                print(self.sizeArr)
                 self.count = self.imgArr.count
                 print(self.imgArr.count)
                 
@@ -296,8 +295,6 @@ class ProductDetailViewController: UIViewController,UICollectionViewDelegate,UIC
             }
         }
         return 0
-        
-        
     }
     
     func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
@@ -349,7 +346,7 @@ class ProductDetailViewController: UIViewController,UICollectionViewDelegate,UIC
     }
     @objc func selectSize(sender:UIButton!){
         self.selectedIndex = sender.tag
-         size_id = ((sizeArr[0].size)[selectedIndex] as! NSDictionary).value(forKey: "size") as! String
+         size_id = ((sizeArr[0].size)[selectedIndex] as! NSDictionary).value(forKey: "id") as! String
          size = ((sizeArr[0].size)[selectedIndex] as! NSDictionary).value(forKey: "size") as! String
         self.sizeCollectionView.reloadData()
         
@@ -468,7 +465,6 @@ class ProductDetailViewController: UIViewController,UICollectionViewDelegate,UIC
     
     //MARK: addToCartAPI Methods
   func addToCartAPI(){
-    
     if Model.sharedInstance.userID != "" {
         SKActivityIndicator.spinnerColor(UIColor.darkGray)
         SKActivityIndicator.show("Loading...")
@@ -478,12 +474,13 @@ class ProductDetailViewController: UIViewController,UICollectionViewDelegate,UIC
         let parameters: Parameters = [
             "user_id": Model.sharedInstance.userID,
             "cloth_id": self.productID,
-            "quantity": "1"
+            "quantity": "1",
+            "size_id" : size_id
         ]
         
         print(parameters)
         
-        Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecom/recipes/addToCart/", parameters: parameters, headers: nil) { (response:NSDictionary?, error:NSError?) in
+        Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecomm/recipes/addToCart/", parameters: parameters, headers: nil) { (response:NSDictionary?, error:NSError?) in
             if error != nil {
                 print(error?.localizedDescription as Any)
                 Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Something Wrong..")
@@ -520,7 +517,7 @@ class ProductDetailViewController: UIViewController,UICollectionViewDelegate,UIC
                 print(self.cartLocal[row].sizeID)
                 print(size)
                 count = 0
-                if (self.cartLocal[row].id == self.productID && self.cartLocal[row].sizeID == size ){
+                if (self.cartLocal[row].id == self.productID && self.cartLocal[row].sizeID == size_id ){
                    count = 1
                     break
                    Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Item Is Already Exits.")
@@ -649,24 +646,20 @@ class ProductDetailViewController: UIViewController,UICollectionViewDelegate,UIC
                     
                     self.cartProduct.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "cloth_id") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), oldPrice: ((item as! NSDictionary).value(forKey: "image1") as! String), brand: "", wishlistID: "", cout: "1", sizeID: ""))
                 }
-               
                 DispatchQueue.main.async(execute: {
-                    
+                     self.cartCountLabel.text  = (String)(self.cartProduct.count)
                     self.collectionView.reloadData()
                 })
             }
         }
-        
     }
     
     @IBAction func btnAddToWishList(_ sender: UIButton) {
-        
         addToWishListAPI()
-        
     }
+    
     //MARK: addToWishListAPI Methods
     func addToWishListAPI(){
-        
         if Model.sharedInstance.userID != "" {
         SKActivityIndicator.spinnerColor(UIColor.darkGray)
         SKActivityIndicator.show("Loading...")
@@ -703,7 +696,6 @@ class ProductDetailViewController: UIViewController,UICollectionViewDelegate,UIC
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
             return
         }
-        
         for section in 0...self.productlocal.count - 1 {
             
             if let i = self.productlocal.index(where: { $0.id == self.productID }) {
@@ -735,8 +727,6 @@ class ProductDetailViewController: UIViewController,UICollectionViewDelegate,UIC
                 fetchWishlistFromCoreData()
             }
         }
-        
-        
     }
 //    //MARK: addToWishListAPI Methods
 //    func addToWishListAPI(){
@@ -846,7 +836,6 @@ extension ProductDetailViewController {
 }
 
 // MARK: - private
-
 @available(iOS 10.0, *)
 private extension ProductDetailViewController {
     func createWebPhotos() -> [SKPhotoProtocol] {

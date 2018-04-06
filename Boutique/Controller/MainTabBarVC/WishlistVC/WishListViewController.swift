@@ -290,12 +290,10 @@ class WishListViewController: UIViewController,UITableViewDelegate,UITableViewDa
                 productDetailVC.productID = (person.value(forKeyPath: "id") as? String)!
                 navigationController?.pushViewController(productDetailVC, animated: true)
             }
-            }
-        
+        }
         print("You tapped cell number \(indexPath.row).")
-        
-        
     }
+    
     @objc func buttonClicked(sender:UIButton!) {
         print("\(sender.tag)")
         if Model.sharedInstance.userID != ""{
@@ -309,7 +307,55 @@ class WishListViewController: UIViewController,UITableViewDelegate,UITableViewDa
     @IBAction func btnDone(_ sender: UIButton){
         var parameter: Parameters = [:]
         if Model.sharedInstance.userID != "" {
-            parameter = ["user_id": Model.sharedInstance.userID, "cloth_id": "clothID","quantity": "1"]
+                SKActivityIndicator.spinnerColor(UIColor.darkGray)
+                SKActivityIndicator.show("Loading...")
+                print(Model.sharedInstance.userID)
+                parameter = ["user_id": Model.sharedInstance.userID, "cloth_id": "clothID","quantity": "1","size_id" : size_id ]
+            
+                //        else{
+                //            removeItem(index : sender.tag)
+                //        }
+                print(parameter)
+                
+                Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecom/recipes/movetocart/", parameters: parameter, headers: nil) { (response:NSDictionary?, error:NSError?) in
+                    if error != nil {
+                        print(error?.localizedDescription as Any)
+                        Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Something Wrong..")
+                        return
+                    }
+                    DispatchQueue.main.async(execute: {
+                        SKActivityIndicator.dismiss()
+                    })
+                    print(response!)
+                    if ((response!["message"] as? [String:Any]) != nil){
+                        let alert = UIAlertController(title: "Alert", message: (response?.value(forKey: "message") as! String), preferredStyle: UIAlertControllerStyle.alert)
+                        alert.addAction(UIAlertAction(title: "ok", style: UIAlertActionStyle.default, handler: nil))
+                        
+                        self.present(alert, animated: true, completion: nil)
+                    }
+                    else{
+                        
+                        //                let alert = UIAlertController(title: "Alert", message: (response?.value(forKey: "message") as! String), preferredStyle: UIAlertControllerStyle.alert)
+                        //                alert.addAction(UIAlertAction(title: "ok", style: UIAlertActionStyle.default, handler: nil))
+                        
+                        DispatchQueue.main.async(execute: {
+                            // self.wishListProduct.remove(at: sender.tag)
+                            self.tableView.reloadData()
+                            if self.wishListProduct.count > 0 {
+                                Model.sharedInstance.badgeValue = (String)(self.wishListProduct.count)
+                                self.cartCountLabel.text = (String)(self.wishListProduct.count)
+                                let tabItems = self.tabBarController?.tabBar.items as NSArray!
+                                let tabItem = tabItems![3] as! UITabBarItem
+                                tabItem.badgeValue = Model.sharedInstance.badgeValue
+                            }
+                            self.getWishListAPI()
+                            
+                        })
+                        //self.present(alert, animated: true, completion: nil)
+                    }
+                }
+            
+            
         }
         else{
             if size == ""{
@@ -320,8 +366,8 @@ class WishListViewController: UIViewController,UITableViewDelegate,UITableViewDa
             }
         }
         print(parameter)
-        
     }
+    
     //MARK: Fetch Wishlist from lacal database
     func wishlistFromLocalDatabase(){
         
@@ -330,9 +376,7 @@ class WishListViewController: UIViewController,UITableViewDelegate,UITableViewDa
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
             return
         }
-        
         let managedContext = appDelegate.persistentContainer.viewContext
-        
         let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Wishlist")
         do {
             self.wishlist = try managedContext.fetch(fetchRequest)
@@ -344,15 +388,15 @@ class WishListViewController: UIViewController,UITableViewDelegate,UITableViewDa
             let tabItem = tabItems![3] as! UITabBarItem
             tabItem.badgeValue = String(wishlist.count)
             
+        }else{
+            let tabItems = self.tabBarController?.tabBar.items as NSArray!
+            let tabItem = tabItems![3] as! UITabBarItem
+            tabItem.badgeValue = nil
         }
     }
     
-    
-    
-    
     //MARK: Remove item for wishlist
     func removeItem(index : NSInteger){
- 
         let managedContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
         let note = wishlist[index]
         managedContext.delete(note)
@@ -382,16 +426,12 @@ class WishListViewController: UIViewController,UITableViewDelegate,UITableViewDa
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
             return
         }
-        
         let managedCon = appDelegate.persistentContainer.viewContext
-        
         let entity = NSEntityDescription.entity(forEntityName: "Cartlist",
                                                 in: managedCon)!
-        
         let cart = NSManagedObject(entity: entity,
                                    insertInto: managedCon)
         let data = wishlist[index]
-        
         cart.setValue((data.value(forKeyPath: "id") as? String)!, forKeyPath: "id")
         cart.setValue((data.value(forKeyPath: "name") as? String)!, forKeyPath: "name")
         cart.setValue((data.value(forKeyPath: "price") as? String)!, forKeyPath: "price")
@@ -435,31 +475,33 @@ class WishListViewController: UIViewController,UITableViewDelegate,UITableViewDa
     }
     //MARK: addToCartAPI Methods
     
-    
-    
-    
-    
     @objc func addToCartAPI(sender:UIButton!){
-            cartSelectedIndex = sender.tag
-            getItemSize(index: sender.tag)
         
-        
-        
-//        SKActivityIndicator.spinnerColor(UIColor.darkGray)
-//        SKActivityIndicator.show("Loading...")
-//        print(Model.sharedInstance.userID)
+        if Model.sharedInstance.userID == ""{
+        cartSelectedIndex = sender.tag
+        getItemSize(index: sender.tag)
+    }
+        else{
+        var parameter: Parameters = [:]
+            if size == ""{
+                getItemSize(index: sender.tag)
+                Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Select Size")
+            }
+//            }else{
 //
-//        var parameter: Parameters = [:]
-//        if Model.sharedInstance.userID != "" {
+//                SKActivityIndicator.spinnerColor(UIColor.darkGray)
+//                SKActivityIndicator.show("Loading...")
+//                print(Model.sharedInstance.userID)
+//               let sizeid = (((sizeArr[0].size[selectedIndex] as! NSDictionary).value(forKey: "Size") as! NSDictionary).value(forKey: "size_id") as! String)
+//                parameter = ["user_id": Model.sharedInstance.userID, "cloth_id": "clothID","quantity": "1","size_id" : sizeid ]
 //
 //
-//            parameter = ["user_id": Model.sharedInstance.userID, "cloth_id": "clothID","quantity": "1"]
-//        }
-//        else{
-//            removeItem(index : sender.tag)
-//        }
+//
+////        else{
+////            removeItem(index : sender.tag)
+////        }
 //        print(parameter)
-        
+//
 //        Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecom/recipes/movetocart/", parameters: parameter, headers: nil) { (response:NSDictionary?, error:NSError?) in
 //            if error != nil {
 //                print(error?.localizedDescription as Any)
@@ -497,14 +539,21 @@ class WishListViewController: UIViewController,UITableViewDelegate,UITableViewDa
 //                //self.present(alert, animated: true, completion: nil)
 //            }
 //        }
+//      }
+    }
     }
     
     func getItemSize(index: NSInteger){
+        var parameter: Parameters = [:]
+        if Model.sharedInstance.userID == ""{
         let person = wishlist[index]
         let clothID = (person.value(forKeyPath: "id") as? String)!
-        var parameter: Parameters = [:]
-        parameter = ["cloth_id":clothID]
-
+         parameter = ["cloth_id":clothID]
+        }
+        else{
+             parameter = ["cloth_id":wishListProduct[index].id]
+        }
+        print(parameter)
         Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecom/recipes/getsize/", parameters: parameter, headers: nil) { (response:NSDictionary?, error:NSError?) in
             if error != nil {
                 print(error?.localizedDescription as Any)
@@ -621,7 +670,7 @@ class WishListViewController: UIViewController,UITableViewDelegate,UITableViewDa
                 if selectedIndex == indexPath.row                {
                     cell.sizeBtn.backgroundColor = UIColor (red: 43.0/255.0, green: 59.0/255.0, blue: 68.0/255.0, alpha: 1)
                     cell.sizeLabel.textColor = UIColor.white
-                    selectedIndex = 200
+                   // selectedIndex = 200
                 }
                 else{
                     cell.sizeBtn.backgroundColor = UIColor.white
@@ -658,7 +707,7 @@ class WishListViewController: UIViewController,UITableViewDelegate,UITableViewDa
             ]
         print(parameters)
         
-        Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecom/recipes/rmwishlist/ZWNvbW1lcmNl/", parameters: parameters, headers: nil) { (response:NSDictionary?, error:NSError?) in
+        Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecomm/recipes/rmwishlist/ZWNvbW1lcmNl/", parameters: parameters, headers: nil) { (response:NSDictionary?, error:NSError?) in
             if error != nil {
                 print(error?.localizedDescription as Any)
                 Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Something Wrong..")

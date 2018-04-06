@@ -24,18 +24,32 @@ class LoginViewController: UIViewController {
      @IBOutlet var btnSignUP: UIButton!
      @IBOutlet var lbl1: UILabel!
      @IBOutlet var lbl2: UILabel!
-    var wishlistArr = String()
+     @IBOutlet var testing: UILabel!
+    var wishlistArr = [String]()
      var cartArr = [NSDictionary]()
-   
     var wishlist: [NSManagedObject] = []
     var cartlist: [NSManagedObject] = []
     var cart = NSMutableArray()
     var size = [getPrice]()
-     var myArray = NSMutableArray()
+     var cartArray = NSArray()
+     var wishlistArray = NSArray()
     var objectModel = Model.sharedInstance
+    var jsonObject: [String: Any]?
+     var cartJsonObject: [String: Any]?
+   var arrayCart: [NSDictionary] = []
+    var arrayWishlist: [NSDictionary] = []
+    var parameters =  [String:String]()
+    var dictCart: [Dictionary<String, AnyObject>] = []
+    var dictWishlist: [Dictionary<String, AnyObject>] = []
     override func viewDidLoad() {
         super.viewDidLoad()
 
+       
+        
+        testing.attributedText = NSAttributedString(html: "<span>&#8377</span>")
+
+        let rupee = "\u{20b9}"
+        print(rupee)
         // Do any additional setup after loading the view.
        
         self.navigationController?.navigationBar.isHidden = true
@@ -60,6 +74,7 @@ class LoginViewController: UIViewController {
         let uuid = UIDevice.current.identifierForVendor?.uuidString
         print(uuid!)
     }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -86,16 +101,19 @@ class LoginViewController: UIViewController {
         if wishlist.count > 0{
             for row in 0...wishlist.count - 1{
                 let person = wishlist[row]
-                let cartID = (person.value(forKeyPath: "id") as! String)
-                print(cartID)
-                wishlistArr.append(cartID + ",")
-            }
+                let wishID = (person.value(forKeyPath: "id") as! String)
+                
+                let dictPoint = [
+                    "cloth_id": wishID
+                ]
+                dictWishlist.append(dictPoint as [String : AnyObject])
+                
+                let dict = ["cloth_id": "\(wishID)"]
+                self.arrayWishlist.append(dict as NSDictionary)
         }
-//        var str = wishlistArr
-//        str.removeLast()
-//        wishlistArr = str
-        
-        let Context = appDelegate.persistentContainer.viewContext
+          
+            print(self.arrayWishlist)
+         let Context = appDelegate.persistentContainer.viewContext
         
         let Request = NSFetchRequest<NSManagedObject>(entityName: "Cartlist")
         do {
@@ -103,7 +121,7 @@ class LoginViewController: UIViewController {
         } catch let error as NSError {
             print("Could not fetch. \(error), \(error.userInfo)")
         }
-        
+       }
         if cartlist.count > 0{
             for row in 0...cartlist.count - 1{
                 let person = cartlist[row]
@@ -111,38 +129,30 @@ class LoginViewController: UIViewController {
                 //self.size.append(getPrice.init(id: (person.value(forKeyPath: "id") as! String), range_a: "1", range_b: "2"))
                
                let cartID = (person.value(forKeyPath: "id") as! String)
-               print(cartID)
                 
-//                cartArr.append(cartID + ",")
+                let dictPoint = [
+                    "cloth_id": cartID,
+                    "size_id": (person.value(forKeyPath: "sizeID") as! String)
+                ]
+                dictCart.append(dictPoint as [String : AnyObject])
                 
-                let jsonObject: NSMutableDictionary = NSMutableDictionary()
-                jsonObject.setValue(cartID, forKey: "cloth_id")
-                jsonObject.setValue("2", forKey: "size_id")
-                
-                myArray.add(jsonObject)
-                
+                let dict = ["cloth_id": cartID,
+                            "size_id" : (person.value(forKeyPath: "sizeID") as! String)
+                        ]
+                self.arrayCart.append(dict as NSDictionary)
+            }
         }
-        }
-     print("\(myArray)")
-        
-        
-//        var str1 = cartArr
-//        str1.removeLast()
-//        cartArr = str1
     }
-
+    
     //MARK: textFieldValidation Method
     func textFieldValidation()
     {
         if (self.textEmail.text?.isEmpty)! {
-            
             Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Enter Email")
         }
         else if (self.textEmail.text?.isEmpty)! {
-            
             Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Enter Password")
         }
-            
         else{
             loginMethod()
         }
@@ -228,69 +238,120 @@ class LoginViewController: UIViewController {
                     self.objectModel.userID = ((item as! NSDictionary).value(forKey: "userid") as! String)
                     print(self.objectModel.userID)
                 }
-                let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                let abcViewController = storyboard.instantiateViewController(withIdentifier: "MainTabBarViewController") as! MainTabBarViewController
-                self.navigationController?.pushViewController(abcViewController, animated: true)
-              //  self.wishlistAndCart()
-//                UserDefaults.standard.set("loginIn", forKey: "loggedIn")
-//                UserDefaults.standard.synchronize()
-//
-//                let storyboard = UIStoryboard(name: "Main", bundle: nil)
-//                let abcViewController = storyboard.instantiateViewController(withIdentifier: "MainTabBarViewController") as! MainTabBarViewController
-//                self.navigationController?.pushViewController(abcViewController, animated: true)
-                
-            }
+                self.wishlistAndCart()
+         }
         }
     }
     
+   
+    func toJSonString(data : Any) -> String {
+        
+        var jsonString = "";
+        
+        do {
+            
+            let jsonData = try JSONSerialization.data(withJSONObject: data, options: .prettyPrinted)
+            jsonString = NSString(data: jsonData, encoding: String.Encoding.utf8.rawValue)! as String
+            
+        } catch {
+            print(error.localizedDescription)
+        }
+        
+        return jsonString;
+    }
+
     
     //MARK: wishlistAndCart API Methods
     func wishlistAndCart(){
         
         SKActivityIndicator.spinnerColor(UIColor.darkGray)
         SKActivityIndicator.show("Loading...")
-//        let parameters: [String: Any] = [
-//            "user_id": Model.sharedInstance.userID,
-//            "cart_id": cartArr ,
-//             "wishlist_id": wishlistArr
-//        ]
-        let parameters: Parameters = [
-            "cart": myArray,
-            "user_id": "42"
-        ]
-        print(parameters)
-    
-//        let headers = ["Authorization":"Bearer ZWNvbW1lcmNl"]
-//        Alamofire.request("http://kftsoftwares.com/ecom/recipes/sendmewishlistdatafortesting", method: .post, parameters: parameters, encoding: URLEncoding.default, headers: headers).responseString
-//            { response in
-//
-//                print(response.result.value!)
-//        }
+       
         
-        Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecom/recipes/sendmewishlistdatafortesting/", parameters: parameters, headers: nil) { (response:NSDictionary?, error:NSError?) in
-            if error != nil {
-                print(error?.localizedDescription as Any)
-                DispatchQueue.main.async(execute: {
-                    SKActivityIndicator.dismiss()
-                })
-                Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Login Failed.Try Again..")
-                return
+        let parameters: [String: Any] = [
+            "wishlist_id":dictWishlist,
+            "cart_id":dictCart,
+             "user_id":Model.sharedInstance.userID
+        ]
+        
+        let params: [String:Any] = ["user_id": Model.sharedInstance.userID,
+                                    "wishlist_id":toJSonString(data: dictWishlist)
+                                ,"cart_id":toJSonString(data: dictCart)];
+        
+        print(params)
+        do{
+             let jsonData = try JSONSerialization.data(withJSONObject: parameters, options: JSONSerialization.WritingOptions()) as NSData
+            let jsonString = NSString(data: jsonData as Data, encoding: String.Encoding.utf8.rawValue)! as String
+            print("json string = \(jsonString)")
+           // parameters = ["jo" : jsonString]
+            if let data = jsonString.data(using: .utf8) {
+                do {
+                    let dictData = try JSONSerialization.jsonObject(with: data, options: []) as! [String: Any]
+                //   print(dictData)
+                } catch {
+                    print(error.localizedDescription)
+                }
             }
-            DispatchQueue.main.async(execute: {
-                SKActivityIndicator.dismiss()
-            })
-            print(response!)
-            if (response?.value(forKey: "message") as! String) == "Invalid Email or Password "{
-                Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: (response?.value(forKey: "message") as! String))
-            }
-            else{
+            
+           
+            if (cartJsonObject as Dictionary<String, AnyObject>?) != nil
+                {
+                    print("XD")
+                }
+
+        } catch _ {
+            print ("UH OOO")
+        }
+         print(parameters)
+        let headers = ["Authorization":"Bearer ZWNvbW1lcmNl"]
+        Alamofire.request("http://kftsoftwares.com/ecomm/recipes/sendmewishlistdatafortesting/", method: .post, parameters: params, encoding: URLEncoding.default, headers: headers).responseString
+            { response in
+
+                print(response.result.value!)
+                
                 let storyboard = UIStoryboard(name: "Main", bundle: nil)
                 let abcViewController = storyboard.instantiateViewController(withIdentifier: "MainTabBarViewController") as! MainTabBarViewController
                 self.navigationController?.pushViewController(abcViewController, animated: true)
-               // Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: (response?.value(forKey: "message") as! String))
-            }
         }
+        print(parameters)
+        
+        
+        
+       
+//
+//        Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecomm/recipes/sendmewishlistdatafortesting/", parameters: parameters, headers: nil) { (response:NSDictionary?, error:NSError?) in
+//            if error != nil {
+//                print(error?.localizedDescription as Any)
+//                DispatchQueue.main.async(execute: {
+//                    SKActivityIndicator.dismiss()
+//                })
+//                Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Login Failed.Try Again..")
+//                return
+//            }
+//            DispatchQueue.main.async(execute: {
+//                SKActivityIndicator.dismiss()
+//            })
+//            print(response!)
+//            if (response?.value(forKey: "message") as! String) == "Invalid Email or Password "{
+//                Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: (response?.value(forKey: "message") as! String))
+//            }
+//            else{
+//                let storyboard = UIStoryboard(name: "Main", bundle: nil)
+//                let abcViewController = storyboard.instantiateViewController(withIdentifier: "MainTabBarViewController") as! MainTabBarViewController
+//                self.navigationController?.pushViewController(abcViewController, animated: true)
+//               // Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: (response?.value(forKey: "message") as! String))
+//            }
+//        }
     }
+    
+    func replace(myString: String, _ index: Int, _ newChar: Character) -> String {
+        var chars = Array(myString.characters)     // gets an array of characters
+        chars[index] = newChar
+        let modifiedString = String(chars)
+        return modifiedString
+    }
+    
+    
     @IBAction func btnForgetPass(_ sender: UIButton) {
         
         let alertController = UIAlertController(title: "Forget Password", message: "", preferredStyle: UIAlertControllerStyle.alert)
@@ -342,4 +403,16 @@ class LoginViewController: UIViewController {
         self.navigationController?.pushViewController(signupVC, animated: true)
     }
     
+}
+extension NSAttributedString {
+    internal convenience init?(html: String) {
+        guard let data = html.data(using: String.Encoding.utf16, allowLossyConversion: false) else {
+            // not sure which is more reliable: String.Encoding.utf16 or String.Encoding.unicode
+            return nil
+        }
+        guard let attributedString = try? NSMutableAttributedString(data: data, options: [NSAttributedString.DocumentReadingOptionKey.documentType: NSAttributedString.DocumentType.html], documentAttributes: nil) else {
+            return nil
+        }
+        self.init(attributedString: attributedString)
+    }
 }

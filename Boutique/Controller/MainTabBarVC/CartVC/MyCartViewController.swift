@@ -76,7 +76,6 @@ class MyCartViewController: UIViewController,UITableViewDelegate,UITableViewData
     }
     
     
-    
     func deleteRecords() -> Void {
             
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
@@ -187,7 +186,7 @@ class MyCartViewController: UIViewController,UITableViewDelegate,UITableViewData
                     for item in ((response)?.value(forKey: "items") as! NSArray) {
                         print(item)
                         
-                        self.cartProduct.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "cloth_id") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), oldPrice: "", brand: "", wishlistID: "", cout: "1", sizeID: ""))
+                        self.cartProduct.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "cloth_id") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), oldPrice: (((item as! NSDictionary).value(forKey: "size") as! NSDictionary).value(forKey: "id") as! String), brand: "", wishlistID: "", cout: "1", sizeID: (((item as! NSDictionary).value(forKey: "size") as! NSDictionary).value(forKey: "size") as! String)))
                     }
                     let defaults = UserDefaults.standard
                     defaults.set(self.cartProduct.count, forKey: "totalCartItem")
@@ -242,9 +241,7 @@ class MyCartViewController: UIViewController,UITableViewDelegate,UITableViewData
         return cell
     }
     
-    
     @objc func addBtn(sender: AnyObject) -> Int {
-        
         let indexPath = IndexPath(item: sender.tag, section: 0) // This defines what indexPath is which is used later to define a cell
         let cell = tableView.cellForRow(at: indexPath) as! CartCell! // This is where the magic happens - reference to the cell
         
@@ -328,7 +325,7 @@ class MyCartViewController: UIViewController,UITableViewDelegate,UITableViewData
     }
     @objc func remove(sender:UIButton!) {
         if Model.sharedInstance.userID != "" {
-            self.deleteItemFromCart(cartID: self.cartProduct[sender.tag].id)
+            self.deleteItemFromCart(cartID: self.cartProduct[sender.tag].id, sizeID: self.cartProduct[sender.tag].oldPrice)
         }
         else{
              if cartlist.count > 0{
@@ -347,15 +344,15 @@ class MyCartViewController: UIViewController,UITableViewDelegate,UITableViewData
     }
     
     //MARK: deleteItemFromCart Methods
-    func deleteItemFromCart( cartID : String){
+    func deleteItemFromCart( cartID : String,sizeID: String){
         
         var parameter: Parameters = [:]
         if Model.sharedInstance.userID != "" {
-            parameter = ["user_id": Model.sharedInstance.userID, "cloth_id": cartID]
+            parameter = ["user_id": Model.sharedInstance.userID, "cloth_id": cartID,"size_id": sizeID]
         }
         print(parameter)
         
-        Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecom/recipes/rmcart/", parameters: parameter, headers: nil) { (response:NSDictionary?, error:NSError?) in
+        Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecomm/recipes/rmcart/", parameters: parameter, headers: nil) { (response:NSDictionary?, error:NSError?) in
             if error != nil {
                 print(error?.localizedDescription as Any)
                 Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Something Wrong..")

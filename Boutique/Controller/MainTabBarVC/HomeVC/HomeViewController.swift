@@ -98,8 +98,8 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
         self.wishListProduct.removeAll()
         self.wishlist.removeAll()
         if Model.sharedInstance.userID != ""{
-            //getCartViewAPI()
-            //getWishListAPI()
+            getCartViewAPI()
+            getWishListAPI()
         }
         else{
             wishlistFromLocalDatabase()
@@ -226,7 +226,7 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
         
           print(parameter)
         
-        Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecom/recipes/ViewCart/", parameters:parameter, headers: nil, completionHandler: { (response:NSDictionary?, error:NSError?) in
+        Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecomm/recipes/ViewCart/", parameters:parameter, headers: nil, completionHandler: { (response:NSDictionary?, error:NSError?) in
             if error != nil {
                 print(error?.localizedDescription as Any)
                 Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Something Wrong..")
@@ -246,7 +246,7 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
                     for item in ((response)?.value(forKey: "items") as! NSArray) {
                         print(item)
                         
-                        self.cartProduct.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "Cloth_id") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), oldPrice: "", brand: "", wishlistID: "", cout: "1", sizeID: ""))
+                        self.cartProduct.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "cloth_id") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), oldPrice: "", brand: "", wishlistID: "", cout: "1", sizeID: ""))
                     }
                     
                     self.wishlistCountLabel.text  = (String)(self.cartProduct.count)
@@ -556,12 +556,10 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
         wishlistFromLocalDatabase()
     }
     
-    
-    
-    
     //MARK: addToWishListAPI Methods
     @objc func addToWishListAPI(sender:UIButton!){
         
+        print(sender.tag)
         seletedIndex = sender.tag
         var parameter: Parameters = [:]
         
@@ -579,8 +577,33 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
             }
            else  if sender.imageView?.image == UIImage (named: "heart") {
                 
-                sender.setImage(UIImage(named: "emptyWishlist"), for: .normal)
-                self.productlocal.remove(at: sender.tag)
+                for section in 0...self.product.count - 1 {
+                    
+                    if section == sender.tag{
+                        sender.setImage(UIImage(named: "emptyWishlist"), for: .normal)
+                        deleteRecords(index:sender.tag)
+                       // self.productlocal.remove(at: sender.tag)
+                    }else{
+                       // self.productlocal.remove(at: section)
+                    }
+                
+                print(product.count)
+                    
+                    
+//                    if let i = self.product.index(where: { $0.id == self.productlocal[section].id }) {
+//                        print(i)
+//                        //self.product[i].wishlistID = "1"
+//                        print("Section: match found")
+//                        sender.setImage(UIImage(named: "emptyWishlist"), for: .normal)
+//                        self.productlocal.remove(at: sender.tag)
+//                    }
+//                    else{
+//                        self.product.remove(at: section)
+//                       // self.productlocal.remove(at: section)
+//                        print("Section: match not found")
+//                    }
+                }
+                
             }
             
         }
@@ -639,6 +662,36 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
             }
         }
     }
+    //MARK: DeleteItem from wishlist
+    func deleteRecords(index:NSInteger){
+        
+//        for section in 0...self.product.count - 1 {
+//            if self.product[section].wishlistID == ""{
+//
+//            }else{
+//                self.product.remove(at: section)
+//            }
+//        }
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+            return
+        }
+        let managedContext = appDelegate.persistentContainer.viewContext
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Wishlist")
+        do {
+            cartlist = try managedContext.fetch(fetchRequest)
+        } catch let error as NSError {
+            print("Could not fetch. \(error), \(error.userInfo)")
+        }
+            let note = wishlist[index]
+            managedContext.delete(note)
+            
+            do {
+                try managedContext.save()
+            } catch let error as NSError {
+                print("Error While Deleting Note: \(error.userInfo)")
+            }
+        wishlistFromLocalDatabase()
+    }
     
   
     //MARK: getWishListAPI Methods
@@ -657,7 +710,7 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
         
         print(parameter)
         
-        Webservice.apiPost(serviceName:"http://kftsoftwares.com/ecom/recipes/viewWishlist/", parameters:parameter, headers: nil, completionHandler: { (response:NSDictionary?, error:NSError?) in
+        Webservice.apiPost(serviceName:"http://kftsoftwares.com/ecomm/recipes/viewWishlist/", parameters:parameter, headers: nil, completionHandler: { (response:NSDictionary?, error:NSError?) in
             if error != nil {
                 print(error?.localizedDescription as Any)
                 Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Something Wrong..")

@@ -60,11 +60,9 @@ class SignUpViewController: UIViewController,UIImagePickerControllerDelegate,UIN
     func textFieldValidation()
     {
         if (self.textUserName.text?.isEmpty)! {
-            
             Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Enter UserName")
         }
         else if (self.textEmail.text?.isEmpty)! {
-            
             Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Enter Email")
         }
         else if (self.textPasssword.text?.isEmpty)! {
@@ -128,12 +126,10 @@ class SignUpViewController: UIViewController,UIImagePickerControllerDelegate,UIN
         
         self.navigationController?.popViewController(animated: true)
     }
-    
     @IBAction func backHaveAcc(_ sender: UIButton) {
         
         self.navigationController?.popViewController(animated: true)
     }
-    
     @IBAction func BtnsignUP(_ sender: UIButton) {
         
         textFieldValidation()
@@ -166,7 +162,6 @@ class SignUpViewController: UIViewController,UIImagePickerControllerDelegate,UIN
         alert.addAction(cancelAction)
         self.present(alert, animated: true, completion: nil)
     }
-    
     
     func openCamera(){
         if(UIImagePickerController .isSourceTypeAvailable(UIImagePickerControllerSourceType.camera)){
