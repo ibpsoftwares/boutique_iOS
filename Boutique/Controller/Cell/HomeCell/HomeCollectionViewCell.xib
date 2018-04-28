@@ -52,13 +52,13 @@
                                         <color key="textColor" red="0.49803921569999998" green="0.50588235290000005" blue="0.50980392159999999" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="$ 243" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zHh-eh-bVF">
-                                        <rect key="frame" x="5" y="27.5" width="31" height="15"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="243" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zHh-eh-bVF">
+                                        <rect key="frame" x="5" y="27.5" width="21" height="15"/>
                                         <fontDescription key="fontDescription" name="Whitney-Medium" family="Whitney" pointSize="13"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="$ 243" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="k7j-RG-poz">
-                                        <rect key="frame" x="46" y="27" width="31" height="15"/>
+                                        <rect key="frame" x="36" y="27" width="31" height="15"/>
                                         <fontDescription key="fontDescription" name="Whitney-Medium" family="Whitney" pointSize="13"/>
                                         <color key="textColor" red="0.96078431369999995" green="0.01176470588" blue="0.1450980392" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
@@ -72,7 +72,7 @@
                                         <state key="normal" image="emptyWishlist"/>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Bgq-6u-YJb">
-                                        <rect key="frame" x="46" y="34" width="31" height="1"/>
+                                        <rect key="frame" x="36" y="34" width="31" height="1"/>
                                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="1" id="Byn-Ky-7jL"/>
@@ -87,15 +87,23 @@
                                         <color key="textColor" red="0.49803921568627452" green="0.50588235294117645" blue="0.50980392156862742" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BfO-Pf-wsB">
+                                        <rect key="frame" x="5" y="35" width="0.0" height="0.0"/>
+                                        <fontDescription key="fontDescription" name="Whitney-Medium" family="Whitney" pointSize="13"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
+                                    <constraint firstItem="zHh-eh-bVF" firstAttribute="leading" secondItem="BfO-Pf-wsB" secondAttribute="trailing" id="1LT-GB-FLh"/>
                                     <constraint firstItem="k7j-RG-poz" firstAttribute="centerY" secondItem="zHh-eh-bVF" secondAttribute="centerY" id="5ip-r9-Ont"/>
                                     <constraint firstItem="v05-99-hnC" firstAttribute="leading" secondItem="mAR-kh-Tq4" secondAttribute="leading" constant="5" id="Csc-Py-XVm"/>
                                     <constraint firstItem="Bgq-6u-YJb" firstAttribute="trailing" secondItem="k7j-RG-poz" secondAttribute="trailing" id="Eov-6z-OX6"/>
                                     <constraint firstItem="zHh-eh-bVF" firstAttribute="top" secondItem="v05-99-hnC" secondAttribute="bottom" constant="5" id="JyD-EP-XBL"/>
-                                    <constraint firstItem="zHh-eh-bVF" firstAttribute="leading" secondItem="v05-99-hnC" secondAttribute="leading" id="UCy-Ue-Dxg"/>
                                     <constraint firstAttribute="height" constant="72" id="VVJ-r9-OuN"/>
+                                    <constraint firstItem="zHh-eh-bVF" firstAttribute="centerY" secondItem="BfO-Pf-wsB" secondAttribute="centerY" id="W8Q-MX-RGh"/>
+                                    <constraint firstItem="BfO-Pf-wsB" firstAttribute="leading" secondItem="v05-99-hnC" secondAttribute="leading" id="aKD-Yn-y1q"/>
                                     <constraint firstItem="v05-99-hnC" firstAttribute="top" secondItem="mAR-kh-Tq4" secondAttribute="top" constant="5" id="eDk-Le-MeJ"/>
                                     <constraint firstItem="dF1-Sp-dnt" firstAttribute="top" secondItem="zHh-eh-bVF" secondAttribute="bottom" constant="5" id="ecp-GK-hN2"/>
                                     <constraint firstItem="zk0-Af-RaC" firstAttribute="centerY" secondItem="v05-99-hnC" secondAttribute="centerY" id="etV-cQ-0W6"/>
@@ -133,6 +141,7 @@
                 <outlet property="brandNameLabel" destination="v05-99-hnC" id="nfQ-n5-Nfz"/>
                 <outlet property="cellView" destination="QK6-Df-NSL" id="sEb-Rj-EW9"/>
                 <outlet property="crossLabel" destination="Bgq-6u-YJb" id="cBT-HA-ceX"/>
+                <outlet property="currencyLabel" destination="BfO-Pf-wsB" id="aWF-BX-RjE"/>
                 <outlet property="oldPriceLabel" destination="k7j-RG-poz" id="R1L-6g-1kW"/>
                 <outlet property="originalPriceLabel" destination="zHh-eh-bVF" id="dlP-1u-Qkt"/>
                 <outlet property="productImg" destination="UmF-65-YHS" id="Tfn-UM-e2T"/>

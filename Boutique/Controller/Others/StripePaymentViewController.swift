@@ -9,6 +9,7 @@
 import UIKit
 import Stripe
 import Alamofire
+import SKActivityIndicatorView
 
 class StripePaymentViewController: UIViewController,UITextFieldDelegate {
 
@@ -48,6 +49,8 @@ class StripePaymentViewController: UIViewController,UITextFieldDelegate {
         amountView.layer.borderColor = UIColor (red: 204.0/255.0, green: 204.0/255.0, blue: 204/255.0, alpha: 1).cgColor
         amountView.layer.borderWidth = 0.8
         self.tabBarController?.tabBar.isHidden = true
+        
+        self.amountTextField.text = "\(String(Model.sharedInstance.totalPrice))"
     }
 
     override func didReceiveMemoryWarning() {
@@ -116,22 +119,83 @@ class StripePaymentViewController: UIViewController,UITextFieldDelegate {
          let headers = ["Authorization":"Bearer ZWNvbW1lcmNl"]
         //let url = "https://thawing-inlet-46474.herokuapp.com/charge.php"
         let url = "http://kftsoftwares.com/ecomm/recipes/payment/"
-        Alamofire.request(url, method:.post, parameters:parameters, headers:headers).responseJSON { response in
-            switch response.result {
+        
+        SKActivityIndicator.spinnerColor(UIColor.darkGray)
+        SKActivityIndicator.show("Loading...")
+        
+        Webservice.apiPost(apiURl: "payment/", parameters: parameters, headers: nil) { (response:NSDictionary?, error:NSError?) in
+            if error != nil {
+                print(error?.localizedDescription as Any)
+                Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Login Failed.Try Again..")
+                return
+            }
+            DispatchQueue.main.async(execute: {
+                SKActivityIndicator.dismiss()
+            })
+            print(response!)
+            if (((response?.value(forKey: "customer_array") as! NSDictionary).value(forKey: "status") as! String)  == "succeeded"){
                 
-            case .success:
-                
-                debugPrint(response)
-                print(response.request!) // original URL request
-                print(response.response!) // URL response
-                print(response.data!) // server data
-                print(response.result)
-                
-            case .failure(let error):
-                
-                print(error)
+                self.orderDetailAPI(amount: Model.sharedInstance.totalAmt, userID: Model.sharedInstance.userID, paymentType: Model.sharedInstance.paymentType)
+            }
+            else{
+                if (response?.value(forKey: "customer_array")  != nil){
+                    
+                    }else{
+                        
+                    }
+                }
+            }
+        }
+        
+    func orderDetailAPI(amount: String,userID: String,paymentType:String){
+        
+        var myString = amount
+        myString.remove(at: myString.startIndex)
+        print(myString)
+        let parameters: Parameters = [
+            "user_id": userID,
+            "amount": myString,
+             "paymentType": paymentType,
+        ]
+        print(parameters)
+        Webservice.apiPost(apiURl: "orderDetail/", parameters: parameters, headers: nil) { (response:NSDictionary?, error:NSError?) in
+            if error != nil {
+                print(error?.localizedDescription as Any)
+                Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Login Failed.Try Again..")
+                return
+            }
+            DispatchQueue.main.async(execute: {
+                SKActivityIndicator.dismiss()
+            })
+            print(response!)
+           
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let abcViewController = storyboard.instantiateViewController(withIdentifier: "SuccessViewController") as! SuccessViewController
+            self.navigationController?.pushViewController(abcViewController, animated: true)
             }
         }
     }
+        
+        
+//        Alamofire.request(url, method:.post, parameters:parameters, headers:headers).responseJSON { response in
+//            switch response.result {
+//
+//            case .success:
+//
+//                debugPrint(response)
+//                print(response.request!) // original URL request
+//                print(response.response!) // URL response
+//                print(response.data!) // server data
+//                print(response.result)
+////                if (((((response.value(forKey: "customer_array")) as! NSArray).object(at: 0)) as! NSDictionary).value(forKey: "address") as! String) == ""{
+////
+////                }
+//
+//            case .failure(let error):
+//
+//                print(error)
+//            }
+//        }
+    
 
-}
+

@@ -58,7 +58,7 @@ class CartViewController: UIViewController,UITableViewDelegate,UITableViewDataSo
         self.cartProduct.removeAll()
         SKActivityIndicator.spinnerColor(UIColor.darkGray)
         SKActivityIndicator.show("Loading...")
-        let requestString = "http://kftsoftwares.com/ecom/recipes/ViewCart/\(Model.sharedInstance.userID)/ZWNvbW1lcmNl/"
+        let requestString = "ViewCart/\(Model.sharedInstance.userID)/ZWNvbW1lcmNl/"
         Alamofire.request(requestString,method: .post, parameters: nil, encoding: JSONEncoding.default, headers: [:]).responseJSON { (response:DataResponse<Any>) in
             
             switch(response.result) {
@@ -150,7 +150,7 @@ class CartViewController: UIViewController,UITableViewDelegate,UITableViewDataSo
             "cart_id": cartID,
             ]
         print(parameters)
-        let url = "http://kftsoftwares.com/ecom/recipes/rmcart/ZWNvbW1lcmNl/"
+        let url = "rmcart/ZWNvbW1lcmNl/"
         
         Alamofire.request(url, method:.post, parameters:parameters, headers:nil).responseJSON { response in
             switch response.result {

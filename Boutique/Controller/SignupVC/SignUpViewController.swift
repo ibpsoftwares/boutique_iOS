@@ -81,6 +81,7 @@ class SignUpViewController: UIViewController,UIImagePickerControllerDelegate,UIN
         }
     }
     //MARK: signupAPI Methods
+    @available(iOS 10.0, *)
     func signupAPI(){
         SKActivityIndicator.spinnerColor(UIColor.darkGray)
         SKActivityIndicator.show("Loading...")
@@ -91,7 +92,7 @@ class SignUpViewController: UIViewController,UIImagePickerControllerDelegate,UIN
             "password": self.textPasssword.text!
         ]
         print(parameters)
-        Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecomm/recipes/signup/", parameters: parameters, headers: nil) { (response:NSDictionary?, error:NSError?) in
+        Webservice.apiPost(apiURl: "signup/", parameters: parameters, headers: nil) { (response:NSDictionary?, error:NSError?) in
             if error != nil {
                 print(error?.localizedDescription as Any)
                 Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Login Failed.Try Again..")
@@ -105,7 +106,10 @@ class SignUpViewController: UIViewController,UIImagePickerControllerDelegate,UIN
                 Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: (response?.value(forKey: "message") as! String))
             }
             else{
-               self.showAlert(msg: (response?.value(forKey: "message") as! String))
+               //self.showAlert(msg: (response?.value(forKey: "message") as! String))
+                let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                let abcViewController = storyboard.instantiateViewController(withIdentifier: "LoginViewController") as! LoginViewController
+                self.navigationController?.pushViewController(abcViewController, animated: true)
             }
         }
     }

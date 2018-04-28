@@ -50,7 +50,6 @@ class ProfileViewController: UIViewController,UIImagePickerControllerDelegate,UI
         
         genderView.layer.borderColor = UIColor (red: 204.0/255.0, green: 204.0/255.0, blue: 204/255.0, alpha: 1).cgColor
         genderView.layer.borderWidth = 0.8
-        
       
         pickerView = UIPickerView(frame: CGRect(x:0, y:0, width:view.frame.width,height: 200))
         pickerView.backgroundColor = .white
@@ -179,7 +178,6 @@ class ProfileViewController: UIViewController,UIImagePickerControllerDelegate,UI
          self.textDOB.text = dateFormatter.string(from: sender.date)
     }
     @objc func doneClick() {
-        
         self.view.endEditing(true)
     }
     @objc func cancelClick() {
@@ -188,13 +186,6 @@ class ProfileViewController: UIViewController,UIImagePickerControllerDelegate,UI
     }
 
     @IBAction func btnUpdate(_ sender: UIButton) {
-        
-        test()
-       // upload(username: textName.text!, email: textEmail.text!, contact: textPhoneNumber.text!, dob: self.textDOB.text!, gender: textGender.text!)
-    }
-    
-    
-    func test(){
         
         let params = [
             "email": (Model.sharedInstance.loginData.value(forKey: "email") as! String),
@@ -205,21 +196,121 @@ class ProfileViewController: UIViewController,UIImagePickerControllerDelegate,UI
             "username": (Model.sharedInstance.loginData.value(forKey: "userName") as! String),
             "gender": textGender.text!
         ]
-        print(params)
+        
+        //let headers = ["Authorization":"Bearer ZWNvbW1lcmNl"]
+        let imageData = UIImageJPEGRepresentation(UIImage(named: "one")!, 0.2)!
+        
+        let url = "http://google.com" /* your API url */
+        
+        let headers: HTTPHeaders = [
+           "Authorization":"Bearer ZWNvbW1lcmNl"
+        ]
+        
+        Alamofire.upload(multipartFormData: { (multipartFormData) in
+            for (key, value) in params {
+                multipartFormData.append("\(value)".data(using: String.Encoding.utf8)!, withName: key as String)
+            }
+                multipartFormData.append(imageData, withName: "image", fileName: "image.png", mimeType: "image/png")
+            
+        }, usingThreshold: UInt64.init(), to: url, method: .post, headers: headers) { (result) in
+            switch result{
+            case .success(let upload, _, _):
+                upload.responseJSON { response in
+                    print("Succesfully uploaded",response.result.value)
+                    if let err = response.error{
+                        return
+                    }
+                }
+            case .failure(let error):
+                print("Error in upload: \(error.localizedDescription)")
+            }
+        }
+  
+        
+        //uploadImage()
+       // test()
+       // upload(username: textName.text!, email: textEmail.text!, contact: textPhoneNumber.text!, dob: self.textDOB.text!, gender: textGender.text!)
+    }
+    
+    func uploadImage( ){
+        
+        let path =  "http://kftsoftwares.com/ecomm/recipes/updateProfile/"
+        print(path)
+        
+                let params = [
+                    "email": (Model.sharedInstance.loginData.value(forKey: "email") as! String),
+                    "contact": textPhoneNumber.text!,
+                    "id": (Model.sharedInstance.loginData.value(forKey: "userid") as! String),
+                    "dob": textDOB.text!,
+                    "userdetail_id": (Model.sharedInstance.loginData.value(forKey: "userdetail_id") as! String),
+                    "username": (Model.sharedInstance.loginData.value(forKey: "userName") as! String),
+                    "gender": textGender.text!
+                ]
+        
+        
+       let headers = ["Authorization":"Bearer ZWNvbW1lcmNl"]
+        let imgData = UIImageJPEGRepresentation(profileImg.image!, 0.2)!
+        
+        let URL = try! URLRequest(url: path, method: .post, headers: headers)
+        
+        
+        Alamofire.upload(multipartFormData: { (multipartFormData) in
+            multipartFormData.append(imgData, withName: "image",fileName: "file.jpg", mimeType: "image/jpg")
+            for (key, value) in params {
+                multipartFormData.append(value.data(using: String.Encoding(rawValue: String.Encoding.utf8.rawValue))!, withName: key)
+            }
+        }, with: URL) { (result) in
+            switch result {
+            case .success(let upload, _, _):
+                
+                upload.uploadProgress(closure: { (progress) in
+                    print("Upload Progress: \(progress.fractionCompleted)")
+                })
+                
+                upload.responseJSON { response in
+                    print(response.result.value!)
+                    if response.result.value != nil {
+                        
+                    }
+                }
+                
+            case .failure(let encodingError):
+                print(encodingError)
+               
+                
+            }
+        }
+        
+    }
+    
+    
+   
+    
+  
+    
+    func test(){
+        
+//        let params = [
+//            "email": (Model.sharedInstance.loginData.value(forKey: "email") as! String),
+//            "contact": textPhoneNumber.text!,
+//            "id": (Model.sharedInstance.loginData.value(forKey: "userid") as! String),
+//            "dob": textDOB.text!,
+//            "userdetail_id": (Model.sharedInstance.loginData.value(forKey: "userdetail_id") as! String),
+//            "username": (Model.sharedInstance.loginData.value(forKey: "userName") as! String),
+//            "gender": textGender.text!
+//        ]
+//        print(params)
         let header = ["Authorization":"Bearer ZWNvbW1lcmNl"]
         Alamofire.upload(multipartFormData:{ multipartFormData in
-            
-            
-            for (key, value) in params {
-                multipartFormData.append((value ).data(using: .utf8)!, withName: key)
-            }
+//            for (key, value) in params {
+//                multipartFormData.append((value ).data(using: .utf8)!, withName: key)
+//            }
             
             DispatchQueue.main.async {
-                if  let imageData = UIImageJPEGRepresentation(self.profileImg.image!, 0.2) {
+                if  let imageData = UIImageJPEGRepresentation(self.profileImg.image!, 0.6) {
                     multipartFormData.append(imageData, withName: "image", fileName: "file.jpg", mimeType: "image/jpg")
                 }
             }
-           
         },
                          usingThreshold:UInt64.init(),
                          to:"http://kftsoftwares.com/ecomm/recipes/updateProfile",
@@ -229,7 +320,7 @@ class ProfileViewController: UIViewController,UIImagePickerControllerDelegate,UI
                             switch encodingResult {
                             case .success(let upload, _, _):
                                 upload.responseString(completionHandler: { response in
-                                    print("success", response.result.value!)
+                                    print(response.result.value!)
                                 })
                             case .failure(let encodingError):
                                 print("en eroor :", encodingError)

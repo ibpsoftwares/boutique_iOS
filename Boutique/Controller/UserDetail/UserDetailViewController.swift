@@ -35,6 +35,7 @@ class UserDetailViewController: UIViewController ,UIPickerViewDelegate,UIPickerV
     @IBOutlet weak var btnSunday: UIButton!
      @IBOutlet weak var checkSatImgView: UIImageView!
      @IBOutlet weak var checkSanImgView: UIImageView!
+    var userData = NSDictionary()
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -106,10 +107,16 @@ class UserDetailViewController: UIViewController ,UIPickerViewDelegate,UIPickerV
             
         }
         self.countryName.append(countries)
-        print(self.countryName)
+        //print(self.countryName)
 //        let codeForCountryDictionary: [NSObject : AnyObject] = NSDictionary(objects: countryCodes, forKeys: countries as! [NSCopying]) as [NSObject : AnyObject]
 //
 //        print(codeForCountryDictionary)
+        print(userData)
+        
+       
+        
+        
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -139,6 +146,16 @@ class UserDetailViewController: UIViewController ,UIPickerViewDelegate,UIPickerV
     
     override func viewWillAppear(_ animated: Bool) {
         self.tabBarController?.tabBar.isHidden = true
+        if ( userData.count > 0){
+            self.textCountry.text = ((userData as NSDictionary).value(forKey: "country") as! String)
+            self.textName.text = ((userData as NSDictionary).value(forKey: "username") as! String)
+            self.textCity.text = ((userData as NSDictionary).value(forKey: "city") as! String)
+            self.textState.text = ((userData as NSDictionary).value(forKey: "state") as! String)
+            self.textZipCode.text = ((userData as NSDictionary).value(forKey: "zip_code") as! String)
+            self.addressTextView.text = ((userData as NSDictionary).value(forKey: "address") as! String)
+            self.textLocality.text = ((userData as NSDictionary).value(forKey: "locality") as! String)
+            self.textMobile.text = ((userData as NSDictionary).value(forKey: "contact1") as! String)
+        }
     }
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
@@ -151,10 +168,10 @@ class UserDetailViewController: UIViewController ,UIPickerViewDelegate,UIPickerV
     }
     @IBAction func btnNext(_ sender: UIButton) {
         
-       // userDetailsAPI()
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let abcViewController = storyboard.instantiateViewController(withIdentifier: "AddPaymentViewController") as! AddPaymentViewController
-        navigationController?.pushViewController(abcViewController, animated: true)
+        userDetailsAPI()
+//        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+//        let abcViewController = storyboard.instantiateViewController(withIdentifier: "AddPaymentViewController") as! AddPaymentViewController
+//        navigationController?.pushViewController(abcViewController, animated: true)
         
     }
     //MARK:- PickerView Delegate & DataSource
@@ -191,17 +208,20 @@ class UserDetailViewController: UIViewController ,UIPickerViewDelegate,UIPickerV
         SKActivityIndicator.show("Loading...")
         let parameters: Parameters = [
             "address": self.addressTextView.text!,
-            "state": self.textCity.text!,
+            "city": self.textCity.text!,
             "country" : textCountry.text!,
+            "state" : textState.text!,
             "userdetail_id": (Model.sharedInstance.loginData.value(forKey: "userdetail_id") as! String),
             "availability": "saturday"+","+"sunday",
             "zip_code" : textZipCode.text!,
             "user_id" :Model.sharedInstance.userID,
             "contact" : textMobile.text!,
-            "username" : textName.text!
+            "username" : textName.text!,
+            "locality" : textLocality.text!
+            
         ]
         print(parameters)
-        Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecomm/recipes/shippingDetail/", parameters: parameters, headers: nil) { (response:NSDictionary?, error:NSError?) in
+        Webservice.apiPost(apiURl: "shippingDetail/", parameters: parameters, headers: nil) { (response:NSDictionary?, error:NSError?) in
             if error != nil {
                 print(error?.localizedDescription as Any)
                 Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Failed.Try Again..")
@@ -211,6 +231,10 @@ class UserDetailViewController: UIViewController ,UIPickerViewDelegate,UIPickerV
                 SKActivityIndicator.dismiss()
             })
             print(response!)
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let abcViewController = storyboard.instantiateViewController(withIdentifier: "AddPaymentViewController") as! AddPaymentViewController
+            abcViewController.userData = ((((response?.value(forKey: "shippingDetails")) as! NSArray).object(at: 0)) as! NSDictionary)
+            self.navigationController?.pushViewController(abcViewController, animated: true)
             if (response?.value(forKey: "message") as! String) == "Invalid Email or Password "{
                 Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: (response?.value(forKey: "message") as! String))
             }

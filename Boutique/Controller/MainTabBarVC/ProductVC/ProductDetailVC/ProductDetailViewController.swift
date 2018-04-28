@@ -163,7 +163,7 @@ class ProductDetailViewController: UIViewController,UICollectionViewDelegate,UIC
         if cartlist.count > 0{
             for row in 0...cartlist.count - 1{
                 let person = cartlist[row]
-                self.cartLocal.append(getProduct.init(name: (person.value(forKeyPath: "name") as! String), price: (person.value(forKeyPath: "price") as! String) , image: (person.value(forKeyPath: "image") as! String) , id:  (person.value(forKeyPath: "id") as! String), oldPrice: (person.value(forKeyPath: "oldPrice") as! String), brandName: (person.value(forKeyPath: "brand") as! String), wishlistID: person.value(forKeyPath: "wishlistID") as! String, sizeID:(person.value(forKeyPath: "sizeID") as! String) ))
+                self.cartLocal.append(getProduct.init(name: (person.value(forKeyPath: "name") as! String), price: (person.value(forKeyPath: "price") as! String) , image: (person.value(forKeyPath: "image") as! String) , id:  (person.value(forKeyPath: "id") as! String), oldPrice: (person.value(forKeyPath: "oldPrice") as! String), brandName: (person.value(forKeyPath: "brand") as! String), wishlistID: person.value(forKeyPath: "wishlistID") as! String, sizeID:(person.value(forKeyPath: "sizeID") as! String), currency: "" ))
             }
         }
         self.cartCountLabel.text  = (String)(self.cartlist.count)
@@ -187,7 +187,7 @@ class ProductDetailViewController: UIViewController,UICollectionViewDelegate,UIC
         if wishlist.count > 0{
             for row in 0...wishlist.count - 1{
                 let person = wishlist[row]
-                self.productlocal.append(getProduct.init(name: (person.value(forKeyPath: "name") as! String), price: (person.value(forKeyPath: "price") as! String) , image: (person.value(forKeyPath: "image") as! String) , id:  (person.value(forKeyPath: "id") as! String), oldPrice: (person.value(forKeyPath: "oldPrice") as! String), brandName: (person.value(forKeyPath: "brand") as! String), wishlistID: person.value(forKeyPath: "wishlistID") as! String, sizeID: ""))
+                self.productlocal.append(getProduct.init(name: (person.value(forKeyPath: "name") as! String), price: (person.value(forKeyPath: "price") as! String) , image: (person.value(forKeyPath: "image") as! String) , id:  (person.value(forKeyPath: "id") as! String), oldPrice: (person.value(forKeyPath: "oldPrice") as! String), brandName: (person.value(forKeyPath: "brand") as! String), wishlistID: person.value(forKeyPath: "wishlistID") as! String, sizeID: "", currency: ""))
             }
         }
     }
@@ -220,7 +220,7 @@ class ProductDetailViewController: UIViewController,UICollectionViewDelegate,UIC
         
         print(parameter)
         
-        Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecom/recipes/getCloth/", parameters: parameter, headers: nil) { (response:NSDictionary?, error:NSError?) in
+        Webservice.apiPost(apiURl: "getCloth", parameters: parameter, headers: nil) { (response:NSDictionary?, error:NSError?) in
             if error != nil {
                 print(error?.localizedDescription as Any)
                 Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Something Wrong..")
@@ -267,7 +267,7 @@ class ProductDetailViewController: UIViewController,UICollectionViewDelegate,UIC
                     self.nameLabel.text = self.product[0].name
                     //self.priceLabel.text = "$\(self.product[0].price)"
                     self.descriptionLabel.text = self.product[0].desc
-                    self.originalPriceLabel.text = "$\(self.product[0].price)"
+                    self.originalPriceLabel.text = "\(Model.sharedInstance.currency)\(self.product[0].price)"
                     
                     if  self.product[0].oldPrice != "" {
                         self.oldPriceLabel.text = self.product[0].oldPrice
@@ -480,7 +480,7 @@ class ProductDetailViewController: UIViewController,UICollectionViewDelegate,UIC
         
         print(parameters)
         
-        Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecomm/recipes/addToCart/", parameters: parameters, headers: nil) { (response:NSDictionary?, error:NSError?) in
+        Webservice.apiPost(apiURl: "addToCart/", parameters: parameters, headers: nil) { (response:NSDictionary?, error:NSError?) in
             if error != nil {
                 print(error?.localizedDescription as Any)
                 Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Something Wrong..")
@@ -628,7 +628,7 @@ class ProductDetailViewController: UIViewController,UICollectionViewDelegate,UIC
         }
         print(parameter)
         
-        Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecom/recipes/viewCart/", parameters: parameter, headers: nil) { (response:NSDictionary?, error:NSError?) in
+        Webservice.apiPost(apiURl: "viewCart/", parameters: parameter, headers: nil) { (response:NSDictionary?, error:NSError?) in
             if error != nil {
                 print(error?.localizedDescription as Any)
                 Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Something Wrong..")
@@ -669,7 +669,7 @@ class ProductDetailViewController: UIViewController,UICollectionViewDelegate,UIC
         parameters = ["user_id": Model.sharedInstance.userID,"cloth_id": self.productID]
         print(parameters)
         
-        Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecom/recipes/addToWishList/ZWNvbW1lcmNl/", parameters: parameters, headers: nil) { (response:NSDictionary?, error:NSError?) in
+            Webservice.apiPost(apiURl: "http://kftsoftwares.com/ecom/recipes/addToWishList/ZWNvbW1lcmNl/", parameters: parameters, headers: nil) { (response:NSDictionary?, error:NSError?) in
             if error != nil {
                 print(error?.localizedDescription as Any)
                 Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Something Wrong..")

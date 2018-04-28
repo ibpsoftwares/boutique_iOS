@@ -145,7 +145,7 @@ class ProductViewController: UIViewController,UICollectionViewDelegate,UICollect
         if wishlist.count > 0{
             for row in 0...wishlist.count - 1{
                 let person = wishlist[row]
-                self.productlocal.append(getProduct.init(name: (person.value(forKeyPath: "name") as! String), price: (person.value(forKeyPath: "price") as! String) , image: (person.value(forKeyPath: "image") as! String) , id:  (person.value(forKeyPath: "id") as! String), oldPrice: (person.value(forKeyPath: "oldPrice") as! String), brandName: (person.value(forKeyPath: "brand") as! String), wishlistID: person.value(forKeyPath: "wishlistID") as! String, sizeID: ""))
+                self.productlocal.append(getProduct.init(name: (person.value(forKeyPath: "name") as! String), price: (person.value(forKeyPath: "price") as! String) , image: (person.value(forKeyPath: "image") as! String) , id:  (person.value(forKeyPath: "id") as! String), oldPrice: (person.value(forKeyPath: "oldPrice") as! String), brandName: (person.value(forKeyPath: "brand") as! String), wishlistID: person.value(forKeyPath: "wishlistID") as! String, sizeID: "", currency: ""))
             }
         }
         
@@ -173,7 +173,7 @@ class ProductViewController: UIViewController,UICollectionViewDelegate,UICollect
         }
         print(parameter)
         
-        Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecom/recipes/getByCategory/", parameters: parameter, headers: nil) { (response:NSDictionary?, error:NSError?) in
+        Webservice.apiPost(apiURl: "getByCategory/", parameters: parameter, headers: nil) { (response:NSDictionary?, error:NSError?) in
             if error != nil {
                 print(error?.localizedDescription as Any)
                 Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Something Wrong..")
@@ -216,7 +216,7 @@ class ProductViewController: UIViewController,UICollectionViewDelegate,UICollect
                                     print("index :\(row)")
                                 }
                                 else{
-                                    self.productlocal.append(getProduct.init(name: "", price: "" , image: "" , id:  "", oldPrice: "", brandName: "", wishlistID: "", sizeID: ""))
+                                    self.productlocal.append(getProduct.init(name: "", price: "" , image: "" , id:  "", oldPrice: "", brandName: "", wishlistID: "", sizeID: "", currency: ""))
                                 }
                             }
                         }
@@ -309,7 +309,9 @@ class ProductViewController: UIViewController,UICollectionViewDelegate,UICollect
             cell.wishlistBtn.tag = indexPath.row
             cell.wishlistBtn.addTarget(self,action:#selector(addToWishListAPI(sender:)), for: .touchUpInside)
             cell.productNameLabel.text = self.product[indexPath.row].name
-            cell.originalPriceLabel.text = self.product[indexPath.row].price
+            cell.originalPriceLabel.text = "\(Model.sharedInstance.currency)\(self.product[indexPath.row].price)"
+          
+            
             let url = URL(string: self.product[indexPath.row].image)
             cell.productImg.kf.setImage(with: url,placeholder: nil)
         }
@@ -378,7 +380,7 @@ class ProductViewController: UIViewController,UICollectionViewDelegate,UICollect
            // SKActivityIndicator.spinnerColor(UIColor.darkGray)
            // SKActivityIndicator.show("Loading...")
 
-            Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecom/recipes/addToWishlist/", parameters: parameter, headers: nil) { (response:NSDictionary?, error:NSError?) in
+            Webservice.apiPost(apiURl: "addToWishlist/", parameters: parameter, headers: nil) { (response:NSDictionary?, error:NSError?) in
                 if error != nil {
                     print(error?.localizedDescription as Any)
                     Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Something Wrong..")
@@ -403,7 +405,7 @@ class ProductViewController: UIViewController,UICollectionViewDelegate,UICollect
            // SKActivityIndicator.spinnerColor(UIColor.darkGray)
             //SKActivityIndicator.show("Loading...")
 
-            Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecom/recipes/rmWishlist/", parameters: parameter, headers: nil) { (response:NSDictionary?, error:NSError?) in
+            Webservice.apiPost(apiURl: "rmWishlist/", parameters: parameter, headers: nil) { (response:NSDictionary?, error:NSError?) in
                 if error != nil {
                     print(error?.localizedDescription as Any)
                     Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Something Wrong..")
@@ -498,7 +500,7 @@ class ProductViewController: UIViewController,UICollectionViewDelegate,UICollect
         let parameters: Parameters = [
                         "product_name": itemName
         ]
-        Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecom/recipes/getByCategory/\(categoryID)/ZWNvbW1lcmNl/", parameters: parameters, headers: nil) { (response:NSDictionary?, error:NSError?) in
+        Webservice.apiPost(apiURl: "getByCategory/\(categoryID)/ZWNvbW1lcmNl/", parameters: parameters, headers: nil) { (response:NSDictionary?, error:NSError?) in
             if error != nil {
                 print(error?.localizedDescription as Any)
                 Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Something Wrong..")
@@ -611,7 +613,7 @@ class ProductViewController: UIViewController,UICollectionViewDelegate,UICollect
             "sort_id": sortID
         ]
         
-        Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecom/recipes/sort/ZWNvbW1lcmNl/", parameters: parameters, headers: nil) { (response:NSDictionary?, error:NSError?) in
+        Webservice.apiPost(apiURl: "sort/ZWNvbW1lcmNl/", parameters: parameters, headers: nil) { (response:NSDictionary?, error:NSError?) in
             if error != nil {
                 print(error?.localizedDescription as Any)
                 Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Something Wrong..")
@@ -838,7 +840,7 @@ class ProductViewController: UIViewController,UICollectionViewDelegate,UICollect
         SKActivityIndicator.spinnerColor(UIColor.darkGray)
         SKActivityIndicator.show("Loading...")
         
-        Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecom/recipes/getbycategory/\(categoryID)/ZWNvbW1lcmNl/", parameters: parameters,headers:nil) { (response:NSDictionary?, error:NSError?) in
+        Webservice.apiPost(apiURl: "getbycategory/\(categoryID)/ZWNvbW1lcmNl/", parameters: parameters,headers:nil) { (response:NSDictionary?, error:NSError?) in
             if error != nil {
                 print(error?.localizedDescription as Any)
                 Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Something Wrong..")
@@ -967,7 +969,7 @@ class ProductViewController: UIViewController,UICollectionViewDelegate,UICollect
         SKActivityIndicator.spinnerColor(UIColor.darkGray)
         SKActivityIndicator.show("Loading...")
         
-        Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecom/recipes/getPriceRange/", parameters: nil, headers: nil) { (response:NSDictionary?, error:NSError?) in
+        Webservice.apiPost(apiURl: "getPriceRange/", parameters: nil, headers: nil) { (response:NSDictionary?, error:NSError?) in
             if error != nil {
                 print(error?.localizedDescription as Any)
                 Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Something Wrong..")

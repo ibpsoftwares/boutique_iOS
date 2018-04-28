@@ -167,7 +167,7 @@
                                             <action selector="BtnsignUP:" destination="BYZ-38-t0r" eventType="touchUpInside" id="1HC-UN-EUX"/>
                                         </connections>
                                     </button>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zBP-Ik-mO4">
+                                    <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zBP-Ik-mO4">
                                         <rect key="frame" x="8" y="201" width="359" height="21"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <nil key="textColor"/>
@@ -1038,7 +1038,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5e4-Pv-oCX">
-                                <rect key="frame" x="0.0" y="516" width="375" height="150"/>
+                                <rect key="frame" x="0.0" y="456" width="375" height="150"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Select Size" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rdk-dI-or3">
                                         <rect key="frame" x="10" y="10" width="67.5" height="17.5"/>
@@ -1149,7 +1149,7 @@
                             <constraint firstItem="z7g-a3-MQz" firstAttribute="trailing" secondItem="5e4-Pv-oCX" secondAttribute="trailing" id="CVc-ca-Amb"/>
                             <constraint firstItem="t5P-xT-wCg" firstAttribute="centerY" secondItem="xDL-K6-KH8" secondAttribute="centerY" id="EHZ-08-WSY"/>
                             <constraint firstItem="vqv-An-1Yc" firstAttribute="leading" secondItem="z7g-a3-MQz" secondAttribute="leading" id="IXN-21-O4q"/>
-                            <constraint firstItem="z7g-a3-MQz" firstAttribute="bottom" secondItem="5e4-Pv-oCX" secondAttribute="bottom" constant="-48" id="K1E-WG-W6M"/>
+                            <constraint firstItem="z7g-a3-MQz" firstAttribute="bottom" secondItem="5e4-Pv-oCX" secondAttribute="bottom" constant="12" id="K1E-WG-W6M"/>
                             <constraint firstItem="pUx-oB-Pj6" firstAttribute="top" secondItem="z7g-a3-MQz" secondAttribute="top" id="Kx6-bh-zXk"/>
                             <constraint firstItem="z7g-a3-MQz" firstAttribute="trailing" secondItem="vqv-An-1Yc" secondAttribute="trailing" id="NV7-kf-gRd"/>
                             <constraint firstItem="z7g-a3-MQz" firstAttribute="bottom" secondItem="vqv-An-1Yc" secondAttribute="bottom" id="Xf0-NY-nWC"/>
@@ -1166,8 +1166,11 @@
                     <connections>
                         <outlet property="bgLabel" destination="t5P-xT-wCg" id="4NS-0y-hnU"/>
                         <outlet property="cartCountLabel" destination="wRH-JJ-eY3" id="dau-L7-Z5W"/>
+                        <outlet property="crossBtn" destination="on7-Zn-V1M" id="fTF-sn-KOs"/>
+                        <outlet property="doneBtn" destination="Pex-Wi-gty" id="436-31-Jcr"/>
                         <outlet property="selectSizeView" destination="5e4-Pv-oCX" id="Nff-5B-vRU"/>
                         <outlet property="sizeCollectionView" destination="AwL-gw-Slz" id="vCD-gl-Mp2"/>
+                        <outlet property="sizeLabel" destination="rdk-dI-or3" id="c6P-R0-rIo"/>
                         <outlet property="tableView" destination="vqv-An-1Yc" id="MoF-Qk-FsT"/>
                     </connections>
                 </viewController>

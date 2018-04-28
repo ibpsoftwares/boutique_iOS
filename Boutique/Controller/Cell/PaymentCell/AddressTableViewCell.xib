@@ -48,8 +48,8 @@
                         <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="(Home)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Q2c-qp-vL0">
-                        <rect key="frame" x="95" y="5" width="44" height="15"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="(Default)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Q2c-qp-vL0">
+                        <rect key="frame" x="95" y="5" width="51" height="15"/>
                         <fontDescription key="fontDescription" name="Whitney-Medium" family="Whitney" pointSize="13"/>
                         <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                         <nil key="highlightedColor"/>
@@ -93,6 +93,13 @@
                 </constraints>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
+            <connections>
+                <outlet property="addressLabel" destination="qDM-nW-FuY" id="38O-Qr-cYB"/>
+                <outlet property="cancelBtn" destination="PLU-7X-kkh" id="Q7h-Al-TxS"/>
+                <outlet property="editBtn" destination="qEu-l8-JxH" id="eYX-2q-c3m"/>
+                <outlet property="homeLabel" destination="P1b-di-SD7" id="d2Y-cV-8Lb"/>
+                <outlet property="mobileNoLabel" destination="6XN-cu-IkM" id="idL-ya-4CF"/>
+            </connections>
             <point key="canvasLocation" x="-136" y="40"/>
         </tableViewCell>
     </objects>

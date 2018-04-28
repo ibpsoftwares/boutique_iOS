@@ -79,7 +79,7 @@ class CategoryViewController: UIViewController,UITableViewDelegate,UITableViewDa
         SKActivityIndicator.spinnerColor(UIColor.darkGray)
         SKActivityIndicator.show("Loading...")
         
-    Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecom/recipes/viewCategories/", parameters: nil, headers: nil) { (response:NSDictionary?, error:NSError?) in
+    Webservice.apiPost(apiURl: "viewCategories/", parameters: nil, headers: nil) { (response:NSDictionary?, error:NSError?) in
             if error != nil {
                 print(error?.localizedDescription as Any)
                 Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Something Wrong..")

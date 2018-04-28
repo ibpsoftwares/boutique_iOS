@@ -173,7 +173,7 @@ class LoginViewController: UIViewController {
             "email": self.textEmail.text!,
             "password": self.textPassword.text!
         ]
-        Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecomm/recipes/login", parameters: parameters, headers: nil) { (response:NSDictionary?, error:NSError?) in
+        Webservice.apiPost(apiURl:  "login", parameters: parameters, headers: nil) { (response:NSDictionary?, error:NSError?) in
             if error != nil {
                 print(error?.localizedDescription as Any)
                 DispatchQueue.main.async(execute: {
@@ -304,44 +304,72 @@ class LoginViewController: UIViewController {
         }
          print(parameters)
         let headers = ["Authorization":"Bearer ZWNvbW1lcmNl"]
-        Alamofire.request("http://kftsoftwares.com/ecomm/recipes/sendmewishlistdatafortesting/", method: .post, parameters: params, encoding: URLEncoding.default, headers: headers).responseString
+        Alamofire.request("http://kftsoftwares.com/ecomm/recipes/localData/", method: .post, parameters: params, encoding: URLEncoding.default, headers: headers).responseString
             { response in
 
                 print(response.result.value!)
-                
+                self.deleteCartlistRecords()
                 let storyboard = UIStoryboard(name: "Main", bundle: nil)
                 let abcViewController = storyboard.instantiateViewController(withIdentifier: "MainTabBarViewController") as! MainTabBarViewController
                 self.navigationController?.pushViewController(abcViewController, animated: true)
         }
-        print(parameters)
+
+    }
+    //MARK: Remove all data from cart in Lacal database
+    func deleteCartlistRecords() -> Void {
+        self.cartlist.removeAll()
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+            return
+        }
+        let managedContext = appDelegate.persistentContainer.viewContext
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Cartlist")
+        do {
+            cartlist = try managedContext.fetch(fetchRequest)
+        } catch let error as NSError {
+            print("Could not fetch. \(error), \(error.userInfo)")
+        }
+        print(cartlist.count)
+        if cartlist.count > 0{
+            for row in 0...cartlist.count - 1{
+                let note = cartlist[row]
+                managedContext.delete(note)
+                 self.deleteWishlistRecords()
+                do {
+                    try managedContext.save()
+                } catch let error as NSError {
+                    print("Error While Deleting Note: \(error.userInfo)")
+                }
+            }
+        }
         
+    }
+    //MARK: Remove all data from cart in Lacal database
+    func deleteWishlistRecords() -> Void {
+        self.wishlist.removeAll()
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+            return
+        }
+        let managedContext = appDelegate.persistentContainer.viewContext
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Wishlist")
+        do {
+            wishlist = try managedContext.fetch(fetchRequest)
+        } catch let error as NSError {
+            print("Could not fetch. \(error), \(error.userInfo)")
+        }
+        print(wishlist.count)
+        if wishlist.count > 0{
+            for row in 0...wishlist.count - 1{
+                let note = wishlist[row]
+                managedContext.delete(note)
+                
+                do {
+                    try managedContext.save()
+                } catch let error as NSError {
+                    print("Error While Deleting Note: \(error.userInfo)")
+                }
+            }
+        }
         
-        
-       
-//
-//        Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecomm/recipes/sendmewishlistdatafortesting/", parameters: parameters, headers: nil) { (response:NSDictionary?, error:NSError?) in
-//            if error != nil {
-//                print(error?.localizedDescription as Any)
-//                DispatchQueue.main.async(execute: {
-//                    SKActivityIndicator.dismiss()
-//                })
-//                Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Login Failed.Try Again..")
-//                return
-//            }
-//            DispatchQueue.main.async(execute: {
-//                SKActivityIndicator.dismiss()
-//            })
-//            print(response!)
-//            if (response?.value(forKey: "message") as! String) == "Invalid Email or Password "{
-//                Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: (response?.value(forKey: "message") as! String))
-//            }
-//            else{
-//                let storyboard = UIStoryboard(name: "Main", bundle: nil)
-//                let abcViewController = storyboard.instantiateViewController(withIdentifier: "MainTabBarViewController") as! MainTabBarViewController
-//                self.navigationController?.pushViewController(abcViewController, animated: true)
-//               // Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: (response?.value(forKey: "message") as! String))
-//            }
-//        }
     }
     
     func replace(myString: String, _ index: Int, _ newChar: Character) -> String {
@@ -378,7 +406,7 @@ class LoginViewController: UIViewController {
             "email": email,
         ]
         print(parameters)
-        Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecomm/recipes/forgetpwd", parameters: parameters, headers: nil) { (response:NSDictionary?, error:NSError?) in
+        Webservice.apiPost(apiURl:  "forgetpwd", parameters: parameters, headers: nil) { (response:NSDictionary?, error:NSError?) in
             if error != nil {
                 print(error?.localizedDescription as Any)
                 Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Login Failed.Try Again..")
@@ -404,15 +432,4 @@ class LoginViewController: UIViewController {
     }
     
 }
-extension NSAttributedString {
-    internal convenience init?(html: String) {
-        guard let data = html.data(using: String.Encoding.utf16, allowLossyConversion: false) else {
-            // not sure which is more reliable: String.Encoding.utf16 or String.Encoding.unicode
-            return nil
-        }
-        guard let attributedString = try? NSMutableAttributedString(data: data, options: [NSAttributedString.DocumentReadingOptionKey.documentType: NSAttributedString.DocumentType.html], documentAttributes: nil) else {
-            return nil
-        }
-        self.init(attributedString: attributedString)
-    }
-}
+

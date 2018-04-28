@@ -20,6 +20,8 @@ class AddPaymentViewController: UIViewController,UITableViewDelegate,UITableView
     @IBOutlet weak var cardDetailsView: UIView!
     @IBOutlet weak var discountLabel: UILabel!
     @IBOutlet weak var cardExpiryDateLabel: UILabel!
+    var totalPrice = String()
+    var userData = NSDictionary()
      @IBOutlet weak var tableView: UITableView!
      var checkCash : Bool = false
      var checkCard : Bool = false
@@ -34,10 +36,13 @@ class AddPaymentViewController: UIViewController,UITableViewDelegate,UITableView
         //taxPriceLabel.text = "0.0"
         //discountLabel.text = "- 0.0"
         totalPriceLabel.text = String("$\(Model.sharedInstance.totalPrice)")
+        Model.sharedInstance.totalAmt = totalPriceLabel.text!
          self.tabBarController?.tabBar.isHidden = true
         self.navigationController?.navigationBar.isHidden = true
         tableView.register(UINib(nibName: "AddressTableViewCell", bundle: nil), forCellReuseIdentifier: "addressCell")
         tableView.tableFooterView = UIView()
+        
+        print(userData)
     }
 
     override func didReceiveMemoryWarning() {
@@ -62,11 +67,28 @@ class AddPaymentViewController: UIViewController,UITableViewDelegate,UITableView
     
     // create a cell for each table view row
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
         // create a new cell if needed or reuse an old one
         let cell:AddressTableViewCell = self.tableView.dequeueReusableCell(withIdentifier: "addressCell") as! AddressTableViewCell!
-       
+        
+        cell.homeLabel.text = ((userData ).value(forKey: "username") as! String)
+        cell.mobileNoLabel.text = ((userData ).value(forKey: "contact1") as! String)
+        let addr = ((userData ).value(forKey: "address") as! String)
+        let local = ((userData ).value(forKey: "locality") as! String)
+         let city = ((userData ).value(forKey: "city") as! String)
+        let state = ((userData ).value(forKey: "state") as! String)
+        
+        let adddress = "\(addr) ,\(local) ,\(city) ,\(state)"
+        print(adddress)
+        cell.addressLabel.text = adddress
+       cell.editBtn.addTarget(self,action:#selector(edit(sender:)), for: .touchUpInside)
         return cell
+    }
+    
+ @objc func edit(sender:UIButton!){
+    let storyboard = UIStoryboard(name: "Main", bundle: nil)
+    let abcViewController = storyboard.instantiateViewController(withIdentifier: "UserDetailViewController") as! UserDetailViewController
+    abcViewController.userData = userData
+    navigationController?.pushViewController(abcViewController, animated: true)
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 90
@@ -80,12 +102,13 @@ class AddPaymentViewController: UIViewController,UITableViewDelegate,UITableView
     @IBAction func completeOrder(_ sender: UIButton) {
         
         if checkCard {
+            Model.sharedInstance.paymentType = "card"
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let abcViewController = storyboard.instantiateViewController(withIdentifier: "StripePaymentViewController") as! StripePaymentViewController
             navigationController?.pushViewController(abcViewController, animated: true)
         }
         else if checkCash {
-            
+            Model.sharedInstance.paymentType = "cod"
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let abcViewController = storyboard.instantiateViewController(withIdentifier: "SuccessViewController") as! SuccessViewController
             navigationController?.pushViewController(abcViewController, animated: true)

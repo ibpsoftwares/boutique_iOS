@@ -12,10 +12,9 @@ import Alamofire
 struct FV_API
 {
     //URL is http://www.stack.com/index.php/signup
-    static let appBaseURL = "http://kftsoftwares.com/ecom/recipes/"  // assign your base url suppose:  http://www.stack.com/index.php
+    static let appBaseURL = "http://kftsoftwares.com/ecomm/recipes"  // assign your base url suppose:  http://www.stack.com/index.php
     static let apiLogin = "login/"   // assign signup i.e: signup
     static let accessToken = "Bearer ZWNvbW1lcmNl"
-    
 }
 
 class Webservice: NSObject
@@ -60,11 +59,18 @@ class Webservice: NSObject
         }
   }
     
-    class func apiPost (serviceName:String,parameters: [String:Any]?,headers:[String:Any]?, completionHandler: @escaping (NSDictionary,_ Error:NSError?) -> ()){
+    class func apiPost (apiURl:String,parameters: [String:Any]?,headers:[String:Any]?, completionHandler: @escaping (NSDictionary,_ Error:NSError?) -> ()){
         
         let headers = ["Authorization":"Bearer ZWNvbW1lcmNl"]
+        var strURL:String = FV_API.appBaseURL  // it gives http://www.stack.com/index.php and apiURl is apiSignUP
         
-        Alamofire.request(serviceName, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
+        if((apiURl as NSString).length > 0)
+        {
+            strURL = strURL + "/" + apiURl    // this gives again http://www.stack.com/index.php/signup
+        }
+        
+        
+        Alamofire.request(strURL, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
 //            print("Request  \(String(describing: response.request))")
 //            print("RESPONSE \(String(describing: response.result.value))")
 //            print("RESPONSE \(response.result)")
@@ -85,10 +91,6 @@ class Webservice: NSObject
                 
             }        }
     }
-    
-    
-    
-    
     
      //MARK:- POST APIs
 //    class func apiPost(serviceName:String,parameters: [String:Any]?,headers:[String:Any]?, completionHandler: @escaping (NSDictionary,_ Error:NSError?) -> ()) {

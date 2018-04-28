@@ -25,7 +25,8 @@ class getProduct {
     var brandName : String
     var wishlistID : String
      var sizeID : String
-    init(name: String,price: String,image: String,id: String,oldPrice: String,brandName: String,wishlistID : String,sizeID : String) {
+     var currency : String
+    init(name: String,price: String,image: String,id: String,oldPrice: String,brandName: String,wishlistID : String,sizeID : String,currency : String) {
         self.name = name
         self.price = price
         self.image = image
@@ -34,6 +35,7 @@ class getProduct {
          self.brandName = brandName
         self.wishlistID = wishlistID
         self.sizeID = sizeID
+         self.currency = currency
     }
 }
 @available(iOS 10.0, *)
@@ -42,11 +44,12 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var filterTableView: UITableView!
     @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet weak var loginBtn: UIButton!
     @IBOutlet weak var headerView: UIView!
     @IBOutlet weak var slideView: UIView!
     @IBOutlet weak var wishlistCountLabel: UILabel!
-     @IBOutlet weak var imgSlider: CLabsImageSlider!
-     @IBOutlet weak var pageControl : UIPageControl!
+    @IBOutlet weak var imgSlider: CLabsImageSlider!
+    @IBOutlet weak var pageControl : UIPageControl!
     var screenheight : CGFloat!
     var product = [getProduct]()
     var productlocal = [getProduct]()
@@ -56,9 +59,10 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
     var wishListProduct = [getProductDetail]()
     var cartProduct = [getProductDetail]()
     var seletedIndex = NSInteger()
-  var localImages =   ["one","two","three","four","five","six"]
+    var localImages =   ["one","two","three","four","five","six"]
     var urlImages = [String]()
     var wishlist: [NSManagedObject] = []
+    var currency = String()
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -83,9 +87,7 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
         self.screenheight = self.view.frame.size.width
         imgSlider.sliderDelegate   =   self
         //configurePageControl()
-        
-        
-        
+    
     }
 
     override func didReceiveMemoryWarning() {
@@ -93,11 +95,11 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
         // Dispose of any resources that can be recreated.
     }
     override func viewWillAppear(_ animated: Bool) {
-        
         self.productlocal.removeAll()
         self.wishListProduct.removeAll()
         self.wishlist.removeAll()
         if Model.sharedInstance.userID != ""{
+            //loginBtn.isHidden = true
             getCartViewAPI()
             getWishListAPI()
         }
@@ -152,7 +154,7 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
         if self.wishlist.count > 0{
             for row in 0...self.wishlist.count - 1{
                 let person = self.wishlist[row]
-                self.productlocal.append(getProduct.init(name: (person.value(forKeyPath: "name") as! String), price: (person.value(forKeyPath: "price") as! String) , image: (person.value(forKeyPath: "image") as! String) , id:  (person.value(forKeyPath: "id") as! String), oldPrice: (person.value(forKeyPath: "oldPrice") as! String), brandName: (person.value(forKeyPath: "brand") as! String), wishlistID: person.value(forKeyPath: "wishlistID") as! String, sizeID: ""))
+                self.productlocal.append(getProduct.init(name: (person.value(forKeyPath: "name") as! String), price: (person.value(forKeyPath: "price") as! String) , image: (person.value(forKeyPath: "image") as! String) , id:  (person.value(forKeyPath: "id") as! String), oldPrice: (person.value(forKeyPath: "oldPrice") as! String), brandName: (person.value(forKeyPath: "brand") as! String), wishlistID: person.value(forKeyPath: "wishlistID") as! String, sizeID: "", currency: ""))
             }
             let tabItems = self.tabBarController?.tabBar.items as NSArray!
             let tabItem = tabItems![3] as! UITabBarItem
@@ -226,7 +228,7 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
         
           print(parameter)
         
-        Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecomm/recipes/ViewCart/", parameters:parameter, headers: nil, completionHandler: { (response:NSDictionary?, error:NSError?) in
+        Webservice.apiPost(apiURl: "ViewCart/", parameters:parameter, headers: nil, completionHandler: { (response:NSDictionary?, error:NSError?) in
             if error != nil {
                 print(error?.localizedDescription as Any)
                 Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Something Wrong..")
@@ -267,7 +269,7 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
         
       //  print(parameter)
         
-        Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecom/recipes/getBannerImages", parameters:nil, headers: nil, completionHandler: { (response:NSDictionary?, error:NSError?) in
+        Webservice.apiPost(apiURl: "getBannerImages", parameters:nil, headers: nil, completionHandler: { (response:NSDictionary?, error:NSError?) in
             if error != nil {
                 print(error?.localizedDescription as Any)
                 Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Something Wrong..")
@@ -276,7 +278,7 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
             DispatchQueue.main.async(execute: {
                 SKActivityIndicator.dismiss()
             })
-          //  print(response!)
+            print(response!)
             if ((response!["message"] as? [String:Any]) != nil){
                 Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: (response?.value(forKey: "message") as! String))
             }
@@ -324,7 +326,7 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
         }
         print(parameter)
         
-        Webservice.apiPost(serviceName:"http://kftsoftwares.com/ecom/recipes/getAllCloths/", parameters:parameter, headers: nil, completionHandler: { (response:NSDictionary?, error:NSError?) in
+        Webservice.apiPost(apiURl:"getAllCloths", parameters:parameter, headers: nil, completionHandler: { (response:NSDictionary?, error:NSError?) in
             if error != nil {
                 print(error?.localizedDescription as Any)
                 Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Something Wrong..")
@@ -343,11 +345,11 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
 
                     if (item as! NSDictionary).value(forKey: "offer_price")  is NSNull {
                         print("empty")
-                        self.product.append(getProduct.init(name:((item as! NSDictionary).value(forKey: "title") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), id: ((item as! NSDictionary).value(forKey: "id") as! String), oldPrice: "", brandName: ((item as! NSDictionary).value(forKey: "brand") as! String), wishlistID: ((item as! NSDictionary).value(forKey: "wishlist") as! String), sizeID: ""))
+                        self.product.append(getProduct.init(name:((item as! NSDictionary).value(forKey: "title") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), id: ((item as! NSDictionary).value(forKey: "id") as! String), oldPrice: "", brandName: ((item as! NSDictionary).value(forKey: "brand") as! String), wishlistID: ((item as! NSDictionary).value(forKey: "symbol") as! String), sizeID: "", currency: ((item as! NSDictionary).value(forKey: "symbol") as! String)))
                     }
                     else {
                         print("not null")
-                        self.product.append(getProduct.init(name:((item as! NSDictionary).value(forKey: "title") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), id: ((item as! NSDictionary).value(forKey: "id") as! String), oldPrice: ((item as! NSDictionary).value(forKey: "offer_price") as! String), brandName: ((item as! NSDictionary).value(forKey: "brand") as! String), wishlistID: ((item as! NSDictionary).value(forKey: "wishlist") as! String), sizeID: ""))
+                        self.product.append(getProduct.init(name:((item as! NSDictionary).value(forKey: "title") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), id: ((item as! NSDictionary).value(forKey: "id") as! String), oldPrice: ((item as! NSDictionary).value(forKey: "offer_price") as! String), brandName: ((item as! NSDictionary).value(forKey: "brand") as! String), wishlistID: ((item as! NSDictionary).value(forKey: "wishlist") as! String), sizeID: "", currency: ((item as! NSDictionary).value(forKey: "symbol") as! String)))
                     }
                 }
                 
@@ -365,7 +367,7 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
                             print("index :\(row)")
                         }
                         else{
-                            self.productlocal.append(getProduct.init(name: "", price: "" , image: "" , id:  "", oldPrice: "", brandName: "", wishlistID: "", sizeID: ""))
+                            self.productlocal.append(getProduct.init(name: "", price: "" , image: "" , id:  "", oldPrice: "", brandName: "", wishlistID: "", sizeID: "", currency: ""))
                         }
                     }
                 }
@@ -408,14 +410,22 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
         cell.layer.borderWidth = 0.5
         
         cell.productNameLabel.text = self.product[indexPath.row].name
-        cell.originalPriceLabel.text = "$\(self.product[indexPath.row].price)"
-
+        cell.originalPriceLabel.text = "\(self.product[indexPath.row].oldPrice)"
+        var curr = String()
+        curr = self.product[indexPath.row].currency
+       
+        cell.currencyLabel.attributedText = NSAttributedString(html: "<span>\(curr)</span>")
+        Model.sharedInstance.currency = cell.currencyLabel.text!
+        print(Model.sharedInstance.currency)
+        
         if  self.product[indexPath.row].oldPrice != "" {
-            cell.oldPriceLabel.text = self.product[indexPath.row].oldPrice
+            cell.oldPriceLabel.text = self.product[indexPath.row].price
+            cell.crossLabel.isHidden = false
         }
         else{
             cell.oldPriceLabel.isHidden = true
             cell.crossLabel.isHidden = true
+            cell.originalPriceLabel.text = "\(self.product[indexPath.row].price)"
         }
         
         if self.product[indexPath.row].wishlistID == "1"
@@ -613,7 +623,7 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
         if sender.imageView?.image == UIImage (named: "emptyWishlist")
         {
 
-            Webservice.apiPost(serviceName:"http://kftsoftwares.com/ecom/recipes/addToWishlist/", parameters:parameter, headers: nil, completionHandler: { (response:NSDictionary?, error:NSError?) in
+            Webservice.apiPost(apiURl:"addToWishlist/", parameters:parameter, headers: nil, completionHandler: { (response:NSDictionary?, error:NSError?) in
                 if error != nil {
                     print(error?.localizedDescription as Any)
                     Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Something Wrong..")
@@ -639,7 +649,7 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
             //            SKActivityIndicator.show("Loading...")
 
             print(parameter)
-            Webservice.apiPost(serviceName:"http://kftsoftwares.com/ecom/recipes/rmWishlist/", parameters:parameter, headers: nil, completionHandler: { (response:NSDictionary?, error:NSError?) in
+            Webservice.apiPost(apiURl:"rmWishlist/", parameters:parameter, headers: nil, completionHandler: { (response:NSDictionary?, error:NSError?) in
                 if error != nil {
                     print(error?.localizedDescription as Any)
                     Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Something Wrong..")
@@ -710,7 +720,7 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
         
         print(parameter)
         
-        Webservice.apiPost(serviceName:"http://kftsoftwares.com/ecomm/recipes/viewWishlist/", parameters:parameter, headers: nil, completionHandler: { (response:NSDictionary?, error:NSError?) in
+        Webservice.apiPost(apiURl:"viewWishlist/", parameters:parameter, headers: nil, completionHandler: { (response:NSDictionary?, error:NSError?) in
             if error != nil {
                 print(error?.localizedDescription as Any)
                 Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Something Wrong..")
@@ -762,7 +772,19 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
         self.present(alert, animated: true, completion: nil)
     }
 }
- 
+extension NSAttributedString {
+    internal convenience init?(html: String) {
+        guard let data = html.data(using: String.Encoding.utf16, allowLossyConversion: false) else {
+            // not sure which is more reliable: String.Encoding.utf16 or String.Encoding.unicode
+            return nil
+        }
+        guard let attributedString = try? NSMutableAttributedString(data: data, options: [NSAttributedString.DocumentReadingOptionKey.documentType: NSAttributedString.DocumentType.html], documentAttributes: nil) else {
+            return nil
+        }
+        self.init(attributedString: attributedString)
+    }
+}
+
 
 
 

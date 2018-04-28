@@ -19,6 +19,9 @@ class WishListViewController: UIViewController,UITableViewDelegate,UITableViewDa
     @IBOutlet weak var selectSizeView: UIView!
     @IBOutlet weak var cartCountLabel: UILabel!
     @IBOutlet weak var bgLabel: UILabel!
+    @IBOutlet var crossBtn: UIButton!
+    @IBOutlet var doneBtn: UIButton!
+     @IBOutlet var sizeLabel: UILabel!
     @IBOutlet weak var sizeCollectionView: UICollectionView!
     var saveProductData = [getProduct]()
     var wishListArr = [getProductDetail]()
@@ -42,6 +45,10 @@ class WishListViewController: UIViewController,UITableViewDelegate,UITableViewDa
         selectSizeView.layer.borderWidth = 1.0
         selectSizeView.layer.borderColor = UIColor.lightGray.cgColor
         selectedIndex = 200
+        self.crossBtn.isHidden = true
+        sizeLabel.isHidden = true
+        doneBtn.isHidden = true
+        self.selectSizeView.isHidden = true
         
         tableView.register(UINib(nibName: "WishListTableViewCell", bundle: nil), forCellReuseIdentifier: "CustomCell")
         tableView.tableFooterView = UIView()
@@ -156,7 +163,7 @@ class WishListViewController: UIViewController,UITableViewDelegate,UITableViewDa
             parameter = ["user_id":""]
         }
         print(parameter)
-        Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecom/recipes/viewWishlist/", parameters: parameter, headers: nil) { (response:NSDictionary?, error:NSError?) in
+        Webservice.apiPost(apiURl: "viewWishlist/", parameters: parameter, headers: nil) { (response:NSDictionary?, error:NSError?) in
             if error != nil {
                 print(error?.localizedDescription as Any)
                 DispatchQueue.main.async(execute: {
@@ -317,7 +324,7 @@ class WishListViewController: UIViewController,UITableViewDelegate,UITableViewDa
                 //        }
                 print(parameter)
                 
-                Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecom/recipes/movetocart/", parameters: parameter, headers: nil) { (response:NSDictionary?, error:NSError?) in
+            Webservice.apiPost(apiURl: "movetocart/", parameters: parameter, headers: nil) { (response:NSDictionary?, error:NSError?) in
                     if error != nil {
                         print(error?.localizedDescription as Any)
                         Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Something Wrong..")
@@ -340,6 +347,11 @@ class WishListViewController: UIViewController,UITableViewDelegate,UITableViewDa
                         
                         DispatchQueue.main.async(execute: {
                             // self.wishListProduct.remove(at: sender.tag)
+                            
+                            self.crossBtn.isHidden = true
+                            self.sizeLabel.isHidden = true
+                            self.doneBtn.isHidden = true
+                            self.sizeCollectionView.isHidden = true
                             self.tableView.reloadData()
                             if self.wishListProduct.count > 0 {
                                 Model.sharedInstance.badgeValue = (String)(self.wishListProduct.count)
@@ -361,7 +373,7 @@ class WishListViewController: UIViewController,UITableViewDelegate,UITableViewDa
             if size == ""{
                 Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Select Size")
             }else{
-                
+                bottom()
                  moveToCart(index: cartSelectedIndex)
             }
         }
@@ -459,6 +471,11 @@ class WishListViewController: UIViewController,UITableViewDelegate,UITableViewDa
             print("Error While Deleting Note: \(error.userInfo)")
         }
         
+        self.crossBtn.isHidden = true
+        self.sizeLabel.isHidden = true
+        self.doneBtn.isHidden = true
+        self.sizeCollectionView.isHidden = true
+        self.sizeCollectionView.removeFromSuperview()
         //Code to Fetch New Data From The DB and Reload Table.
         
         let Context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
@@ -554,7 +571,7 @@ class WishListViewController: UIViewController,UITableViewDelegate,UITableViewDa
              parameter = ["cloth_id":wishListProduct[index].id]
         }
         print(parameter)
-        Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecom/recipes/getsize/", parameters: parameter, headers: nil) { (response:NSDictionary?, error:NSError?) in
+        Webservice.apiPost(apiURl: "getsize/", parameters: parameter, headers: nil) { (response:NSDictionary?, error:NSError?) in
             if error != nil {
                 print(error?.localizedDescription as Any)
                 Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Something Wrong..")
@@ -573,6 +590,9 @@ class WishListViewController: UIViewController,UITableViewDelegate,UITableViewDa
               self.sizeArr.append(getSize.init(size: (response!.value(forKey: "sizes") as! NSArray)))
                 print(self.sizeArr)
                  self.selectSizeView.isHidden = false
+                self.crossBtn.isHidden = false
+                self.sizeLabel.isHidden = false
+                self.doneBtn.isHidden = false
                  self.Up()
                 DispatchQueue.main.async(execute: {
                      self.selectSizeView.isHidden = false
@@ -583,10 +603,7 @@ class WishListViewController: UIViewController,UITableViewDelegate,UITableViewDa
         }
     }
     
-    
-    
     func bottom()  {
-
         let transition = CATransition()
         transition.type = kCATransitionPush
         transition.subtype = kCATransitionFromBottom
@@ -609,6 +626,10 @@ class WishListViewController: UIViewController,UITableViewDelegate,UITableViewDa
     
     //MARK: Button Actions
     @IBAction func btnCross(_ sender: UIButton) {
+//        self.crossBtn.isHidden = true
+//        sizeLabel.isHidden = true
+//        doneBtn.isHidden = true
+//        self.sizeCollectionView.isHidden = true
        bottom()
     }
     //MARK: viewToCartAPI Methods
@@ -621,7 +642,7 @@ class WishListViewController: UIViewController,UITableViewDelegate,UITableViewDa
         SKActivityIndicator.show("Loading...")
         print(Model.sharedInstance.userID)
         
-        Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecom/recipes/ViewCart/\(Model.sharedInstance.userID)/ZWNvbW1lcmNl/", parameters: nil, headers: nil) { (response:NSDictionary?, error:NSError?) in
+            Webservice.apiPost(apiURl: "ViewCart/\(Model.sharedInstance.userID)/ZWNvbW1lcmNl/", parameters: nil, headers: nil) { (response:NSDictionary?, error:NSError?) in
             if error != nil {
                 print(error?.localizedDescription as Any)
                 Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Something Wrong..")
@@ -707,7 +728,7 @@ class WishListViewController: UIViewController,UITableViewDelegate,UITableViewDa
             ]
         print(parameters)
         
-        Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecomm/recipes/rmwishlist/ZWNvbW1lcmNl/", parameters: parameters, headers: nil) { (response:NSDictionary?, error:NSError?) in
+        Webservice.apiPost(apiURl: "rmwishlist/ZWNvbW1lcmNl/", parameters: parameters, headers: nil) { (response:NSDictionary?, error:NSError?) in
             if error != nil {
                 print(error?.localizedDescription as Any)
                 Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Something Wrong..")

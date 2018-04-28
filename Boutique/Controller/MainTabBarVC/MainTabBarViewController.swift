@@ -52,7 +52,7 @@ class MainTabBarViewController: UITabBarController ,UITabBarControllerDelegate{
     func getWishListAPI() {
         
         self.wishListProduct.removeAll()
-        let requestString = "http://kftsoftwares.com/ecom/recipes/viewWishlist/\(Model.sharedInstance.userID)/"
+        let requestString = "viewWishlist/\(Model.sharedInstance.userID)/"
         print(requestString)
         Alamofire.request(requestString,method: .get, parameters: nil, encoding: JSONEncoding.default, headers: [:]).responseJSON { (response:DataResponse<Any>) in
             
@@ -109,7 +109,7 @@ class MainTabBarViewController: UITabBarController ,UITabBarControllerDelegate{
         //SKActivityIndicator.spinnerColor(UIColor.darkGray)
         //SKActivityIndicator.show("Loading...")
         
-        Webservice.apiPost(serviceName: "http://kftsoftwares.com/ecom/recipes/viewCart/\(Model.sharedInstance.userID)/ZWNvbW1lcmNl/", parameters: nil, headers: nil) { (response:NSDictionary?, error:NSError?) in
+        Webservice.apiPost(apiURl: "viewCart/\(Model.sharedInstance.userID)/ZWNvbW1lcmNl/", parameters: nil, headers: nil) { (response:NSDictionary?, error:NSError?) in
             if error != nil {
                 print(error?.localizedDescription as Any)
                 Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Something Wrong..")

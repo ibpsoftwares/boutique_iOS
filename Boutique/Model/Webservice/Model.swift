@@ -20,9 +20,12 @@ final class Model {
     //MARK: Local Variable
     
     var userID = String()
+     var currency = String()
     var badgeValue = String()
     var cartCount = Int()
     var totalPrice = Double()
+    var  totalAmt = String()
+     var  paymentType = String()
     var tempData = NSMutableDictionary()
      var lacalDataArr = NSMutableArray()
     var loginData = NSMutableDictionary()
