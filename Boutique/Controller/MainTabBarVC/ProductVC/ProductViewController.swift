@@ -78,6 +78,7 @@ class ProductViewController: UIViewController,UICollectionViewDelegate,UICollect
     var product = [getProductDetail]()
     var price = [getPrice]()
     var categoryID = String()
+    var offerID = String()
     var sortedArray = [Product]()
     @IBOutlet weak var slideView: UIView!
     @IBOutlet weak var slideSortView: UIView!
@@ -90,7 +91,7 @@ class ProductViewController: UIViewController,UICollectionViewDelegate,UICollect
     var wishlist: [NSManagedObject] = []
     var productlocal = [getProduct]()
     var seletedIndex = NSInteger()
-   
+    var checkStr = String()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -132,7 +133,7 @@ class ProductViewController: UIViewController,UICollectionViewDelegate,UICollect
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
             return
         }
-        
+
         let managedContext = appDelegate.persistentContainer.viewContext
         
         let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Wishlist")
@@ -148,7 +149,6 @@ class ProductViewController: UIViewController,UICollectionViewDelegate,UICollect
                 self.productlocal.append(getProduct.init(name: (person.value(forKeyPath: "name") as! String), price: (person.value(forKeyPath: "price") as! String) , image: (person.value(forKeyPath: "image") as! String) , id:  (person.value(forKeyPath: "id") as! String), oldPrice: (person.value(forKeyPath: "oldPrice") as! String), brandName: (person.value(forKeyPath: "brand") as! String), wishlistID: person.value(forKeyPath: "wishlistID") as! String, sizeID: "", currency: ""))
             }
         }
-        
          self.getProductAPI()
     }
     
@@ -164,13 +164,30 @@ class ProductViewController: UIViewController,UICollectionViewDelegate,UICollect
         SKActivityIndicator.show("Loading...")
         print(categoryID)
        var parameter: Parameters = [:]
-        if Model.sharedInstance.userID != "" {
-            parameter = ["user_id": Model.sharedInstance.userID,"category_id":categoryID]
+        
+        if checkStr == "true"{
             
+            if Model.sharedInstance.userID != "" {
+                parameter = ["user_id": Model.sharedInstance.userID,"offer_id":offerID]
+                
+            }
+            else{
+                parameter = ["user_id":"","offer_id":offerID]
+            }
         }
         else{
-            parameter = ["user_id":"","category_id":categoryID]
+            
+            if Model.sharedInstance.userID != "" {
+                parameter = ["user_id": Model.sharedInstance.userID,"category_id":categoryID]
+                
+            }
+            else{
+                parameter = ["user_id":"","category_id":categoryID]
+            }
         }
+        
+        
+        
         print(parameter)
         
         Webservice.apiPost(apiURl: "getByCategory/", parameters: parameter, headers: nil) { (response:NSDictionary?, error:NSError?) in

@@ -61,6 +61,7 @@
 		187002772043CE420089156B /* Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 187002762043CE420089156B /* Alert.swift */; };
 		187E21CC2066030D00360F10 /* AddressTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 187E21CA2066030D00360F10 /* AddressTableViewCell.swift */; };
 		187E21CD2066030D00360F10 /* AddressTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 187E21CB2066030D00360F10 /* AddressTableViewCell.xib */; };
+		188BF30F20999A290035B937 /* AddBannerCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 188BF30E20999A290035B937 /* AddBannerCollectionViewCell.swift */; };
 		18F074A9203EC30600E7E706 /* StripeTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18F074A8203EC30600E7E706 /* StripeTableViewController.swift */; };
 		18F074AB203EC99100E7E706 /* StripePaymentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18F074AA203EC99100E7E706 /* StripePaymentViewController.swift */; };
 		18F074AD203ED54C00E7E706 /* SuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18F074AC203ED54C00E7E706 /* SuccessViewController.swift */; };
@@ -148,6 +149,7 @@
 		187002762043CE420089156B /* Alert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alert.swift; sourceTree = "<group>"; };
 		187E21CA2066030D00360F10 /* AddressTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressTableViewCell.swift; sourceTree = "<group>"; };
 		187E21CB2066030D00360F10 /* AddressTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AddressTableViewCell.xib; sourceTree = "<group>"; };
+		188BF30E20999A290035B937 /* AddBannerCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddBannerCollectionViewCell.swift; sourceTree = "<group>"; };
 		18F074A8203EC30600E7E706 /* StripeTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeTableViewController.swift; sourceTree = "<group>"; };
 		18F074AA203EC99100E7E706 /* StripePaymentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripePaymentViewController.swift; sourceTree = "<group>"; };
 		18F074AC203ED54C00E7E706 /* SuccessViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessViewController.swift; sourceTree = "<group>"; };
@@ -251,6 +253,7 @@
 			children = (
 				1836E372203294CD00997FC1 /* HomeCollectionViewCell.swift */,
 				1836E373203294CD00997FC1 /* HomeCollectionViewCell.xib */,
+				188BF30E20999A290035B937 /* AddBannerCollectionViewCell.swift */,
 			);
 			path = HomeCell;
 			sourceTree = "<group>";
@@ -915,6 +918,7 @@
 				18F074AB203EC99100E7E706 /* StripePaymentViewController.swift in Sources */,
 				183C90432036CBB700B1021F /* Model.swift in Sources */,
 				1836E3782032BB3500997FC1 /* SettingsViewController.swift in Sources */,
+				188BF30F20999A290035B937 /* AddBannerCollectionViewCell.swift in Sources */,
 				183D54012033EA98003B2651 /* CategoryTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

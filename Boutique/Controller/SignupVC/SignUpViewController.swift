@@ -57,6 +57,7 @@ class SignUpViewController: UIViewController,UIImagePickerControllerDelegate,UIN
     }
     
     //MARK: textFieldValidation Method
+    @available(iOS 10.0, *)
     func textFieldValidation()
     {
         if (self.textUserName.text?.isEmpty)! {
@@ -134,6 +135,7 @@ class SignUpViewController: UIViewController,UIImagePickerControllerDelegate,UIN
         
         self.navigationController?.popViewController(animated: true)
     }
+    @available(iOS 10.0, *)
     @IBAction func BtnsignUP(_ sender: UIButton) {
         
         textFieldValidation()

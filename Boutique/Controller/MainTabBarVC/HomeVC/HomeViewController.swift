@@ -38,21 +38,50 @@ class getProduct {
          self.currency = currency
     }
 }
+class getoffer1 {
+    var image: String
+    var id: String
+    
+    init(image: String,id: String) {
+        self.image = image
+        self.id = id
+        
+    }
+}
+class getoffer2 {
+    var image: String
+    var id: String
+    
+    init(image: String,id: String) {
+        self.image = image
+        self.id = id
+        
+    }
+}
 @available(iOS 10.0, *)
 class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectionViewDataSource,UICollectionViewDelegateFlowLayout,imageSliderDelegate{
 
+    @IBOutlet var collectionViewHeight: NSLayoutConstraint!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var filterTableView: UITableView!
     @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet weak var collectionView1: UICollectionView!
+    @IBOutlet var collectionViewHeight1: NSLayoutConstraint!
+    @IBOutlet weak var slideCollectionView: UICollectionView!
+     @IBOutlet weak var slideCollectionView1: UICollectionView!
     @IBOutlet weak var loginBtn: UIButton!
     @IBOutlet weak var headerView: UIView!
     @IBOutlet weak var slideView: UIView!
     @IBOutlet weak var wishlistCountLabel: UILabel!
+    @IBOutlet weak var bannerImg: UIImageView!
+     @IBOutlet weak var bannerImg1: UIImageView!
     @IBOutlet weak var imgSlider: CLabsImageSlider!
     @IBOutlet weak var pageControl : UIPageControl!
     var screenheight : CGFloat!
     var product = [getProduct]()
     var productlocal = [getProduct]()
+    var imgArr = [getoffer1]()
+    var imgArr1 = [getoffer2]()
     var cartlist: [NSManagedObject] = []
     var saveProductData = [localDatabase]()
     //let urlImages = [String]()
@@ -60,6 +89,7 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
     var cartProduct = [getProductDetail]()
     var seletedIndex = NSInteger()
     var localImages =   ["one","two","three","four","five","six"]
+    var imagesArray =   ["text1","tst1","tst2","tst3"]
     var urlImages = [String]()
     var wishlist: [NSManagedObject] = []
     var currency = String()
@@ -73,13 +103,19 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
         var width = UIScreen.main.bounds.width
         layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
        // width = width - 10
+
         layout.itemSize = CGSize(width: width / 2 , height:290)
+         self.collectionView.collectionViewLayout = layout
+         self.collectionView1.collectionViewLayout = layout
         layout.minimumInteritemSpacing = 0
         layout.minimumLineSpacing = 0
-        self.collectionView.collectionViewLayout = layout
        
         self.collectionView.register(UINib(nibName: "HomeCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "myCell")
-        
+        self.collectionView1.register(UINib(nibName: "HomeCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "myCell")
+         self.slideCollectionView.register(UINib(nibName: "HomeCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "myCell")
+        self.slideCollectionView.reloadData()
+        self.slideCollectionView1.register(UINib(nibName: "HomeCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "myCell")
+        self.slideCollectionView1.reloadData()
        // tableView.register(UINib(nibName: "CategoryTableViewCell", bundle: nil), forCellReuseIdentifier: "categoryCell")
         //tableView.tableFooterView = UIView()
         //filterTableView.tableFooterView = UIView()
@@ -112,7 +148,9 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
          getProductImages()
         self.wishListProduct.removeAll()
         getProductAPI()
+        
     }
+    
     //MARK: Fetch Cart Data From Core Data
     func fetchCartData(){
         
@@ -268,6 +306,7 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
 //        }
         
       //  print(parameter)
+        self.imgArr.removeAll()
         
         Webservice.apiPost(apiURl: "getBannerImages", parameters:nil, headers: nil, completionHandler: { (response:NSDictionary?, error:NSError?) in
             if error != nil {
@@ -284,18 +323,33 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
             }
             else{
 
-                for item in (response?.value(forKey: "bannerImages") as! NSArray) {
-                   // print(item)
+                let url = URL(string: ((response as! NSDictionary).value(forKey: "bannerImages") as! String))
+                self.bannerImg.kf.indicatorType = .activity
+                self.bannerImg.kf.setImage(with: url,placeholder: nil)
+                //self.bannerImg1.kf.indicatorType = .activity
+                //self.bannerImg1.kf.setImage(with: url,placeholder: nil)
+                
+                for item in (response?.value(forKey: "offer1") as! NSArray) {
+                    print(item)
 
-                    self.urlImages.append(((item as! NSDictionary).value(forKey: "image") as! String))
+                    self.imgArr.append(getoffer1.init(image: ((item as! NSDictionary).value(forKey: "image") as! String), id: ((item as! NSDictionary).value(forKey: "id") as! String)))
+                   // self.urlImages.append(((item as! NSDictionary).value(forKey: "image") as! String))
                 }
 
+                for item in (response?.value(forKey: "offer2") as! NSArray) {
+                    print(item)
+                    
+                    self.imgArr1.append(getoffer2.init(image: ((item as! NSDictionary).value(forKey: "image") as! String), id: ((item as! NSDictionary).value(forKey: "id") as! String)))
+                    // self.urlImages.append(((item as! NSDictionary).value(forKey: "image") as! String))
+                }
                 print(self.urlImages)
                 DispatchQueue.main.async(execute: {
                     //self.imgSlider.setUpView(imageSource: .Url(imageArray: self.localImages, placeHolderImage: UIImage (named: "placeHolder")), slideType: .ManualSwipe, isArrowBtnEnabled: true)
 
-                    self.imgSlider.setUpView(imageSource: .Url(imageArray: self.urlImages , placeHolderImage: UIImage (named: "placeHolder")), slideType: .Automatic(timeIntervalinSeconds: 2.0), isArrowBtnEnabled: true)
-                    print(self.localImages.count)
+                    self.slideCollectionView.reloadData()
+                    self.slideCollectionView1.reloadData()
+                    //self.imgSlider.setUpView(imageSource: .Url(imageArray: self.urlImages , placeHolderImage: UIImage (named: "placeHolder")), slideType: .Automatic(timeIntervalinSeconds: 2.0), isArrowBtnEnabled: true)
+                    //print(self.localImages.count)
                 })
             }
         })
@@ -383,9 +437,15 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
                     else{
                          print("Section: match not found")
                     }
-                        }
                 }
+            }
                 DispatchQueue.main.async(execute: {
+                    let int: Int32 = Int32((self.product.count) * 290 / 2 )
+                    let cgfloat = CGFloat(int)
+                    print(cgfloat)
+                    self.collectionViewHeight.constant = cgfloat
+                    self.collectionViewHeight1.constant = cgfloat 
+                    self.collectionView1.reloadData()
                    self.collectionView.reloadData()
                 })
             }
@@ -394,7 +454,20 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
     
     //MARK: CollectionView Delegate and Data Source
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return product.count
+        
+        if collectionView == self.collectionView {
+            return self.product.count
+        }
+        else if collectionView == self.slideCollectionView {
+            return self.imgArr.count
+        }
+        else if collectionView == self.collectionView1 {
+            return self.product.count
+        }
+        else if collectionView == self.slideCollectionView1 {
+            return self.imgArr1.count
+        }
+        return 0
     }
     
     func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
@@ -403,48 +476,153 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        let cell : HomeCollectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: "myCell", for: indexPath as IndexPath) as! HomeCollectionViewCell
+       // let cell : HomeCollectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: "myCell", for: indexPath as IndexPath) as! HomeCollectionViewCell
    
-        cell.backgroundColor = UIColor.white
-        cell.layer.borderColor = UIColor (red: 204.0/255.0, green: 204.0/255.0, blue: 204/255.0, alpha: 1).cgColor
-        cell.layer.borderWidth = 0.5
-        
-        cell.productNameLabel.text = self.product[indexPath.row].name
-        cell.originalPriceLabel.text = "\(self.product[indexPath.row].oldPrice)"
-        var curr = String()
-        curr = self.product[indexPath.row].currency
+//        if collectionView == collectionView{
+//        cell.backgroundColor = UIColor.white
+//        cell.layer.borderColor = UIColor (red: 204.0/255.0, green: 204.0/255.0, blue: 204/255.0, alpha: 1).cgColor
+//        cell.layer.borderWidth = 0.5
+//
+//        cell.productNameLabel.text = self.product[indexPath.row].name
+//        cell.originalPriceLabel.text = "\(self.product[indexPath.row].oldPrice)"
+//        var curr = String()
+//        curr = self.product[indexPath.row].currency
+//
+//        cell.currencyLabel.attributedText = NSAttributedString(html: "<span>\(curr)</span>")
+//        Model.sharedInstance.currency = cell.currencyLabel.text!
+//        print(Model.sharedInstance.currency)
+//
+//        if  self.product[indexPath.row].oldPrice != "" {
+//            cell.oldPriceLabel.text = self.product[indexPath.row].price
+//            cell.crossLabel.isHidden = false
+//        }
+//        else{
+//            cell.oldPriceLabel.isHidden = true
+//            cell.crossLabel.isHidden = true
+//            cell.originalPriceLabel.text = "\(self.product[indexPath.row].price)"
+//        }
+//
+//        if self.product[indexPath.row].wishlistID == "1"
+//        {
+//            cell.wishlistBtn.setImage(UIImage (named: "heart"), for: .normal)
+//        }
+//        else{
+//
+//            cell.wishlistBtn.setImage(UIImage (named: "emptyWishlist"), for: .normal)
+//        }
+//
+//        cell.brandNameLabel.text = self.product[indexPath.row].brandName
+//        let url = URL(string: self.product[indexPath.row].image)
+//        cell.productImg.kf.indicatorType = .activity
+//        cell.productImg.kf.setImage(with: url,placeholder: nil)
+//
+//        cell.wishlistBtn.tag = indexPath.row
+//        cell.wishlistBtn.addTarget(self,action:#selector(addToWishListAPI(sender:)), for: .touchUpInside)
+//        return cell
+//        }
        
-        cell.currencyLabel.attributedText = NSAttributedString(html: "<span>\(curr)</span>")
-        Model.sharedInstance.currency = cell.currencyLabel.text!
-        print(Model.sharedInstance.currency)
+        var cell = HomeCollectionViewCell()
         
-        if  self.product[indexPath.row].oldPrice != "" {
-            cell.oldPriceLabel.text = self.product[indexPath.row].price
-            cell.crossLabel.isHidden = false
-        }
-        else{
-            cell.oldPriceLabel.isHidden = true
-            cell.crossLabel.isHidden = true
-            cell.originalPriceLabel.text = "\(self.product[indexPath.row].price)"
-        }
-        
-        if self.product[indexPath.row].wishlistID == "1"
+        if(collectionView == self.collectionView)
         {
-            cell.wishlistBtn.setImage(UIImage (named: "heart"), for: .normal)
+            cell = collectionView.dequeueReusableCell(withReuseIdentifier: "myCell", for: indexPath as IndexPath) as! HomeCollectionViewCell
+            cell.backgroundColor = UIColor.white
+                    cell.layer.borderColor = UIColor (red: 204.0/255.0, green: 204.0/255.0, blue: 204/255.0, alpha: 1).cgColor
+                    cell.layer.borderWidth = 0.5
+            
+                    cell.productNameLabel.text = self.product[indexPath.row].name
+                    cell.originalPriceLabel.text = "\(self.product[indexPath.row].oldPrice)"
+                    var curr = String()
+                    curr = self.product[indexPath.row].currency
+            
+                    cell.currencyLabel.attributedText = NSAttributedString(html: "<span>\(curr)</span>")
+                    Model.sharedInstance.currency = cell.currencyLabel.text!
+                    print(Model.sharedInstance.currency)
+            
+                    if  self.product[indexPath.row].oldPrice != "" {
+                        cell.oldPriceLabel.text = self.product[indexPath.row].price
+                        cell.crossLabel.isHidden = false
+                    }
+                    else{
+                        cell.oldPriceLabel.isHidden = true
+                        cell.crossLabel.isHidden = true
+                        cell.originalPriceLabel.text = "\(self.product[indexPath.row].price)"
+                    }
+            
+                    if self.product[indexPath.row].wishlistID == "1"
+                    {
+                        cell.wishlistBtn.setImage(UIImage (named: "heart"), for: .normal)
+                    }
+                    else{
+            
+                        cell.wishlistBtn.setImage(UIImage (named: "emptyWishlist"), for: .normal)
+                    }
+            
+                    cell.brandNameLabel.text = self.product[indexPath.row].brandName
+                    let url = URL(string: self.product[indexPath.row].image)
+                    cell.productImg.kf.indicatorType = .activity
+                    cell.productImg.kf.setImage(with: url,placeholder: nil)
+            
+                    cell.wishlistBtn.tag = indexPath.row
+                    cell.wishlistBtn.addTarget(self,action:#selector(addToWishListAPI(sender:)), for: .touchUpInside)
         }
-        else{
-
-            cell.wishlistBtn.setImage(UIImage (named: "emptyWishlist"), for: .normal)
+        else if(collectionView == self.slideCollectionView){
+                 let cell : AddBannerCollectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath as IndexPath) as! AddBannerCollectionViewCell
+                let url = URL(string: self.imgArr[indexPath.row].image)
+                cell.recipeImg.kf.indicatorType = .activity
+                cell.recipeImg.kf.setImage(with: url,placeholder: nil)
+                return cell
         }
-       
-        cell.brandNameLabel.text = self.product[indexPath.row].brandName
-        let url = URL(string: self.product[indexPath.row].image)
-        cell.productImg.kf.indicatorType = .activity
-        cell.productImg.kf.setImage(with: url,placeholder: nil)
-
-        cell.wishlistBtn.tag = indexPath.row
-        cell.wishlistBtn.addTarget(self,action:#selector(addToWishListAPI(sender:)), for: .touchUpInside)
-        
+        else if(collectionView == self.slideCollectionView1){
+            let cell : AddBannerCollectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath as IndexPath) as! AddBannerCollectionViewCell
+            let url = URL(string: self.imgArr1[indexPath.row].image)
+            cell.recipeImg.kf.indicatorType = .activity
+            cell.recipeImg.kf.setImage(with: url,placeholder: nil)
+            return cell
+        }
+        else if(collectionView == self.collectionView1){
+           let cell : HomeCollectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: "myCell", for: indexPath as IndexPath) as! HomeCollectionViewCell
+            cell.backgroundColor = UIColor.white
+            cell.layer.borderColor = UIColor (red: 204.0/255.0, green: 204.0/255.0, blue: 204/255.0, alpha: 1).cgColor
+            cell.layer.borderWidth = 0.5
+            
+            cell.productNameLabel.text = self.product[indexPath.row].name
+            cell.originalPriceLabel.text = "\(self.product[indexPath.row].oldPrice)"
+            var curr = String()
+            curr = self.product[indexPath.row].currency
+            
+            cell.currencyLabel.attributedText = NSAttributedString(html: "<span>\(curr)</span>")
+            Model.sharedInstance.currency = cell.currencyLabel.text!
+            print(Model.sharedInstance.currency)
+            
+            if  self.product[indexPath.row].oldPrice != "" {
+                cell.oldPriceLabel.text = self.product[indexPath.row].price
+                cell.crossLabel.isHidden = false
+            }
+            else{
+                cell.oldPriceLabel.isHidden = true
+                cell.crossLabel.isHidden = true
+                cell.originalPriceLabel.text = "\(self.product[indexPath.row].price)"
+            }
+            
+            if self.product[indexPath.row].wishlistID == "1"
+            {
+                cell.wishlistBtn.setImage(UIImage (named: "heart"), for: .normal)
+            }
+            else{
+                
+                cell.wishlistBtn.setImage(UIImage (named: "emptyWishlist"), for: .normal)
+            }
+            
+            cell.brandNameLabel.text = self.product[indexPath.row].brandName
+            let url = URL(string: self.product[indexPath.row].image)
+            cell.productImg.kf.indicatorType = .activity
+            cell.productImg.kf.setImage(with: url,placeholder: nil)
+            
+            cell.wishlistBtn.tag = indexPath.row
+            cell.wishlistBtn.addTarget(self,action:#selector(addToWishListAPI(sender:)), for: .touchUpInside)
+            return cell
+        }
         return cell
     }
    
@@ -454,16 +632,36 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
         return sectionInset
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let productDetailVC = storyboard.instantiateViewController(withIdentifier: "ProductDetailViewController") as! ProductDetailViewController
-        productDetailVC.productID = self.product[indexPath.row].id
-        productDetailVC.passDict.setValue(self.product[indexPath.row].id, forKey: "id")
-        productDetailVC.passDict.setValue(self.product[indexPath.row].name, forKey: "name")
-        productDetailVC.passDict.setValue(self.product[indexPath.row].price, forKey: "price")
-        productDetailVC.passDict.setValue(self.product[indexPath.row].image, forKey: "image")
-        productDetailVC.passDict.setValue(self.product[indexPath.row].brandName, forKey: "brand")
-        productDetailVC.passDict.setValue(self.product[indexPath.row].oldPrice, forKey: "oldPrice")
-        navigationController?.pushViewController(productDetailVC, animated: true)
+        
+         if(collectionView == self.collectionView){
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let productDetailVC = storyboard.instantiateViewController(withIdentifier: "ProductDetailViewController") as! ProductDetailViewController
+            productDetailVC.productID = self.product[indexPath.row].id
+            productDetailVC.passDict.setValue(self.product[indexPath.row].id, forKey: "id")
+            productDetailVC.passDict.setValue(self.product[indexPath.row].name, forKey: "name")
+            productDetailVC.passDict.setValue(self.product[indexPath.row].price, forKey: "price")
+            productDetailVC.passDict.setValue(self.product[indexPath.row].image, forKey: "image")
+            productDetailVC.passDict.setValue(self.product[indexPath.row].brandName, forKey: "brand")
+            productDetailVC.passDict.setValue(self.product[indexPath.row].oldPrice, forKey: "oldPrice")
+            navigationController?.pushViewController(productDetailVC, animated: true)
+            
+        }
+        else if(collectionView == self.slideCollectionView){
+           let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let categoryViewController = storyboard.instantiateViewController(withIdentifier: "ProductViewController") as! ProductViewController
+            categoryViewController.checkStr = "true"
+            categoryViewController.offerID = imgArr[indexPath.row].id
+            navigationController?.pushViewController(categoryViewController, animated: true)
+        }
+         else if(collectionView == self.slideCollectionView1){
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let categoryViewController = storyboard.instantiateViewController(withIdentifier: "ProductViewController") as! ProductViewController
+            categoryViewController.checkStr = "true"
+            categoryViewController.offerID = imgArr1[indexPath.row].id
+            navigationController?.pushViewController(categoryViewController, animated: true)
+        }
+        
+        
     }
     @IBAction func cartBtn(_ sender: UIButton) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -692,9 +890,16 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
         } catch let error as NSError {
             print("Could not fetch. \(error), \(error.userInfo)")
         }
-            let note = wishlist[index]
-            managedContext.delete(note)
-            
+        print(cartlist)
+        
+        let strID = self.product[index].id
+        
+        for section in 0...self.cartlist.count - 1  {
+            if strID == ((cartlist[section].value(forKey: "id")) as! String) {
+                let note = cartlist[section]
+                managedContext.delete(note)
+            }
+        }
             do {
                 try managedContext.save()
             } catch let error as NSError {
