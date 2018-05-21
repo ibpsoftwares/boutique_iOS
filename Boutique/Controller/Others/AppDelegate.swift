@@ -30,7 +30,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         //Stripe.setDefaultPublishableKey("pk_test_hgdZjDGqsgqvnoYv3qjb8fCR")
         //STPPaymentConfiguration.shared().publishableKey = "pk_test_xfBdFEL0TOvvCb5k2QXWbYBj"
         
-        UIApplication.statusBarBackgroundColor = UIColor (red: 57.0/255.0, green: 88.0/255.0, blue: 101.0/255.0, alpha: 1)
+        UIApplication.statusBarBackgroundColor = UIColor (red: 93.0/255.0, green: 69.0/255.0, blue: 61.0/255.0, alpha: 1)
         UIApplication.shared.statusBarStyle = .lightContent
         //UITabBar.appearance().isTranslucent = false
         UITabBar.appearance().barTintColor = UIColor (red: 67.0/255.0, green: 140.0/255.0, blue: 234.0/255.0, alpha: 1)

@@ -24,11 +24,11 @@ class getCategory {
 class getCategoryName {
     var categoryName: String
     var id: String
-    
-    init(categoryName: String,id : String) {
+    var image: String
+    init(categoryName: String,id : String,image:String) {
         self.categoryName = categoryName
         self.id = id
-        
+        self.image = image
     }
 }
 class CategoryViewController: UIViewController,UITableViewDelegate,UITableViewDataSource {
@@ -94,7 +94,7 @@ class CategoryViewController: UIViewController,UITableViewDelegate,UITableViewDa
             }
             else{
                 for item in (response!.value(forKey: "categories") as! NSArray) {
-                    self.categoryName.append(getCategoryName.init(categoryName: (item as! NSDictionary).value(forKey: "name") as! String, id: (item as! NSDictionary).value(forKey: "id") as! String))
+                    self.categoryName.append(getCategoryName.init(categoryName: (item as! NSDictionary).value(forKey: "name") as! String, id: (item as! NSDictionary).value(forKey: "id") as! String, image: (item as! NSDictionary).value(forKey: "image") as! String))
                 }
                 
                 DispatchQueue.main.async(execute: {
@@ -113,6 +113,9 @@ class CategoryViewController: UIViewController,UITableViewDelegate,UITableViewDa
 
         let cell:CategoryTableViewCell = self.tableView.dequeueReusableCell(withIdentifier: "categoryCell") as! CategoryTableViewCell!
         cell.itemNameLabel.text = self.categoryName[indexPath.row].categoryName
+        let url = URL(string: self.categoryName[indexPath.row].image)
+        cell.imgView.kf.indicatorType = .activity
+        cell.imgView.kf.setImage(with: url,placeholder: nil)
         return cell
     }
 
@@ -126,10 +129,10 @@ class CategoryViewController: UIViewController,UITableViewDelegate,UITableViewDa
         } else {
             // Fallback on earlier versions
         }
-        
-
     }
-    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 170
+    }
 }
 // MARK: - LUExpandableTableViewDataSource
 /*

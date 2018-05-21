@@ -95,6 +95,7 @@
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <connections>
                 <outlet property="addressLabel" destination="qDM-nW-FuY" id="38O-Qr-cYB"/>
+                <outlet property="addressType" destination="Q2c-qp-vL0" id="ZHd-Jf-jK3"/>
                 <outlet property="cancelBtn" destination="PLU-7X-kkh" id="Q7h-Al-TxS"/>
                 <outlet property="editBtn" destination="qEu-l8-JxH" id="eYX-2q-c3m"/>
                 <outlet property="homeLabel" destination="P1b-di-SD7" id="d2Y-cV-8Lb"/>

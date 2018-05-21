@@ -14,13 +14,13 @@ class orderDetail {
     var id: String
     var amt: String
     var date: String
-    
-    init(id: String,amt : String,date : String) {
+    var status: String
+    init(id: String,amt : String,date : String,status : String) {
         
         self.id = id
         self.amt = amt
         self.date = date
-        
+        self.status = status
     }
 }
 class OrderHistoryViewController: UIViewController,UITableViewDelegate,UITableViewDataSource {
@@ -72,7 +72,7 @@ class OrderHistoryViewController: UIViewController,UITableViewDelegate,UITableVi
             print(response!)
             for item in ((response)?.value(forKey: "orderDetail") as! NSArray){
                 print(item)
-                self.order.append(orderDetail.init(id: (((item as! NSDictionary).value(forKey: "OrderDetail") as! NSDictionary).value(forKey: "id") as! String), amt: (((item as! NSDictionary).value(forKey: "OrderDetail") as! NSDictionary).value(forKey: "amount") as! String), date: (((item as! NSDictionary).value(forKey: "OrderDetail") as! NSDictionary).value(forKey: "created") as! String)))
+                self.order.append(orderDetail.init(id: (((item as! NSDictionary).value(forKey: "OrderDetail") as! NSDictionary).value(forKey: "id") as! String), amt: (((item as! NSDictionary).value(forKey: "OrderDetail") as! NSDictionary).value(forKey: "amount") as! String), date: (((item as! NSDictionary).value(forKey: "OrderDetail") as! NSDictionary).value(forKey: "created") as! String), status: (((item as! NSDictionary).value(forKey: "OrderDetail") as! NSDictionary).value(forKey: "status") as! String)))
             }
             DispatchQueue.main.async(execute: {
                 self.tableView.reloadData()
@@ -93,14 +93,40 @@ class OrderHistoryViewController: UIViewController,UITableViewDelegate,UITableVi
         // create a new cell if needed or reuse an old one
         let cell:OrderHistoryTableViewCell = self.tableView.dequeueReusableCell(withIdentifier: "historyCell") as! OrderHistoryTableViewCell!
         
-        let dateFromStringFormatter = DateFormatter()
-        dateFromStringFormatter.dateFormat = "YYYY-MM-dd"
+//        let dateFromStringFormatter = DateFormatter()
+//        dateFromStringFormatter.dateFormat = "YYYY-MM-dd"
+//
+//        let date = self.order[indexPath.row].date
+//        let dateFormatter = DateFormatter()
+//
+//        dateFormatter.dateFormat = "dd-MM-yyyy"
+//        let dateFromString : NSDate = dateFormatter.date(from: date)! as NSDate
+//       // dateFormatter.dateFormat = "dd-MM-yyyy"
+//        let datenew = dateFormatter.string(from: dateFromString as Date)
+//        print(datenew)
         
-        let dateFromString = dateFromStringFormatter.date(from: self.order[indexPath.row].date)
+        //cell.orderDateLabel.text = datenew
+      
+        cell.orderIDLabel.text = ("SKU\(self.order[indexPath.row].id)")
         
-        cell.orderIDLabel.text = self.order[indexPath.row].id
-        cell.orderDateLabel.text = self.order[indexPath.row].date
-        cell.amountLabel.text = self.order[indexPath.row].amt
+        cell.amountLabel.text = ("\(Model.sharedInstance.currency)\(self.order[indexPath.row].amt)")
+       
+        if self.order [indexPath.row].status == "2"{
+            cell.deliveryLabel.text = "Placed"
+            cell.img.image = UIImage(named: "inProgress")
+        }
+        else if self.order [indexPath.row].status == "3"{
+            cell.deliveryLabel.text = "Shipped"
+             cell.img.image = UIImage(named: "inProgress")
+        }
+        else if self.order [indexPath.row].status == "4"{
+            cell.deliveryLabel.text = "Delivered"
+             cell.img.image = UIImage(named: "delivered")
+        }
+        else if self.order [indexPath.row].status == "5"{
+            cell.deliveryLabel.text = "Cancelled"
+            cell.img.image = UIImage(named: "cencelled")
+        }
         //cell.deliveryLabel.text = self.status[indexPath.row]
         //cell.img.image = UIImage (named: self.image[indexPath.row])
         return cell
@@ -110,6 +136,9 @@ class OrderHistoryViewController: UIViewController,UITableViewDelegate,UITableVi
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print("You tapped cell number \(indexPath.row).")
         
+    }
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 60
     }
 }
 extension UITabBarController {

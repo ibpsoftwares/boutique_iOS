@@ -26,7 +26,8 @@ class getProduct {
     var wishlistID : String
      var sizeID : String
      var currency : String
-    init(name: String,price: String,image: String,id: String,oldPrice: String,brandName: String,wishlistID : String,sizeID : String,currency : String) {
+    var categoryID : String
+    init(name: String,price: String,image: String,id: String,oldPrice: String,brandName: String,wishlistID : String,sizeID : String,currency : String,categoryID: String) {
         self.name = name
         self.price = price
         self.image = image
@@ -35,7 +36,8 @@ class getProduct {
          self.brandName = brandName
         self.wishlistID = wishlistID
         self.sizeID = sizeID
-         self.currency = currency
+        self.currency = currency
+        self.categoryID = categoryID
     }
 }
 class getoffer1 {
@@ -79,6 +81,8 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
     @IBOutlet weak var pageControl : UIPageControl!
     var screenheight : CGFloat!
     var product = [getProduct]()
+    var product1 = [getProduct]()
+    var product2 = [getProduct]()
     var productlocal = [getProduct]()
     var imgArr = [getoffer1]()
     var imgArr1 = [getoffer2]()
@@ -93,22 +97,23 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
     var urlImages = [String]()
     var wishlist: [NSManagedObject] = []
     var currency = String()
+    private var cache = [UICollectionViewLayoutAttributes]()
     override func viewDidLoad() {
         super.viewDidLoad()
 
        Model.sharedInstance.lacalDataArr.removeAllObjects()
         
         self.navigationController?.setNavigationBarHidden(true, animated: true)
-        let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
-        var width = UIScreen.main.bounds.width
-        layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-       // width = width - 10
-
-        layout.itemSize = CGSize(width: width / 2 , height:290)
-         self.collectionView.collectionViewLayout = layout
-         self.collectionView1.collectionViewLayout = layout
-        layout.minimumInteritemSpacing = 0
-        layout.minimumLineSpacing = 0
+//        let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
+//        var width = UIScreen.main.bounds.width
+//        layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+//       // width = width - 10
+//
+//        layout.itemSize = CGSize(width: width / 2 , height:290)
+//         self.collectionView.collectionViewLayout = layout
+//         self.collectionView1.collectionViewLayout = layout
+//        layout.minimumInteritemSpacing = 0
+//        layout.minimumLineSpacing = 0
        
         self.collectionView.register(UINib(nibName: "HomeCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "myCell")
         self.collectionView1.register(UINib(nibName: "HomeCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "myCell")
@@ -131,6 +136,11 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
         // Dispose of any resources that can be recreated.
     }
     override func viewWillAppear(_ animated: Bool) {
+        cache.removeAll()
+        collectionView.reloadData()
+        collectionView.collectionViewLayout.invalidateLayout()
+        collectionView1.reloadData()
+        collectionView1.collectionViewLayout.invalidateLayout()
         self.productlocal.removeAll()
         self.wishListProduct.removeAll()
         self.wishlist.removeAll()
@@ -150,7 +160,7 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
         getProductAPI()
         
     }
-    
+   
     //MARK: Fetch Cart Data From Core Data
     func fetchCartData(){
         
@@ -171,7 +181,6 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
         else{
             print("no data...")
             self.wishlistCountLabel.isHidden  = true
-            
         }
     }
     //MARK: Fetch Wishlist from lacal database
@@ -192,12 +201,11 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
         if self.wishlist.count > 0{
             for row in 0...self.wishlist.count - 1{
                 let person = self.wishlist[row]
-                self.productlocal.append(getProduct.init(name: (person.value(forKeyPath: "name") as! String), price: (person.value(forKeyPath: "price") as! String) , image: (person.value(forKeyPath: "image") as! String) , id:  (person.value(forKeyPath: "id") as! String), oldPrice: (person.value(forKeyPath: "oldPrice") as! String), brandName: (person.value(forKeyPath: "brand") as! String), wishlistID: person.value(forKeyPath: "wishlistID") as! String, sizeID: "", currency: ""))
+                self.productlocal.append(getProduct.init(name: (person.value(forKeyPath: "name") as! String), price: (person.value(forKeyPath: "price") as! String) , image: (person.value(forKeyPath: "image") as! String) , id:  (person.value(forKeyPath: "id") as! String), oldPrice: (person.value(forKeyPath: "oldPrice") as! String), brandName: (person.value(forKeyPath: "brand") as! String), wishlistID: person.value(forKeyPath: "wishlistID") as! String, sizeID: "", currency: "", categoryID: ""))
             }
             let tabItems = self.tabBarController?.tabBar.items as NSArray!
             let tabItem = tabItems![3] as! UITabBarItem
             tabItem.badgeValue = String(wishlist.count)
-            
         }
         else{
             print("no data...")
@@ -286,9 +294,8 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
                     for item in ((response)?.value(forKey: "items") as! NSArray) {
                         print(item)
                         
-                        self.cartProduct.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "cloth_id") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), oldPrice: "", brand: "", wishlistID: "", cout: "1", sizeID: ""))
+                        self.cartProduct.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "cloth_id") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), oldPrice: "", brand: "", wishlistID: "", cout: "1", sizeID: "", categoryID: ((item as! NSDictionary).value(forKey: "category_id") as! String)))
                     }
-                    
                     self.wishlistCountLabel.text  = (String)(self.cartProduct.count)
                 }
             }
@@ -307,7 +314,7 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
         
       //  print(parameter)
         self.imgArr.removeAll()
-        
+        self.imgArr1.removeAll()
         Webservice.apiPost(apiURl: "getBannerImages", parameters:nil, headers: nil, completionHandler: { (response:NSDictionary?, error:NSError?) in
             if error != nil {
                 print(error?.localizedDescription as Any)
@@ -371,6 +378,8 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
     func getProductAPI (){
         
         self.product.removeAll()
+        self.product1.removeAll()
+        self.product2.removeAll()
         SKActivityIndicator.spinnerColor(UIColor.darkGray)
         SKActivityIndicator.show("Loading...")
         var parameter: Parameters = [:]
@@ -399,19 +408,33 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
 
                     if (item as! NSDictionary).value(forKey: "offer_price")  is NSNull {
                         print("empty")
-                        self.product.append(getProduct.init(name:((item as! NSDictionary).value(forKey: "title") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), id: ((item as! NSDictionary).value(forKey: "id") as! String), oldPrice: "", brandName: ((item as! NSDictionary).value(forKey: "brand") as! String), wishlistID: ((item as! NSDictionary).value(forKey: "symbol") as! String), sizeID: "", currency: ((item as! NSDictionary).value(forKey: "symbol") as! String)))
+                        self.product.append(getProduct.init(name:((item as! NSDictionary).value(forKey: "title") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), id: ((item as! NSDictionary).value(forKey: "id") as! String), oldPrice: "", brandName: ((item as! NSDictionary).value(forKey: "brand") as! String), wishlistID: ((item as! NSDictionary).value(forKey: "wishlist") as! String), sizeID: "", currency: ((item as! NSDictionary).value(forKey: "symbol") as! String), categoryID: ((item as! NSDictionary).value(forKey: "category_id") as! String)))
                     }
                     else {
                         print("not null")
-                        self.product.append(getProduct.init(name:((item as! NSDictionary).value(forKey: "title") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), id: ((item as! NSDictionary).value(forKey: "id") as! String), oldPrice: ((item as! NSDictionary).value(forKey: "offer_price") as! String), brandName: ((item as! NSDictionary).value(forKey: "brand") as! String), wishlistID: ((item as! NSDictionary).value(forKey: "wishlist") as! String), sizeID: "", currency: ((item as! NSDictionary).value(forKey: "symbol") as! String)))
+                        self.product.append(getProduct.init(name:((item as! NSDictionary).value(forKey: "title") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), id: ((item as! NSDictionary).value(forKey: "id") as! String), oldPrice: ((item as! NSDictionary).value(forKey: "offer_price") as! String), brandName: ((item as! NSDictionary).value(forKey: "brand") as! String), wishlistID: ((item as! NSDictionary).value(forKey: "wishlist") as! String), sizeID: "", currency: ((item as! NSDictionary).value(forKey: "symbol") as! String), categoryID: ((item as! NSDictionary).value(forKey: "category_id") as! String)))
                     }
                 }
-                
                 DispatchQueue.main.async(execute: {
                     SKActivityIndicator.dismiss()
                    // self.collectionView.reloadData()
-                    
                 })
+                
+                // split array into diff. category
+                if self.product.count > 0{
+                    for row in 0...self.product.count - 1{
+                        
+                        if row <= 5 {
+                            self.product1.append(getProduct.init(name: self.product[row].name, price: self.product[row].price , image: self.product[row].image , id:  self.product[row].id, oldPrice: self.product[row].oldPrice, brandName: self.product[row].brandName, wishlistID: self.product[row].wishlistID, sizeID: "", currency: self.product[row].currency, categoryID: self.product[row].categoryID))
+                        }
+                        else{
+                            self.product2.append(getProduct.init(name: self.product[row].name, price: self.product[row].price , image: self.product[row].image , id:  self.product[row].id, oldPrice: self.product[row].oldPrice, brandName: self.product[row].brandName, wishlistID: self.product[row].wishlistID, sizeID: "", currency: self.product[row].currency, categoryID: self.product[row].categoryID))
+                        }
+                    }
+                }
+                print(self.product1.count)
+                print(self.product2.count)
+                
                  if Model.sharedInstance.userID == "" {
                 
                 if self.product.count > 0{
@@ -421,7 +444,7 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
                             print("index :\(row)")
                         }
                         else{
-                            self.productlocal.append(getProduct.init(name: "", price: "" , image: "" , id:  "", oldPrice: "", brandName: "", wishlistID: "", sizeID: "", currency: ""))
+                            self.productlocal.append(getProduct.init(name: "", price: "" , image: "" , id:  "", oldPrice: "", brandName: "", wishlistID: "", sizeID: "", currency: "", categoryID: ""))
                         }
                     }
                 }
@@ -440,13 +463,18 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
                 }
             }
                 DispatchQueue.main.async(execute: {
-                    let int: Int32 = Int32((self.product.count) * 290 / 2 )
+                    let int: Int32 = Int32((self.product1.count) * 290 / 2 )
                     let cgfloat = CGFloat(int)
                     print(cgfloat)
-                    self.collectionViewHeight.constant = cgfloat
-                    self.collectionViewHeight1.constant = cgfloat 
+                    let int1: Int32 = Int32((self.product2.count) * 290 / 2 )
+                    let cgfloat1 = CGFloat(int1)
+                    print(cgfloat1)
+                    self.collectionViewHeight.constant = cgfloat + 30
+                    self.collectionViewHeight1.constant = cgfloat1 + 200
                     self.collectionView1.reloadData()
                    self.collectionView.reloadData()
+                    self.collectionView.collectionViewLayout.invalidateLayout()
+                    self.collectionView1.collectionViewLayout.invalidateLayout()
                 })
             }
         })
@@ -456,13 +484,13 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
         if collectionView == self.collectionView {
-            return self.product.count
+            return self.product1.count
         }
         else if collectionView == self.slideCollectionView {
             return self.imgArr.count
         }
         else if collectionView == self.collectionView1 {
-            return self.product.count
+            return self.product2.count
         }
         else if collectionView == self.slideCollectionView1 {
             return self.imgArr1.count
@@ -521,35 +549,35 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
 //        return cell
 //        }
        
-        var cell = HomeCollectionViewCell()
+        var cell = collectionView.dequeueReusableCell(withReuseIdentifier: "myCell", for: indexPath as IndexPath) as! HomeCollectionViewCell
         
         if(collectionView == self.collectionView)
         {
-            cell = collectionView.dequeueReusableCell(withReuseIdentifier: "myCell", for: indexPath as IndexPath) as! HomeCollectionViewCell
+            cell = self.collectionView.dequeueReusableCell(withReuseIdentifier: "myCell", for: indexPath as IndexPath) as! HomeCollectionViewCell
             cell.backgroundColor = UIColor.white
                     cell.layer.borderColor = UIColor (red: 204.0/255.0, green: 204.0/255.0, blue: 204/255.0, alpha: 1).cgColor
                     cell.layer.borderWidth = 0.5
             
-                    cell.productNameLabel.text = self.product[indexPath.row].name
-                    cell.originalPriceLabel.text = "\(self.product[indexPath.row].oldPrice)"
+                    //cell.productNameLabel.text = self.product[indexPath.row].name
+                    cell.originalPriceLabel.text = "\(Model.sharedInstance.currency)\(self.product1[indexPath.row].oldPrice)"
                     var curr = String()
-                    curr = self.product[indexPath.row].currency
+                    curr = self.product1[indexPath.row].currency
             
                     cell.currencyLabel.attributedText = NSAttributedString(html: "<span>\(curr)</span>")
                     Model.sharedInstance.currency = cell.currencyLabel.text!
                     print(Model.sharedInstance.currency)
             
-                    if  self.product[indexPath.row].oldPrice != "" {
-                        cell.oldPriceLabel.text = self.product[indexPath.row].price
+                    if  self.product1[indexPath.row].oldPrice != "" {
+                        cell.oldPriceLabel.text = "\(Model.sharedInstance.currency)\(self.product1[indexPath.row].price)"
                         cell.crossLabel.isHidden = false
                     }
                     else{
                         cell.oldPriceLabel.isHidden = true
                         cell.crossLabel.isHidden = true
-                        cell.originalPriceLabel.text = "\(self.product[indexPath.row].price)"
+                        cell.originalPriceLabel.text = "\(Model.sharedInstance.currency)\(self.product1[indexPath.row].price)"
                     }
             
-                    if self.product[indexPath.row].wishlistID == "1"
+                    if self.product1[indexPath.row].wishlistID == "1"
                     {
                         cell.wishlistBtn.setImage(UIImage (named: "heart"), for: .normal)
                     }
@@ -558,8 +586,8 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
                         cell.wishlistBtn.setImage(UIImage (named: "emptyWishlist"), for: .normal)
                     }
             
-                    cell.brandNameLabel.text = self.product[indexPath.row].brandName
-                    let url = URL(string: self.product[indexPath.row].image)
+                    cell.brandNameLabel.text = self.product1[indexPath.row].name
+                    let url = URL(string: self.product1[indexPath.row].image)
                     cell.productImg.kf.indicatorType = .activity
                     cell.productImg.kf.setImage(with: url,placeholder: nil)
             
@@ -585,40 +613,40 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
             cell.backgroundColor = UIColor.white
             cell.layer.borderColor = UIColor (red: 204.0/255.0, green: 204.0/255.0, blue: 204/255.0, alpha: 1).cgColor
             cell.layer.borderWidth = 0.5
-            
-            cell.productNameLabel.text = self.product[indexPath.row].name
-            cell.originalPriceLabel.text = "\(self.product[indexPath.row].oldPrice)"
+
+            cell.productNameLabel.text = self.product2[indexPath.row].name
+            cell.originalPriceLabel.text = "\(Model.sharedInstance.currency)\(self.product2[indexPath.row].oldPrice)"
             var curr = String()
-            curr = self.product[indexPath.row].currency
-            
+            curr = self.product2[indexPath.row].currency
+
             cell.currencyLabel.attributedText = NSAttributedString(html: "<span>\(curr)</span>")
             Model.sharedInstance.currency = cell.currencyLabel.text!
             print(Model.sharedInstance.currency)
-            
-            if  self.product[indexPath.row].oldPrice != "" {
-                cell.oldPriceLabel.text = self.product[indexPath.row].price
+
+            if  self.product2[indexPath.row].oldPrice != "" {
+                cell.oldPriceLabel.text = "\(Model.sharedInstance.currency)\(self.product2[indexPath.row].price)"
                 cell.crossLabel.isHidden = false
             }
             else{
                 cell.oldPriceLabel.isHidden = true
                 cell.crossLabel.isHidden = true
-                cell.originalPriceLabel.text = "\(self.product[indexPath.row].price)"
+                cell.originalPriceLabel.text = "\(Model.sharedInstance.currency)\(self.product2[indexPath.row].price)"
             }
-            
-            if self.product[indexPath.row].wishlistID == "1"
+
+            if self.product2[indexPath.row].wishlistID == "1"
             {
                 cell.wishlistBtn.setImage(UIImage (named: "heart"), for: .normal)
             }
             else{
-                
+
                 cell.wishlistBtn.setImage(UIImage (named: "emptyWishlist"), for: .normal)
             }
-            
-            cell.brandNameLabel.text = self.product[indexPath.row].brandName
-            let url = URL(string: self.product[indexPath.row].image)
+
+            cell.brandNameLabel.text = self.product2[indexPath.row].brandName
+            let url = URL(string: self.product2[indexPath.row].image)
             cell.productImg.kf.indicatorType = .activity
             cell.productImg.kf.setImage(with: url,placeholder: nil)
-            
+
             cell.wishlistBtn.tag = indexPath.row
             cell.wishlistBtn.addTarget(self,action:#selector(addToWishListAPI(sender:)), for: .touchUpInside)
             return cell
@@ -626,26 +654,70 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
         return cell
     }
    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets
-    {
-        let sectionInset = UIEdgeInsetsMake(0, 0, 0, 0)
-        return sectionInset
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return 0
     }
+    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
+        if collectionView ==  slideCollectionView{
+            return CGSize(width:150 , height:150)
+        }
+        else if collectionView ==  slideCollectionView1{
+            return CGSize(width:150 , height:150)
+        }
+        return CGSize(width:view.frame.width / 2 , height:290)
+    }
+     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize
+    {
+//        let approximateWidthOfContent = view.frame.width - x
+//        // x is the width of the logo in the left
+//
+//        let size = CGSize(width: approximateWidthOfContent, height: 1000)
+//
+//        //1000 is the large arbitrary values which should be taken in case of very high amount of content
+//
+//        let attributes = [NSFontAttributeName: UIFont.systemFont(ofSize: 15)]
+//        let estimatedFrame = NSString(string: user.bioText).boundingRect(with: size, options: .usesLineFragmentOrigin, attributes: attributes, context: nil)
+        if collectionView ==  slideCollectionView{
+            return CGSize(width:150 , height:150)
+        }
+        else if collectionView ==  slideCollectionView1{
+            return CGSize(width:150 , height:150)
+        }
+        return CGSize(width: view.frame.width / 2, height: 290 + 10)
+    }
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets
+//    {
+//        let sectionInset = UIEdgeInsetsMake(0, 0, 0, 0)
+//        return sectionInset
+//    }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
          if(collectionView == self.collectionView){
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let productDetailVC = storyboard.instantiateViewController(withIdentifier: "ProductDetailViewController") as! ProductDetailViewController
-            productDetailVC.productID = self.product[indexPath.row].id
-            productDetailVC.passDict.setValue(self.product[indexPath.row].id, forKey: "id")
-            productDetailVC.passDict.setValue(self.product[indexPath.row].name, forKey: "name")
-            productDetailVC.passDict.setValue(self.product[indexPath.row].price, forKey: "price")
-            productDetailVC.passDict.setValue(self.product[indexPath.row].image, forKey: "image")
-            productDetailVC.passDict.setValue(self.product[indexPath.row].brandName, forKey: "brand")
-            productDetailVC.passDict.setValue(self.product[indexPath.row].oldPrice, forKey: "oldPrice")
+            productDetailVC.productID = self.product1[indexPath.row].id
+            productDetailVC.passDict.setValue(self.product1[indexPath.row].id, forKey: "id")
+            productDetailVC.passDict.setValue(self.product1[indexPath.row].name, forKey: "name")
+            productDetailVC.passDict.setValue(self.product1[indexPath.row].price, forKey: "price")
+            productDetailVC.passDict.setValue(self.product1[indexPath.row].image, forKey: "image")
+            productDetailVC.passDict.setValue(self.product1[indexPath.row].brandName, forKey: "brand")
+            productDetailVC.passDict.setValue(self.product1[indexPath.row].oldPrice, forKey: "oldPrice")
+            productDetailVC.passDict.setValue(self.product1[indexPath.row].categoryID, forKey: "categoryID")
             navigationController?.pushViewController(productDetailVC, animated: true)
-            
         }
+         else if(collectionView == self.collectionView1){
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let productDetailVC = storyboard.instantiateViewController(withIdentifier: "ProductDetailViewController") as! ProductDetailViewController
+            productDetailVC.productID = self.product2[indexPath.row].id
+            productDetailVC.passDict.setValue(self.product2[indexPath.row].id, forKey: "id")
+            productDetailVC.passDict.setValue(self.product2[indexPath.row].name, forKey: "name")
+            productDetailVC.passDict.setValue(self.product2[indexPath.row].price, forKey: "price")
+            productDetailVC.passDict.setValue(self.product2[indexPath.row].image, forKey: "image")
+            productDetailVC.passDict.setValue(self.product2[indexPath.row].brandName, forKey: "brand")
+            productDetailVC.passDict.setValue(self.product2[indexPath.row].oldPrice, forKey: "oldPrice")
+            productDetailVC.passDict.setValue(self.product2[indexPath.row].categoryID, forKey: "categoryID")
+            navigationController?.pushViewController(productDetailVC, animated: true)
+         }
         else if(collectionView == self.slideCollectionView){
            let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let categoryViewController = storyboard.instantiateViewController(withIdentifier: "ProductViewController") as! ProductViewController
@@ -863,10 +935,8 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
                 else{
                     sender.setImage(UIImage(named: "emptyWishlist"), for: .normal)
                     self.getWishListAPI()
-
-                }
-            })
-
+                 }
+              })
             }
         }
     }
@@ -908,7 +978,6 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
         wishlistFromLocalDatabase()
     }
     
-  
     //MARK: getWishListAPI Methods
     func getWishListAPI (){
         self.wishListProduct.removeAll()
@@ -945,9 +1014,8 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
                 for item in (response!.value(forKey: "Wishlist") as! NSArray) {
                     print(item)
                     
-                    self.wishListProduct.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "cloth_id") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), oldPrice: "", brand: "", wishlistID: "", cout: "1", sizeID: ""))
+                    self.wishListProduct.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "cloth_id") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), oldPrice: "", brand: "", wishlistID: "", cout: "1", sizeID: "", categoryID: ((item as! NSDictionary).value(forKey: "category_id") as! String)))
                 }
-                
                 Model.sharedInstance.badgeValue = (String)(self.wishListProduct.count)
                // if self.wishListProduct.count > 0 {
                     
@@ -955,7 +1023,6 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
                     let tabItem = tabItems![3] as! UITabBarItem
                     tabItem.badgeValue = Model.sharedInstance.badgeValue
                 //}
-                
                 DispatchQueue.main.async(execute: {
                     // self.tableView.reloadData()
                 })

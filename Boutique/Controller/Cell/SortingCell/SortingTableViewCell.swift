@@ -1,17 +1,15 @@
 //
-//  CategoryTableViewCell.swift
+//  SortingTableViewCell.swift
 //  Boutique
 //
-//  Created by Apple on 14/02/18.
+//  Created by Apple on 08/05/18.
 //  Copyright © 2018 Apple. All rights reserved.
 //
 
 import UIKit
 
-class CategoryTableViewCell: UITableViewCell {
-
-    @IBOutlet weak var itemNameLabel: UILabel!
-    @IBOutlet weak var imgView: UIImageView!
+class SortingTableViewCell: UITableViewCell {
+@IBOutlet weak var itemNameLabel: UILabel!
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

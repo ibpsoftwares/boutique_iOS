@@ -62,19 +62,19 @@
                                         <color key="textColor" red="0.49803921569999998" green="0.50588235290000005" blue="0.50980392159999999" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="243" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zHh-eh-bVF">
-                                        <rect key="frame" x="5" y="27.5" width="21" height="15"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zHh-eh-bVF">
+                                        <rect key="frame" x="5" y="27.5" width="0.0" height="0.0"/>
                                         <fontDescription key="fontDescription" name="Whitney-Medium" family="Whitney" pointSize="13"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="$ 243" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="k7j-RG-poz">
-                                        <rect key="frame" x="36" y="27" width="31" height="15"/>
+                                        <rect key="frame" x="15" y="19.5" width="31" height="15"/>
                                         <fontDescription key="fontDescription" name="Whitney-Medium" family="Whitney" pointSize="13"/>
                                         <color key="textColor" red="0.96078431369999995" green="0.01176470588" blue="0.1450980392" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Bgq-6u-YJb">
-                                        <rect key="frame" x="36" y="34" width="31" height="1"/>
+                                        <rect key="frame" x="15" y="26.5" width="31" height="1"/>
                                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="1" id="Byn-Ky-7jL"/>
@@ -84,13 +84,13 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Women Blue Printed Kurta" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dF1-Sp-dnt">
-                                        <rect key="frame" x="5" y="45.5" width="156.5" height="16.5"/>
+                                        <rect key="frame" x="5" y="30.5" width="156.5" height="16.5"/>
                                         <fontDescription key="fontDescription" name="Whitney-Medium" family="Whitney" pointSize="14"/>
                                         <color key="textColor" red="0.49803921568627452" green="0.50588235294117645" blue="0.50980392156862742" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BfO-Pf-wsB">
-                                        <rect key="frame" x="5" y="35" width="0.0" height="0.0"/>
+                                    <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BfO-Pf-wsB">
+                                        <rect key="frame" x="5" y="27.5" width="0.0" height="0.0"/>
                                         <fontDescription key="fontDescription" name="Whitney-Medium" family="Whitney" pointSize="13"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
@@ -148,7 +148,7 @@
                 <outlet property="productNameLabel" destination="dF1-Sp-dnt" id="lvO-5T-TLO"/>
                 <outlet property="wishlistBtn" destination="zk0-Af-RaC" id="g03-ag-nlk"/>
             </connections>
-            <point key="canvasLocation" x="291.5" y="-8.5"/>
+            <point key="canvasLocation" x="-12" y="-52"/>
         </collectionViewCell>
     </objects>
     <resources>

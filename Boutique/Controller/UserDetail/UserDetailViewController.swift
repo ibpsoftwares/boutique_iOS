@@ -217,8 +217,8 @@ class UserDetailViewController: UIViewController ,UIPickerViewDelegate,UIPickerV
             "user_id" :Model.sharedInstance.userID,
             "contact" : textMobile.text!,
             "username" : textName.text!,
-            "locality" : textLocality.text!
-            
+            "locality" : textLocality.text!,
+            "addressType" : "Home"
         ]
         print(parameters)
         Webservice.apiPost(apiURl: "shippingDetail/", parameters: parameters, headers: nil) { (response:NSDictionary?, error:NSError?) in

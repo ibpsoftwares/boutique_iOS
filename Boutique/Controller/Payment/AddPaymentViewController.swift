@@ -21,6 +21,7 @@ class AddPaymentViewController: UIViewController,UITableViewDelegate,UITableView
     @IBOutlet weak var discountLabel: UILabel!
     @IBOutlet weak var cardExpiryDateLabel: UILabel!
     var totalPrice = String()
+     var deliveryCharge = String()
     var userData = NSDictionary()
      @IBOutlet weak var tableView: UITableView!
      var checkCash : Bool = false
@@ -32,10 +33,14 @@ class AddPaymentViewController: UIViewController,UITableViewDelegate,UITableView
         
         print(Model.sharedInstance.totalPrice)
         itemPriceLabel.text = String(Model.sharedInstance.totalPrice)
+        deliveryCharge = (UserDefaults.standard.value(forKey: "deliveryCharges") as! String)
+        let result = Int(Model.sharedInstance.totalPrice) + Int(deliveryCharge)!
+        print(result)
         shipmentPriceLabel.text = "0.0"
         //taxPriceLabel.text = "0.0"
         //discountLabel.text = "- 0.0"
-        totalPriceLabel.text = String("$\(Model.sharedInstance.totalPrice)")
+        totalPriceLabel.text = String("\(Model.sharedInstance.currency)\(result)")
+        self.shipmentPriceLabel.text = deliveryCharge
         Model.sharedInstance.totalAmt = totalPriceLabel.text!
          self.tabBarController?.tabBar.isHidden = true
         self.navigationController?.navigationBar.isHidden = true
@@ -76,10 +81,11 @@ class AddPaymentViewController: UIViewController,UITableViewDelegate,UITableView
         let local = ((userData ).value(forKey: "locality") as! String)
          let city = ((userData ).value(forKey: "city") as! String)
         let state = ((userData ).value(forKey: "state") as! String)
-        
+        let addressType = ((userData ).value(forKey: "addressType") as! String)
         let adddress = "\(addr) ,\(local) ,\(city) ,\(state)"
         print(adddress)
         cell.addressLabel.text = adddress
+        cell.addressType.text = "(\(addressType))"
        cell.editBtn.addTarget(self,action:#selector(edit(sender:)), for: .touchUpInside)
         return cell
     }

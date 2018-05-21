@@ -129,7 +129,7 @@ class MyCartViewController: UIViewController,UITableViewDelegate,UITableViewData
                 if (person.value(forKeyPath: "name") as! String) == ""{
                     
                 }else{
-                    self.cartProduct.append(getProductDetail.init(name: (person.value(forKeyPath: "name") as! String), id:  (person.value(forKeyPath: "id") as! String), price: (person.value(forKeyPath: "price") as! String) , image: (person.value(forKeyPath: "image") as! String), oldPrice: (person.value(forKeyPath: "oldPrice") as! String), brand: (person.value(forKeyPath: "brand") as! String), wishlistID: person.value(forKeyPath: "wishlistID") as! String, cout: "1", sizeID: (person.value(forKeyPath: "size") as! String)))
+                    self.cartProduct.append(getProductDetail.init(name: (person.value(forKeyPath: "name") as! String), id:  (person.value(forKeyPath: "id") as! String), price: (person.value(forKeyPath: "price") as! String) , image: (person.value(forKeyPath: "image") as! String), oldPrice: (person.value(forKeyPath: "oldPrice") as! String), brand: (person.value(forKeyPath: "brand") as! String), wishlistID: person.value(forKeyPath: "wishlistID") as! String, cout: "1", sizeID: (person.value(forKeyPath: "size") as! String), categoryID: ""))
                 }
             }
         
@@ -190,10 +190,10 @@ class MyCartViewController: UIViewController,UITableViewDelegate,UITableViewData
                         
 
                         if (item as! NSDictionary).value(forKey: "offer_price")  is NSNull {
-                           self.cartProduct.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "cart_id") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), oldPrice: (((item as! NSDictionary).value(forKey: "size") as! NSDictionary).value(forKey: "id") as! String), brand: "", wishlistID: "", cout: "1", sizeID: (((item as! NSDictionary).value(forKey: "size") as! NSDictionary).value(forKey: "size") as! String)))
+                            self.cartProduct.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "cloth_id") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), oldPrice: (((item as! NSDictionary).value(forKey: "size") as! NSDictionary).value(forKey: "id") as! String), brand: "", wishlistID: "", cout: "1", sizeID: (((item as! NSDictionary).value(forKey: "size") as! NSDictionary).value(forKey: "size") as! String), categoryID: ((item as! NSDictionary).value(forKey: "category_id") as! String)))
                         }
                         else {
-                            self.cartProduct.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "cart_id") as! String), price: ((item as! NSDictionary).value(forKey: "offer_price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), oldPrice: (((item as! NSDictionary).value(forKey: "size") as! NSDictionary).value(forKey: "id") as! String), brand: "", wishlistID: "", cout: "1", sizeID: (((item as! NSDictionary).value(forKey: "size") as! NSDictionary).value(forKey: "size") as! String)))
+                            self.cartProduct.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "cloth_id") as! String), price: ((item as! NSDictionary).value(forKey: "offer_price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), oldPrice: (((item as! NSDictionary).value(forKey: "size") as! NSDictionary).value(forKey: "id") as! String), brand: "", wishlistID: "", cout: "1", sizeID: (((item as! NSDictionary).value(forKey: "size") as! NSDictionary).value(forKey: "size") as! String), categoryID: ((item as! NSDictionary).value(forKey: "category_id") as! String)))
                         }
                         
 //                        self.cartProduct.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "cart_id") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), oldPrice: (((item as! NSDictionary).value(forKey: "size") as! NSDictionary).value(forKey: "id") as! String), brand: "", wishlistID: "", cout: "1", sizeID: (((item as! NSDictionary).value(forKey: "size") as! NSDictionary).value(forKey: "size") as! String)))
@@ -206,7 +206,7 @@ class MyCartViewController: UIViewController,UITableViewDelegate,UITableViewData
                         let total = (Int)(self.cartProduct[i].price)!
                         print(total)
                         self.totalPrice += total
-                        self.totalPriceLabel.text = String("$\(self.totalPrice)")
+                        self.totalPriceLabel.text = String("\(Model.sharedInstance.currency)\(self.totalPrice)")
                         Model.sharedInstance.totalPrice = Double(self.totalPrice)
                     }
                     DispatchQueue.main.async(execute: {
@@ -281,7 +281,7 @@ class MyCartViewController: UIViewController,UITableViewDelegate,UITableViewData
         
         print(totalPrice)
         self.totalPrice += Int(total)
-        self.totalPriceLabel.text = String("$\(self.totalPrice)")
+        self.totalPriceLabel.text = String("\(Model.sharedInstance.currency)\(self.totalPrice)")
         Model.sharedInstance.totalPrice = Double(self.totalPrice)
         self.tableView.reloadData()
         return count
@@ -306,7 +306,7 @@ class MyCartViewController: UIViewController,UITableViewDelegate,UITableViewData
 
 //            print(totalPrice)
 //            self.totalPrice = Int(total)
-            self.totalPriceLabel.text = String("$\(self.totalPrice)")
+            self.totalPriceLabel.text = String("\(Model.sharedInstance.currency)\(self.totalPrice)")
         } else {
             count = count - 1
             let myDouble = Double(self.cartProduct[sender.tag].price)
@@ -321,7 +321,7 @@ class MyCartViewController: UIViewController,UITableViewDelegate,UITableViewData
             
             print(totalPrice)
             self.totalPrice -= Int(total)
-            self.totalPriceLabel.text = String("$\(self.totalPrice)")
+            self.totalPriceLabel.text = String("\(Model.sharedInstance.currency)\(self.totalPrice)")
             Model.sharedInstance.totalPrice = Double(self.totalPrice)
         }
     self.tableView.reloadData()
@@ -385,7 +385,7 @@ class MyCartViewController: UIViewController,UITableViewDelegate,UITableViewData
             }
             else
             {
-                Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: (response?.value(forKey: "message") as! String))
+               // Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: (response?.value(forKey: "message") as! String))
                 self.getCartViewAPI()
             }
         }
@@ -429,7 +429,6 @@ class MyCartViewController: UIViewController,UITableViewDelegate,UITableViewData
                 
                 print(dictPoint)
                 checkoutlist.append(dictPoint as [String : AnyObject])
-                
             }
         }
         SKActivityIndicator.spinnerColor(UIColor.darkGray)
@@ -465,7 +464,9 @@ class MyCartViewController: UIViewController,UITableViewDelegate,UITableViewData
                         let storyboard = UIStoryboard(name: "Main", bundle: nil)
                         let abcViewController = storyboard.instantiateViewController(withIdentifier: "AddPaymentViewController") as! AddPaymentViewController
                         abcViewController.userData = ((((response?.value(forKey: "shippingDetails")) as! NSArray).object(at: 0)) as! NSDictionary)
-                        abcViewController.totalPrice = self.totalPriceLabel.text!
+                        abcViewController.totalPrice = (String)(describing: ((((response?.value(forKey: "priceDetail")) as! NSArray).object(at: 0)) as! NSDictionary).value(forKey: "totalPrice") as! NSNumber)
+                        //abcViewController.deliveryCharge = (response?.value(forKey: "deliveryCharges") as! String)
+                        UserDefaults.standard.set((response?.value(forKey: "deliveryCharges") as! String), forKey: "deliveryCharges")
                         self.navigationController?.pushViewController(abcViewController, animated: true)
                     }
                 }

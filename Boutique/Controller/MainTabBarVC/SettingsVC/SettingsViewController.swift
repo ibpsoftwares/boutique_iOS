@@ -8,6 +8,7 @@
 
 import UIKit
 
+@available(iOS 10.0, *)
 class SettingsViewController: UIViewController,UITableViewDelegate,UITableViewDataSource {
 
     @IBOutlet weak var tableView: UITableView!
@@ -21,6 +22,12 @@ class SettingsViewController: UIViewController,UITableViewDelegate,UITableViewDa
         
         tableView.register(UINib(nibName: "SettingTableViewCell", bundle: nil), forCellReuseIdentifier: "CustomCell")
         tableView.tableFooterView = UIView()
+        
+        if Model.sharedInstance.userID == ""{
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let abcViewController = storyboard.instantiateViewController(withIdentifier: "LoginViewController") as! LoginViewController
+            navigationController?.pushViewController(abcViewController, animated: true)
+        }
     }
 
     override func didReceiveMemoryWarning() {

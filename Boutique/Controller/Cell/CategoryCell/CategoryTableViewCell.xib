@@ -18,28 +18,45 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="categoryCell" id="KGk-i7-Jjw" customClass="CategoryTableViewCell" customModule="Boutique" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+            <rect key="frame" x="0.0" y="0.0" width="375" height="250"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
-                <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                <rect key="frame" x="0.0" y="0.0" width="375" height="249.5"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="KfB-xw-p0U">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="249.5"/>
+                    </imageView>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="KDW-sz-0CE">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="249.5"/>
+                        <color key="backgroundColor" red="0.51157994923857864" green="0.51157994923857864" blue="0.51157994923857864" alpha="0.23758561643835616" colorSpace="custom" customColorSpace="displayP3"/>
+                    </imageView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CB0-7o-qib">
-                        <rect key="frame" x="10" y="13" width="34" height="18"/>
-                        <fontDescription key="fontDescription" name="Whitney-Medium" family="Whitney" pointSize="15"/>
-                        <nil key="textColor"/>
+                        <rect key="frame" x="165" y="113" width="45" height="23.5"/>
+                        <fontDescription key="fontDescription" name="Whitney-Medium" family="Whitney" pointSize="20"/>
+                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <nil key="highlightedColor"/>
                     </label>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="CB0-7o-qib" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="10" id="hVr-0O-MwO"/>
-                    <constraint firstItem="CB0-7o-qib" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="su6-jJ-oPR"/>
+                    <constraint firstItem="KfB-xw-p0U" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="CKr-oK-sBk"/>
+                    <constraint firstItem="KfB-xw-p0U" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" id="DtD-eB-oyd"/>
+                    <constraint firstItem="KDW-sz-0CE" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="QKV-j0-L5W"/>
+                    <constraint firstItem="CB0-7o-qib" firstAttribute="centerX" secondItem="H2p-sc-9uM" secondAttribute="centerX" id="Tps-T2-hE1"/>
+                    <constraint firstAttribute="trailing" secondItem="KDW-sz-0CE" secondAttribute="trailing" id="Yez-Il-1k7"/>
+                    <constraint firstItem="KDW-sz-0CE" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" id="h1Q-F2-Sb3"/>
+                    <constraint firstAttribute="bottom" secondItem="KfB-xw-p0U" secondAttribute="bottom" id="nmC-5V-FVG"/>
+                    <constraint firstAttribute="trailing" secondItem="KfB-xw-p0U" secondAttribute="trailing" id="ooU-sb-rL1"/>
+                    <constraint firstAttribute="bottom" secondItem="KDW-sz-0CE" secondAttribute="bottom" id="pjt-Ne-8QT"/>
+                    <constraint firstItem="CB0-7o-qib" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="z8m-hR-DPQ"/>
                 </constraints>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <connections>
+                <outlet property="imgView" destination="KfB-xw-p0U" id="kv3-wW-phg"/>
                 <outlet property="itemNameLabel" destination="CB0-7o-qib" id="JPB-AH-h3A"/>
             </connections>
+            <point key="canvasLocation" x="-65.5" y="27"/>
         </tableViewCell>
     </objects>
 </document>
