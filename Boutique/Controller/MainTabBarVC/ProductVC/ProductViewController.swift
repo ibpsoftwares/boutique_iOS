@@ -391,7 +391,7 @@ class ProductViewController: UIViewController,UICollectionViewDelegate,UICollect
             productDetailVC.passDict.setValue(self.product[indexPath.row].image, forKey: "image")
             productDetailVC.passDict.setValue(self.product[indexPath.row].brand, forKey: "brand")
             productDetailVC.passDict.setValue(self.product[indexPath.row].oldPrice, forKey: "oldPrice")
-           productDetailVC.passDict.setValue(self.product[indexPath.row].categoryID, forKey: "categoryID")
+            productDetailVC.passDict.setValue(self.product[indexPath.row].categoryID, forKey: "categoryID")
             productDetailVC.productID = self.product[indexPath.row].id
             navigationController?.pushViewController(productDetailVC, animated: true)
         }

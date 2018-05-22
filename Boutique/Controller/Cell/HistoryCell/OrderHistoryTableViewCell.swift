@@ -15,6 +15,10 @@ class OrderHistoryTableViewCell: UITableViewCell {
      @IBOutlet weak var amountLabel: UILabel!
      @IBOutlet weak var deliveryLabel: UILabel!
      @IBOutlet weak var img: UIImageView!
+    @IBOutlet weak var nameLabel: UILabel!
+    @IBOutlet weak var priceLabel: UILabel!
+    @IBOutlet weak var qtyLabel: UILabel!
+     @IBOutlet weak var productImg: UIImageView!
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

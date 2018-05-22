@@ -169,7 +169,7 @@ class ProductDetailViewController: UIViewController,UICollectionViewDelegate,UIC
         
     }
    
-    //MARK: Fetch Cart Data From Core Data
+    //MARK: Fetch Cart Data From CoreData
     func fetchCartData(){
         cartLocal.removeAll()
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
@@ -185,13 +185,14 @@ class ProductDetailViewController: UIViewController,UICollectionViewDelegate,UIC
         if cartlist.count > 0{
             for row in 0...cartlist.count - 1{
                 let person = cartlist[row]
+                print(person)
                 self.cartLocal.append(getProduct.init(name: (person.value(forKeyPath: "name") as! String), price: (person.value(forKeyPath: "price") as! String) , image: (person.value(forKeyPath: "image") as! String) , id:  (person.value(forKeyPath: "id") as! String), oldPrice: (person.value(forKeyPath: "oldPrice") as! String), brandName: (person.value(forKeyPath: "brand") as! String), wishlistID: person.value(forKeyPath: "wishlistID") as! String, sizeID:(person.value(forKeyPath: "sizeID") as! String), currency: "", categoryID: "" ))
             }
         }
         self.cartCountLabel.text  = (String)(self.cartlist.count)
     }
     
-    //MARK: Fetch Wishlist from Core Data
+    //MARK: Fetch Wishlist from CoreData
     func fetchWishlistFromCoreData(){
         self.productlocal.removeAll()
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
@@ -292,7 +293,6 @@ class ProductDetailViewController: UIViewController,UICollectionViewDelegate,UIC
                         self.images.append(photo)
                     }
                 }
-                
                 
                 if (response!.value(forKey: "relatedProducts") as! NSArray).count == 0 {
                     print("Data not found!..")
@@ -661,6 +661,7 @@ class ProductDetailViewController: UIViewController,UICollectionViewDelegate,UIC
             cart.setValue(passDict.value(forKey: "oldPrice"), forKeyPath: "oldPrice")
             cart.setValue(passDict.value(forKey: "brand"), forKeyPath: "brand")
             cart.setValue(passDict.value(forKey: "image"), forKeyPath: "image")
+            cart.setValue(passDict.value(forKey: "categoryID"), forKeyPath: "categoryID")
             cart.setValue(size_id, forKeyPath: "sizeID")
             cart.setValue(size, forKeyPath: "size")
             cart.setValue("1", forKeyPath: "wishlistID")
@@ -733,24 +734,18 @@ class ProductDetailViewController: UIViewController,UICollectionViewDelegate,UIC
             })
             print(response!)
             if ((response!["message"] as? [String:Any]) != nil){
-                Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: (response?.value(forKey: "message") as! String))
+                //Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: (response?.value(forKey: "message") as! String))
             }
             else{
+                 if ((response!.value(forKey: "items") != nil) ){
                 for item in (response!.value(forKey: "items") as! NSArray) {
                     
                     self.cartProduct.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "cloth_id") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), oldPrice: ((item as! NSDictionary).value(forKey: "offer_price") as! String), brand: "", wishlistID: "", cout: "1", sizeID: "", categoryID: ((item as! NSDictionary).value(forKey: "category_id") as! String)))
                 }
+            }
                 DispatchQueue.main.async(execute: {
                      self.cartCountLabel.text  = (String)(self.cartProduct.count)
-//                    if self.cartProduct[0].oldPrice == ""{
-//
-//                         self.originalPriceLabel.text = self.cartProduct[0].price
-//                    }
-//                    else{
-//                        self.oldPriceLabel.text = self.cartProduct[0].oldPrice
-//                    }
-                    
-                    self.collectionView.reloadData()
+                   self.collectionView.reloadData()
                 })
             }
         }

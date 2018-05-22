@@ -103,8 +103,6 @@ class MyCartViewController: UIViewController,UITableViewDelegate,UITableViewData
             }
          fetchCartData()
          }
-  
-    
     
     //MARK: Fetch Cart Data From Core Data
     func fetchCartData(){
@@ -126,10 +124,11 @@ class MyCartViewController: UIViewController,UITableViewDelegate,UITableViewData
             
             for row in 0...cartlist.count - 1{
                 let person = cartlist[row]
+                print(person)
                 if (person.value(forKeyPath: "name") as! String) == ""{
                     
                 }else{
-                    self.cartProduct.append(getProductDetail.init(name: (person.value(forKeyPath: "name") as! String), id:  (person.value(forKeyPath: "id") as! String), price: (person.value(forKeyPath: "price") as! String) , image: (person.value(forKeyPath: "image") as! String), oldPrice: (person.value(forKeyPath: "oldPrice") as! String), brand: (person.value(forKeyPath: "brand") as! String), wishlistID: person.value(forKeyPath: "wishlistID") as! String, cout: "1", sizeID: (person.value(forKeyPath: "size") as! String), categoryID: ""))
+                    self.cartProduct.append(getProductDetail.init(name: (person.value(forKeyPath: "name") as! String), id:  (person.value(forKeyPath: "id") as! String), price: (person.value(forKeyPath: "price") as! String) , image: (person.value(forKeyPath: "image") as! String), oldPrice: (person.value(forKeyPath: "oldPrice") as! String), brand: (person.value(forKeyPath: "brand") as! String), wishlistID: person.value(forKeyPath: "wishlistID") as! String, cout: "1", sizeID: (person.value(forKeyPath: "size") as! String), categoryID: (person.value(forKeyPath: "categoryID") as! String)))
                 }
             }
         
@@ -190,10 +189,10 @@ class MyCartViewController: UIViewController,UITableViewDelegate,UITableViewData
                         
 
                         if (item as! NSDictionary).value(forKey: "offer_price")  is NSNull {
-                            self.cartProduct.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "cloth_id") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), oldPrice: (((item as! NSDictionary).value(forKey: "size") as! NSDictionary).value(forKey: "id") as! String), brand: "", wishlistID: "", cout: "1", sizeID: (((item as! NSDictionary).value(forKey: "size") as! NSDictionary).value(forKey: "size") as! String), categoryID: ((item as! NSDictionary).value(forKey: "category_id") as! String)))
+                            self.cartProduct.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "cart_id") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), oldPrice: (((item as! NSDictionary).value(forKey: "size") as! NSDictionary).value(forKey: "id") as! String), brand: "", wishlistID: "", cout: "1", sizeID: (((item as! NSDictionary).value(forKey: "size") as! NSDictionary).value(forKey: "size") as! String), categoryID: ((item as! NSDictionary).value(forKey: "category_id") as! String)))
                         }
                         else {
-                            self.cartProduct.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "cloth_id") as! String), price: ((item as! NSDictionary).value(forKey: "offer_price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), oldPrice: (((item as! NSDictionary).value(forKey: "size") as! NSDictionary).value(forKey: "id") as! String), brand: "", wishlistID: "", cout: "1", sizeID: (((item as! NSDictionary).value(forKey: "size") as! NSDictionary).value(forKey: "size") as! String), categoryID: ((item as! NSDictionary).value(forKey: "category_id") as! String)))
+                            self.cartProduct.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "cart_id") as! String), price: ((item as! NSDictionary).value(forKey: "offer_price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), oldPrice: (((item as! NSDictionary).value(forKey: "size") as! NSDictionary).value(forKey: "id") as! String), brand: "", wishlistID: "", cout: "1", sizeID: (((item as! NSDictionary).value(forKey: "size") as! NSDictionary).value(forKey: "size") as! String), categoryID: ((item as! NSDictionary).value(forKey: "category_id") as! String)))
                         }
                         
 //                        self.cartProduct.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "cart_id") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), oldPrice: (((item as! NSDictionary).value(forKey: "size") as! NSDictionary).value(forKey: "id") as! String), brand: "", wishlistID: "", cout: "1", sizeID: (((item as! NSDictionary).value(forKey: "size") as! NSDictionary).value(forKey: "size") as! String)))
@@ -218,7 +217,6 @@ class MyCartViewController: UIViewController,UITableViewDelegate,UITableViewData
                     let defaults = UserDefaults.standard
                     defaults.removeObject(forKey: "totalCartItem")
                     defaults.synchronize()
-                     self.tableView.reloadData()
                     Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: (response?.value(forKey: "message") as! String))
                 }
             }
@@ -328,7 +326,6 @@ class MyCartViewController: UIViewController,UITableViewDelegate,UITableViewData
         return count
     }
     
-    
     // method to run when table view cell is tapped
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print("You tapped cell number \(indexPath.row).")
@@ -336,6 +333,8 @@ class MyCartViewController: UIViewController,UITableViewDelegate,UITableViewData
         if #available(iOS 10.0, *) {
             let productDetailVC = storyboard.instantiateViewController(withIdentifier: "ProductDetailViewController") as! ProductDetailViewController
             productDetailVC.productID = self.cartProduct[indexPath.row].id
+            productDetailVC.passDict.setValue(self.cartProduct[indexPath.row].id, forKey: "id")
+            productDetailVC.passDict.setValue(self.cartProduct[indexPath.row].categoryID, forKey: "categoryID")
             navigationController?.pushViewController(productDetailVC, animated: true)
         } else {
             // Fallback on earlier versions
@@ -424,7 +423,8 @@ class MyCartViewController: UIViewController,UITableViewDelegate,UITableViewData
                 
                 let dictPoint = [
                     "cart_id": self.cartProduct[row].id,
-                    "quantity": (quantitylist[row] as NSDictionary).value(forKey: "quantity") as! String
+                    "quantity": (quantitylist[row] as NSDictionary).value(forKey: "quantity") as! String,
+                    "user_id": Model.sharedInstance.userID
                 ]
                 
                 print(dictPoint)
@@ -433,13 +433,13 @@ class MyCartViewController: UIViewController,UITableViewDelegate,UITableViewData
         }
         SKActivityIndicator.spinnerColor(UIColor.darkGray)
         SKActivityIndicator.show("Loading...")
-        let params: [String:Any] = ["checkout_data":toJSonString(data: checkoutlist),
-                                    "user_id": Model.sharedInstance.userID]
+        let params: [String:Any] = ["cartArray":toJSonString(data: checkoutlist)
+                                    ]
         
         print(params)
         
         
-        Webservice.apiPost(apiURl: "checkout/", parameters: params, headers: nil) { (response:NSDictionary?, error:NSError?) in
+        Webservice.apiPost(apiURl: "saveOrder/", parameters: params, headers: nil) { (response:NSDictionary?, error:NSError?) in
             if error != nil {
                 print(error?.localizedDescription as Any)
                 Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Login Failed.Try Again..")

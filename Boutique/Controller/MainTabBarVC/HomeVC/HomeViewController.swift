@@ -822,6 +822,7 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
         person.setValue(self.product[index].oldPrice, forKeyPath: "oldPrice")
         person.setValue(self.product[index].brandName, forKeyPath: "brand")
         person.setValue(self.product[index].image, forKeyPath: "image")
+         person.setValue(self.product[index].categoryID, forKeyPath: "categoryID")
         person.setValue("1", forKeyPath: "wishlistID")
        
         print(person)

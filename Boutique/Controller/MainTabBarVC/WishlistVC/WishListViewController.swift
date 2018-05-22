@@ -121,7 +121,7 @@ class WishListViewController: UIViewController,UITableViewDelegate,UITableViewDa
                 for row in 0...wishlist.count - 1{
                     
                     let person = wishlist[row]
-                    
+                    print(person)
                     self.wishListProduct.append(getProductDetail.init(name: (person.value(forKeyPath: "name") as! String), id: (person.value(forKeyPath: "id") as! String), price: (person.value(forKeyPath: "price") as! String), image: (person.value(forKeyPath: "image") as! String), oldPrice: (person.value(forKeyPath: "oldPrice") as! String), brand: (person.value(forKeyPath: "brand") as! String), wishlistID: (person.value(forKeyPath: "wishlistID") as! String), cout: "", sizeID: "", categoryID: ""))
                 }
             }
@@ -444,12 +444,14 @@ class WishListViewController: UIViewController,UITableViewDelegate,UITableViewDa
         let cart = NSManagedObject(entity: entity,
                                    insertInto: managedCon)
         let data = wishlist[index]
+        print(data)
         cart.setValue((data.value(forKeyPath: "id") as? String)!, forKeyPath: "id")
         cart.setValue((data.value(forKeyPath: "name") as? String)!, forKeyPath: "name")
         cart.setValue((data.value(forKeyPath: "price") as? String)!, forKeyPath: "price")
         cart.setValue((data.value(forKeyPath: "oldPrice") as? String)!, forKeyPath: "oldPrice")
         cart.setValue((data.value(forKeyPath: "brand") as? String)!, forKeyPath: "brand")
         cart.setValue((data.value(forKeyPath: "image") as? String)!, forKeyPath: "image")
+        cart.setValue((data.value(forKeyPath: "categoryID") as? String), forKeyPath: "categoryID")
         cart.setValue(size_id, forKeyPath: "sizeID")
         cart.setValue(size, forKeyPath: "size")
         cart.setValue("1", forKeyPath: "wishlistID")

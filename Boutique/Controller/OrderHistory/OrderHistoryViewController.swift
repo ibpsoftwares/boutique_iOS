@@ -12,15 +12,25 @@ import SKActivityIndicatorView
 
 class orderDetail {
     var id: String
-    var amt: String
+    var categoryID: String
     var date: String
     var status: String
-    init(id: String,amt : String,date : String,status : String) {
+    var name: String
+    var qty: String
+   var amount: String
+    var orderID : String
+    var image : String
+    init(id: String,categoryID : String,date : String,status : String,name : String,qty : String,amount : String,orderID : String,image: String) {
         
         self.id = id
-        self.amt = amt
+        self.categoryID = categoryID
         self.date = date
         self.status = status
+        self.name = name
+        self.qty = qty
+        self.amount = amount
+        self.orderID = orderID
+        self.image = image
     }
 }
 class OrderHistoryViewController: UIViewController,UITableViewDelegate,UITableViewDataSource {
@@ -72,7 +82,7 @@ class OrderHistoryViewController: UIViewController,UITableViewDelegate,UITableVi
             print(response!)
             for item in ((response)?.value(forKey: "orderDetail") as! NSArray){
                 print(item)
-                self.order.append(orderDetail.init(id: (((item as! NSDictionary).value(forKey: "OrderDetail") as! NSDictionary).value(forKey: "id") as! String), amt: (((item as! NSDictionary).value(forKey: "OrderDetail") as! NSDictionary).value(forKey: "amount") as! String), date: (((item as! NSDictionary).value(forKey: "OrderDetail") as! NSDictionary).value(forKey: "created") as! String), status: (((item as! NSDictionary).value(forKey: "OrderDetail") as! NSDictionary).value(forKey: "status") as! String)))
+                self.order.append(orderDetail.init(id: ((item as! NSDictionary).value(forKey: "cloth_id") as! String), categoryID: ((item as! NSDictionary).value(forKey: "category_id") as! String), date: ((item as! NSDictionary).value(forKey: "created") as! String), status: ((item as! NSDictionary).value(forKey: "status") as! String), name: ((item as! NSDictionary).value(forKey: "title") as! String), qty: ((item as! NSDictionary).value(forKey: "quantity") as! String), amount: ((item as! NSDictionary).value(forKey: "price") as! String), orderID: ((item as! NSDictionary).value(forKey: "order_id") as! String), image: ((item as! NSDictionary).value(forKey: "image") as! String)))
             }
             DispatchQueue.main.async(execute: {
                 self.tableView.reloadData()
@@ -105,25 +115,32 @@ class OrderHistoryViewController: UIViewController,UITableViewDelegate,UITableVi
 //        let datenew = dateFormatter.string(from: dateFromString as Date)
 //        print(datenew)
         
-        //cell.orderDateLabel.text = datenew
+        cell.orderDateLabel.text = "12/06/2015"
       
         cell.orderIDLabel.text = ("SKU\(self.order[indexPath.row].id)")
-        
-        cell.amountLabel.text = ("\(Model.sharedInstance.currency)\(self.order[indexPath.row].amt)")
+       // cell.amountLabel.text = ("\(Model.sharedInstance.currency)\(self.order[indexPath.row].amount)")
+        cell.nameLabel.text = self.order[indexPath.row].name
+        cell.qtyLabel.text = ("Quantity : \(self.order[indexPath.row].qty)")
+        cell.priceLabel.text = ("\(Model.sharedInstance.currency)\(self.order[indexPath.row].amount)")
        
-        if self.order [indexPath.row].status == "2"{
+        cell.productImg.layer.cornerRadius =  cell.productImg.frame.size.height / 2
+        cell.productImg.clipsToBounds = true
+        let url = URL(string: self.order[indexPath.row].image )
+        cell.productImg.kf.indicatorType = .activity
+        cell.productImg.kf.setImage(with: url,placeholder: nil)
+        if self.order [indexPath.row].status == "3"{
             cell.deliveryLabel.text = "Placed"
             cell.img.image = UIImage(named: "inProgress")
         }
-        else if self.order [indexPath.row].status == "3"{
+        else if self.order [indexPath.row].status == "4"{
             cell.deliveryLabel.text = "Shipped"
              cell.img.image = UIImage(named: "inProgress")
         }
-        else if self.order [indexPath.row].status == "4"{
+        else if self.order [indexPath.row].status == "5"{
             cell.deliveryLabel.text = "Delivered"
              cell.img.image = UIImage(named: "delivered")
         }
-        else if self.order [indexPath.row].status == "5"{
+        else if self.order [indexPath.row].status == "6"{
             cell.deliveryLabel.text = "Cancelled"
             cell.img.image = UIImage(named: "cencelled")
         }
@@ -138,7 +155,7 @@ class OrderHistoryViewController: UIViewController,UITableViewDelegate,UITableVi
         
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 60
+        return 100
     }
 }
 extension UITabBarController {

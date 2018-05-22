@@ -22,12 +22,7 @@ class SettingsViewController: UIViewController,UITableViewDelegate,UITableViewDa
         
         tableView.register(UINib(nibName: "SettingTableViewCell", bundle: nil), forCellReuseIdentifier: "CustomCell")
         tableView.tableFooterView = UIView()
-        
-        if Model.sharedInstance.userID == ""{
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let abcViewController = storyboard.instantiateViewController(withIdentifier: "LoginViewController") as! LoginViewController
-            navigationController?.pushViewController(abcViewController, animated: true)
-        }
+       
     }
 
     override func didReceiveMemoryWarning() {
@@ -35,9 +30,14 @@ class SettingsViewController: UIViewController,UITableViewDelegate,UITableViewDa
         // Dispose of any resources that can be recreated.
     }
     
-//    override func viewWillAppear(_ animated: Bool) {
-//        self.tabBarController?.tabBar.isHidden = false
-//    }
+    override func viewWillAppear(_ animated: Bool) {
+        //self.tabBarController?.tabBar.isHidden = false
+        if Model.sharedInstance.userID == ""{
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let abcViewController = storyboard.instantiateViewController(withIdentifier: "LoginViewController") as! LoginViewController
+            navigationController?.pushViewController(abcViewController, animated: true)
+        }
+    }
 //
 //    override func viewWillDisappear(_ animated: Bool) {
 //        super.viewWillDisappear(animated)
