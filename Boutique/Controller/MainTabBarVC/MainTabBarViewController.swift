@@ -33,7 +33,7 @@ class MainTabBarViewController: UITabBarController ,UITabBarControllerDelegate{
         // set red as selected background color
         let numberOfItems = CGFloat(tabBar.items!.count)
         let tabBarItemSize = CGSize(width: tabBar.frame.width / numberOfItems, height: tabBar.frame.height)
-        tabBar.selectionIndicatorImage = UIImage.imageWithColor(color:  UIColor(red: 151.0/255.0, green: 110.0/255.0, blue: 99.0/255.0, alpha: 1), size: tabBarItemSize).resizableImage(withCapInsets: UIEdgeInsets.zero)
+        tabBar.selectionIndicatorImage = UIImage.imageWithColor(color:  UIColor(red: 40.0/255.0, green: 160.0/255.0, blue: 199.0/255.0, alpha: 1), size: tabBarItemSize).resizableImage(withCapInsets: UIEdgeInsets.zero)
         
         // remove default border
         tabBar.frame.size.width = self.view.frame.width + 4
@@ -55,62 +55,102 @@ class MainTabBarViewController: UITabBarController ,UITabBarControllerDelegate{
     }
     override func viewWillAppear(_ animated: Bool) {
          self.wishListProduct.removeAll()
-        getWishListAPI()
+        if Model.sharedInstance.userID != "" {
+            //getWishListAPI()
+        }
         
     }
-    //MARK: getCartViewAPI Methods
-    func getWishListAPI() {
-        
+    //MARK: getWishListAPI Methods
+    func getWishListAPI(){
         self.wishListProduct.removeAll()
-        let requestString = "viewWishlist/\(Model.sharedInstance.userID)/"
-        print(requestString)
-        Alamofire.request(requestString,method: .get, parameters: nil, encoding: JSONEncoding.default, headers: [:]).responseJSON { (response:DataResponse<Any>) in
-            
-            switch(response.result) {
-            case .success(_):
-               
-                if response.result.value != nil{
-                    
-                    let product = response.result.value as! NSDictionary
-                    print(product)
-                    
-//                    if ((product ).value(forKey: "message") as! String == "Wishlist Empty"){
-//                        Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: (product.value(forKey: "message") as! String))
-//                    }
-//                    else{
-                    
-                    if ((product ).value(forKey: "Wishlist") != nil){
-                        
-                    for item in ((product ).value(forKey: "Wishlist") as! NSArray) {
-                        print(item)
-                        
-                        self.wishListProduct.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "cloth_id") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), oldPrice: "", brand: "", wishlistID: "", cout: "1", sizeID: "", categoryID: ((item as! NSDictionary).value(forKey: "category_id") as! String)))
-                    }
-                    
-                    self.objectModel.badgeValue = (String)(self.wishListProduct.count)
-                    if self.wishListProduct.count > 0 {
-                        
-                       // let tabItem = tabItems![4] as! UITabBarItem
-                       // tabItem.badgeValue = (String)(self.wishListProduct.count)
-                        //self.tabBar.items?[3].badgeValue =  self.objectModel.badgeValue
-                    }
-                        
-                    }
-                    else{
-                          // self.tabBar.items?[3].badgeValue =  nil
-                          //  Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: (product.value(forKey: "message") as! String))
-                        }
-                }
-                //}
-                break
-                
-            case .failure(_):
-                print("Failure : \(String(describing: response.result.error))")
-                break
-                
+       
+        var parameter: Parameters = [:]
+        if Model.sharedInstance.userID != "" {
+            parameter = ["user_id": Model.sharedInstance.userID]
+        }
+        else{
+            parameter = ["user_id":""]
+        }
+         let headers = ["Authorization":"Bearer ZWNvbW1lcmNl"]
+        print(parameter)
+        Webservice.apiPost(apiURl: "viewWishlist/", parameters: parameter, headers: headers) { (response:NSDictionary?, error:NSError?) in
+            if error != nil {
+                print(error?.localizedDescription as Any)
+                DispatchQueue.main.async(execute: {
+                })
+                Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Something Wrong..")
+                return
             }
+            print(response!)
+            if ((response!.value(forKey: "Wishlist") != nil)){
+                
+                for item in (response?.value(forKey: "Wishlist") as! NSArray) {
+                    print(item)
+                    self.wishListProduct.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "cloth_id") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), oldPrice: "", brand: "", wishlistID: "", cout: "1", sizeID: "", categoryID: ((item as! NSDictionary).value(forKey: "category_id") as! String), stock: ""))
+                }
+              
+                 self.objectModel.badgeValue = (String)(self.wishListProduct.count)
+            }
+            else{
+                Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: (response?.value(forKey: "message") as! String))
+            }
+            
         }
     }
+    //MARK: getCartViewAPI Methods
+//    func getWishListAPI() {
+//
+//        self.wishListProduct.removeAll()
+//        let requestString = "viewWishlist/\(Model.sharedInstance.userID)/"
+//        print(requestString)
+//        Alamofire.request(requestString,method: .get, parameters: nil, encoding: JSONEncoding.default, headers: [:]).responseJSON { (response:DataResponse<Any>) in
+//
+//            switch(response.result) {
+//            case .success(_):
+//
+//                print(response.result.value )
+//                if response.result.value != nil{
+//
+//                    let product = response.result.value as! NSDictionary
+//                    print(product)
+//
+////                    if ((product ).value(forKey: "message") as! String == "Wishlist Empty"){
+////                        Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: (product.value(forKey: "message") as! String))
+////                    }
+////                    else{
+//
+//                    if ((product ).value(forKey: "Wishlist") != nil){
+//
+//                    for item in ((product ).value(forKey: "Wishlist") as! NSArray) {
+//                        print(item)
+//
+//                        self.wishListProduct.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "cloth_id") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), oldPrice: "", brand: "", wishlistID: "", cout: "1", sizeID: "", categoryID: ((item as! NSDictionary).value(forKey: "category_id") as! String)))
+//                    }
+//
+//                    self.objectModel.badgeValue = (String)(self.wishListProduct.count)
+//                    if self.wishListProduct.count > 0 {
+//
+//                       // let tabItem = tabItems![4] as! UITabBarItem
+//                       // tabItem.badgeValue = (String)(self.wishListProduct.count)
+//                        //self.tabBar.items?[3].badgeValue =  self.objectModel.badgeValue
+//                    }
+//
+//                    }
+//                    else{
+//                          // self.tabBar.items?[3].badgeValue =  nil
+//                          //  Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: (product.value(forKey: "message") as! String))
+//                        }
+//                }
+//                //}
+//                break
+//
+//            case .failure(_):
+//                print("Failure : \(String(describing: response.result.error))")
+//                break
+//
+//            }
+//        }
+//    }
     
     //MARK: getCartViewAPI Methods
     func getCartViewAPI(){
@@ -139,7 +179,7 @@ class MainTabBarViewController: UITabBarController ,UITabBarControllerDelegate{
                     for item in ((response)?.value(forKey: "items") as! NSArray) {
                         print(item)
                         
-                        self.cartProduct.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "cloth_id") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), oldPrice: "", brand: "", wishlistID: "", cout: "1", sizeID: "", categoryID: ((item as! NSDictionary).value(forKey: "category_id") as! String)))
+                        self.cartProduct.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "cloth_id") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), oldPrice: "", brand: "", wishlistID: "", cout: "1", sizeID: "", categoryID: ((item as! NSDictionary).value(forKey: "category_id") as! String), stock: ((item as! NSDictionary).value(forKey: "stock") as! String)))
                     }
                    
                     Model.sharedInstance.cartCount = self.cartProduct.count

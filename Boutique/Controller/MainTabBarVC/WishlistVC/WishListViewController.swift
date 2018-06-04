@@ -19,6 +19,7 @@ class WishListViewController: UIViewController,UITableViewDelegate,UITableViewDa
     @IBOutlet weak var selectSizeView: UIView!
     @IBOutlet weak var cartCountLabel: UILabel!
     @IBOutlet weak var bgLabel: UILabel!
+    @IBOutlet var bgImg: UIImageView!
     @IBOutlet var crossBtn: UIButton!
     @IBOutlet var doneBtn: UIButton!
      @IBOutlet var sizeLabel: UILabel!
@@ -42,6 +43,7 @@ class WishListViewController: UIViewController,UITableViewDelegate,UITableViewDa
 
         // Do any additional setup after loading the view.
         bgLabel.isHidden = true
+        bgImg.isHidden = true
         selectSizeView.layer.borderWidth = 1.0
         selectSizeView.layer.borderColor = UIColor.lightGray.cgColor
         selectedIndex = 200
@@ -67,7 +69,6 @@ class WishListViewController: UIViewController,UITableViewDelegate,UITableViewDa
         } catch let error as NSError {
             print("Could not fetch. \(error), \(error.userInfo)")
         }
-         self.wishListProduct.removeAll()
     }
 
     override func didReceiveMemoryWarning() {
@@ -96,6 +97,7 @@ class WishListViewController: UIViewController,UITableViewDelegate,UITableViewDa
            self.cartCountLabel.isHidden  = true
             
         }
+        self.tableView.reloadData()
     }
     override func viewWillAppear(_ animated: Bool) {
         fetchCartData()
@@ -122,11 +124,17 @@ class WishListViewController: UIViewController,UITableViewDelegate,UITableViewDa
                     
                     let person = wishlist[row]
                     print(person)
-                    self.wishListProduct.append(getProductDetail.init(name: (person.value(forKeyPath: "name") as! String), id: (person.value(forKeyPath: "id") as! String), price: (person.value(forKeyPath: "price") as! String), image: (person.value(forKeyPath: "image") as! String), oldPrice: (person.value(forKeyPath: "oldPrice") as! String), brand: (person.value(forKeyPath: "brand") as! String), wishlistID: (person.value(forKeyPath: "wishlistID") as! String), cout: "", sizeID: "", categoryID: ""))
+                    self.wishListProduct.append(getProductDetail.init(name: (person.value(forKeyPath: "name") as! String), id: (person.value(forKeyPath: "id") as! String), price: (person.value(forKeyPath: "price") as! String), image: (person.value(forKeyPath: "image") as! String), oldPrice: (person.value(forKeyPath: "oldPrice") as! String), brand: (person.value(forKeyPath: "brand") as! String), wishlistID: (person.value(forKeyPath: "wishlistID") as! String), cout: "", sizeID: "", categoryID: (person.value(forKeyPath: "categoryID") as! String), stock: ""))
                 }
+                self.bgLabel.isHidden = true
+                self.bgImg.isHidden = true
+            }
+            else{
+                self.bgLabel.isHidden = false
+                self.bgImg.isHidden = false
             }
         }
-        self.tableView.reloadData()
+        //self.tableView.reloadData()
     }
     func removeDuplicates(array: [getProductDetail]) -> [getProductDetail] {
         var encountered = Set<String>()
@@ -187,9 +195,10 @@ class WishListViewController: UIViewController,UITableViewDelegate,UITableViewDa
                     for item in (response?.value(forKey: "Wishlist") as! NSArray) {
                         print(item)
                         
-                        self.wishListProduct.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "cloth_id") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), oldPrice: "", brand: "", wishlistID: "", cout: "1", sizeID: "", categoryID: ((item as! NSDictionary).value(forKey: "category_id") as! String)))
+                        self.wishListProduct.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "cloth_id") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), oldPrice: "", brand: "", wishlistID: "", cout: "1", sizeID: "", categoryID: ((item as! NSDictionary).value(forKey: "category_id") as! String), stock: ""))
                     }
                     self.bgLabel.isHidden = true
+                    self.bgImg.isHidden = true
                     Model.sharedInstance.badgeValue = (String)(self.wishListProduct.count)
                     if self.wishListProduct.count > 0 {
                         self.cartCountLabel.text = (String)(self.wishListProduct.count)
@@ -209,6 +218,7 @@ class WishListViewController: UIViewController,UITableViewDelegate,UITableViewDa
                 }
             else{
                     self.bgLabel.isHidden = false
+                    self.bgImg.isHidden = false
                     let tabItems = self.tabBarController?.tabBar.items as NSArray!
                     let tabItem = tabItems![3] as! UITabBarItem
                     tabItem.badgeValue = nil
@@ -253,19 +263,16 @@ class WishListViewController: UIViewController,UITableViewDelegate,UITableViewDa
             cell.productImg.kf.setImage(with: url,placeholder: nil)
             cell.productNameLabel.text = person.value(forKeyPath: "name") as? String
             let price: String? = person.value(forKeyPath: "price") as? String
-            cell.productPriceLabel.text = "$\(price!)"
-//                let url = URL(string: self.wishListProduct[indexPath.row].image)
-//                cell.productImg.kf.setImage(with: url,placeholder: nil)
-//                cell.productNameLabel.text = wishListProduct[indexPath.row].name
-//                cell.productPriceLabel.text = "$\(wishListProduct[indexPath.row].price)"
+            cell.productPriceLabel.text = "\(Model.sharedInstance.currency)\(price!)"
             }
         }
          else{
-            
+            if self.wishListProduct.count > 0{
             let url = URL(string: self.wishListProduct[indexPath.row].image)
             cell.productImg.kf.setImage(with: url,placeholder: nil)
             cell.productNameLabel.text = wishListProduct[indexPath.row].name
-            cell.productPriceLabel.text = "$\(wishListProduct[indexPath.row].price)"
+            cell.productPriceLabel.text = "\(Model.sharedInstance.currency)\(wishListProduct[indexPath.row].price)"
+            }
             
         }
         cell.deleteBtn.tag = indexPath.row
@@ -317,7 +324,7 @@ class WishListViewController: UIViewController,UITableViewDelegate,UITableViewDa
                 SKActivityIndicator.spinnerColor(UIColor.darkGray)
                 SKActivityIndicator.show("Loading...")
                 print(Model.sharedInstance.userID)
-                parameter = ["user_id": Model.sharedInstance.userID, "cloth_id": "clothID","quantity": "1","size_id" : size_id ]
+                parameter = ["user_id": Model.sharedInstance.userID, "cloth_id": self.wishListProduct[sender.tag].id,"quantity": "1","size_id" : size_id ]
             
                 //        else{
                 //            removeItem(index : sender.tag)
@@ -352,7 +359,7 @@ class WishListViewController: UIViewController,UITableViewDelegate,UITableViewDa
                             self.sizeLabel.isHidden = true
                             self.doneBtn.isHidden = true
                             self.sizeCollectionView.isHidden = true
-                            self.tableView.reloadData()
+                            self.bottom()
                             if self.wishListProduct.count > 0 {
                                 Model.sharedInstance.badgeValue = (String)(self.wishListProduct.count)
                                 self.cartCountLabel.text = (String)(self.wishListProduct.count)
@@ -361,6 +368,7 @@ class WishListViewController: UIViewController,UITableViewDelegate,UITableViewDa
                                 tabItem.badgeValue = Model.sharedInstance.badgeValue
                             }
                             self.getWishListAPI()
+                           // self.tableView.reloadData()
                             
                         })
                         //self.present(alert, animated: true, completion: nil)

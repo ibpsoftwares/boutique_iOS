@@ -46,6 +46,8 @@
 		18515A4D20466422001ADA07 /* OrderHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18515A4C20466422001ADA07 /* OrderHistoryViewController.swift */; };
 		18561DC820A17899004F7DFD /* SortingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18561DC620A17899004F7DFD /* SortingTableViewCell.swift */; };
 		18561DC920A17899004F7DFD /* SortingTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 18561DC720A17899004F7DFD /* SortingTableViewCell.xib */; };
+		185766B820B9749E0035536A /* Product1DetailCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 185766B620B9749E0035536A /* Product1DetailCollectionViewCell.swift */; };
+		185766B920B9749E0035536A /* Product1DetailCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 185766B720B9749E0035536A /* Product1DetailCollectionViewCell.xib */; };
 		1860E6B82031A5FA00EB90AC /* MainTabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1860E6B72031A5FA00EB90AC /* MainTabBarViewController.swift */; };
 		18665F2A203159C000F5A5E1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18665F29203159C000F5A5E1 /* AppDelegate.swift */; };
 		18665F2C203159C000F5A5E1 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18665F2B203159C000F5A5E1 /* ViewController.swift */; };
@@ -132,6 +134,8 @@
 		18515A4C20466422001ADA07 /* OrderHistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderHistoryViewController.swift; sourceTree = "<group>"; };
 		18561DC620A17899004F7DFD /* SortingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortingTableViewCell.swift; sourceTree = "<group>"; };
 		18561DC720A17899004F7DFD /* SortingTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SortingTableViewCell.xib; sourceTree = "<group>"; };
+		185766B620B9749E0035536A /* Product1DetailCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Product1DetailCollectionViewCell.swift; sourceTree = "<group>"; };
+		185766B720B9749E0035536A /* Product1DetailCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = Product1DetailCollectionViewCell.xib; sourceTree = "<group>"; };
 		1860E6B72031A5FA00EB90AC /* MainTabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarViewController.swift; sourceTree = "<group>"; };
 		18665F26203159C000F5A5E1 /* Boutique.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Boutique.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		18665F29203159C000F5A5E1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -236,6 +240,7 @@
 		1836E371203294A800997FC1 /* Cell */ = {
 			isa = PBXGroup;
 			children = (
+				185766B520B974630035536A /* SingleProduct */,
 				18CF543820AED77F0076902F /* SubCategoryCell */,
 				18561DC320A1784D004F7DFD /* SortingCell */,
 				187E21C9206602C300360F10 /* PaymentCell */,
@@ -379,6 +384,15 @@
 				18561DC720A17899004F7DFD /* SortingTableViewCell.xib */,
 			);
 			path = SortingCell;
+			sourceTree = "<group>";
+		};
+		185766B520B974630035536A /* SingleProduct */ = {
+			isa = PBXGroup;
+			children = (
+				185766B620B9749E0035536A /* Product1DetailCollectionViewCell.swift */,
+				185766B720B9749E0035536A /* Product1DetailCollectionViewCell.xib */,
+			);
+			path = SingleProduct;
 			sourceTree = "<group>";
 		};
 		1860E6B42031A36800EB90AC /* MainTabBarVC */ = {
@@ -713,6 +727,7 @@
 				1836E375203294CD00997FC1 /* HomeCollectionViewCell.xib in Resources */,
 				18665F34203159C000F5A5E1 /* Assets.xcassets in Resources */,
 				18515A4A20466063001ADA07 /* OrderHistoryTableViewCell.xib in Resources */,
+				185766B920B9749E0035536A /* Product1DetailCollectionViewCell.xib in Resources */,
 				1836E38D2032D67500997FC1 /* WishListTableViewCell.xib in Resources */,
 				186A5962203FC8FD00E687BA /* PriceTableViewCell.xib in Resources */,
 				18561DC920A17899004F7DFD /* SortingTableViewCell.xib in Resources */,
@@ -943,6 +958,7 @@
 				1822F6A620353FD600CC83AE /* ProductDetailCollectionViewCell.swift in Sources */,
 				18269D3020417F2F00ADEC70 /* AddPaymentViewController.swift in Sources */,
 				18F074A9203EC30600E7E706 /* StripeTableViewController.swift in Sources */,
+				185766B820B9749E0035536A /* Product1DetailCollectionViewCell.swift in Sources */,
 				1822F6A420353A4100CC83AE /* ProductDetailViewController.swift in Sources */,
 				186A5961203FC8FD00E687BA /* PriceTableViewCell.swift in Sources */,
 				181F0DBC203D5ECC00082803 /* UserDetailViewController.swift in Sources */,

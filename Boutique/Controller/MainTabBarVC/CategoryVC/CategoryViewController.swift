@@ -60,14 +60,16 @@ class CategoryViewController: UIViewController,UITableViewDelegate,UITableViewDa
 //        expandableTableView.expandableTableViewDataSource = self
 //        expandableTableView.expandableTableViewDelegate = self
 //        expandableTableView.tableFooterView = UIView()
-        self.getCategoryAPI()
+      //  self.getCategoryAPI()
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
+    override func viewWillAppear(_ animated: Bool) {
+         self.getCategoryAPI()
+    }
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         expandableTableView.frame = view.bounds
@@ -76,6 +78,7 @@ class CategoryViewController: UIViewController,UITableViewDelegate,UITableViewDa
     
     //MARK: getProductAPI Methods
    func getCategoryAPI(){
+    self.categoryName.removeAll()
         SKActivityIndicator.spinnerColor(UIColor.darkGray)
         SKActivityIndicator.show("Loading...")
         
@@ -93,6 +96,7 @@ class CategoryViewController: UIViewController,UITableViewDelegate,UITableViewDa
                 Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: (response?.value(forKey: "message") as! String))
             }
             else{
+                 if ((response!.value(forKey: "categories") != nil) ){
                 for item in (response!.value(forKey: "categories") as! NSArray) {
                     self.categoryName.append(getCategoryName.init(categoryName: (item as! NSDictionary).value(forKey: "name") as! String, id: (item as! NSDictionary).value(forKey: "id") as! String, image: (item as! NSDictionary).value(forKey: "image") as! String))
                 }
@@ -100,8 +104,11 @@ class CategoryViewController: UIViewController,UITableViewDelegate,UITableViewDa
                 DispatchQueue.main.async(execute: {
                     self.tableView.reloadData()
                 })
-            }
+                 }else{
+                     Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: (response?.value(forKey: "message") as! String))
+                }
         }
+    }
     }
 
     //MARK: TableView Delegate and Data Source

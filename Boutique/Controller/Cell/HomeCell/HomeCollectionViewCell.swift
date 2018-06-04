@@ -18,6 +18,7 @@ class HomeCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var crossLabel: UILabel!
      @IBOutlet weak var currencyLabel: UILabel!
     @IBOutlet weak var productImg: UIImageView!
+    @IBOutlet weak var stockImg: UIImageView!
     @IBOutlet weak var wishlistBtn: UIButton!
     override func awakeFromNib() {
         super.awakeFromNib()

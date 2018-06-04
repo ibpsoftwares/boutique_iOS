@@ -115,15 +115,42 @@ class AddPaymentViewController: UIViewController,UITableViewDelegate,UITableView
         }
         else if checkCash {
             Model.sharedInstance.paymentType = "cod"
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let abcViewController = storyboard.instantiateViewController(withIdentifier: "SuccessViewController") as! SuccessViewController
-            navigationController?.pushViewController(abcViewController, animated: true)
+            self.orderDetailAPI(amount: Model.sharedInstance.totalAmt, userID: Model.sharedInstance.userID, paymentType: Model.sharedInstance.paymentType)
+           
         }
         else {
             Alert.showAlertMessage(vc: self, titleStr:"Alert!", messageStr: "Choose Payment Method")
         }
     }
-
+    
+    func orderDetailAPI(amount: String,userID: String,paymentType:String){
+        
+        var myString = amount
+        myString.remove(at: myString.startIndex)
+     //   print(myString)
+        
+        let parameters = [
+            "user_id": userID,
+            "amount": myString,
+            "paymentType": paymentType,
+        ]
+        
+        print(parameters)
+        Webservice.apiPost(apiURl: "orderDetail/", parameters: parameters, headers: nil) { (response:NSDictionary?, error:NSError?) in
+            if error != nil {
+                print(error?.localizedDescription as Any)
+                Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Login Failed.Try Again..")
+                return
+            }
+            
+            print(response!)
+            
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let abcViewController = storyboard.instantiateViewController(withIdentifier: "SuccessViewController") as! SuccessViewController
+            self.navigationController?.pushViewController(abcViewController, animated: true)
+        }
+    }
+    
     @IBAction func setCreditCardPaymentMode(_ sender: UIButton) {
         checkCash = false
         checkCard = true

@@ -75,7 +75,7 @@ class SettingsViewController: UIViewController,UITableViewDelegate,UITableViewDa
             let abcViewController = storyboard.instantiateViewController(withIdentifier: "ProfileViewController") as! ProfileViewController
             navigationController?.pushViewController(abcViewController, animated: true)
         }
-        if indexPath.row == 2{
+         else if indexPath.row == 2{
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let abcViewController = storyboard.instantiateViewController(withIdentifier: "ConfirmPasswordViewController") as! ConfirmPasswordViewController
             navigationController?.pushViewController(abcViewController, animated: true)
@@ -87,13 +87,13 @@ class SettingsViewController: UIViewController,UITableViewDelegate,UITableViewDa
         }
        else if indexPath.row == 4{
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            if #available(iOS 10.0, *) {
+           // if #available(iOS 10.0, *) {
                 let abcViewController = storyboard.instantiateViewController(withIdentifier: "LoginViewController") as! LoginViewController
                  Model.sharedInstance.userID = ""
                 navigationController?.pushViewController(abcViewController, animated: true)
-            } else {
+           // } else {
                 // Fallback on earlier versions
-            }
+          //  }
             
         }
     }

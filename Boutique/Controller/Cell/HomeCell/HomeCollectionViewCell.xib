@@ -10,6 +10,9 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
+        <array key="whitney-bold.otf">
+            <string>Whitney-Bold</string>
+        </array>
         <array key="whitney-medium.otf">
             <string>Whitney-Medium</string>
         </array>
@@ -30,7 +33,7 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Hu5-yU-NzR">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="225"/>
                                 <subviews>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="text" translatesAutoresizingMaskIntoConstraints="NO" id="UmF-65-YHS">
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="placeHolder1" translatesAutoresizingMaskIntoConstraints="NO" id="UmF-65-YHS">
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="225"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                     </imageView>
@@ -42,15 +45,24 @@
                                         </constraints>
                                         <state key="normal" image="emptyWishlist"/>
                                     </button>
+                                    <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="stock" translatesAutoresizingMaskIntoConstraints="NO" id="e01-sa-yAy">
+                                        <rect key="frame" x="1" y="15" width="93" height="65"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="93" id="RQy-t7-O0J"/>
+                                            <constraint firstAttribute="height" constant="65" id="liT-14-crR"/>
+                                        </constraints>
+                                    </imageView>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
+                                    <constraint firstItem="e01-sa-yAy" firstAttribute="top" secondItem="Hu5-yU-NzR" secondAttribute="top" constant="15" id="5wv-pd-9aC"/>
                                     <constraint firstAttribute="trailing" secondItem="zk0-Af-RaC" secondAttribute="trailing" constant="10" id="CPW-Rb-OBY"/>
                                     <constraint firstAttribute="trailing" secondItem="UmF-65-YHS" secondAttribute="trailing" id="K9g-gu-X9c"/>
                                     <constraint firstItem="UmF-65-YHS" firstAttribute="leading" secondItem="Hu5-yU-NzR" secondAttribute="leading" id="QN2-BB-o2F"/>
                                     <constraint firstItem="UmF-65-YHS" firstAttribute="top" secondItem="Hu5-yU-NzR" secondAttribute="top" id="efo-vt-msA"/>
                                     <constraint firstItem="zk0-Af-RaC" firstAttribute="top" secondItem="Hu5-yU-NzR" secondAttribute="top" constant="10" id="jLp-Cg-6QO"/>
                                     <constraint firstAttribute="bottom" secondItem="UmF-65-YHS" secondAttribute="bottom" id="o9H-lo-ISf"/>
+                                    <constraint firstItem="e01-sa-yAy" firstAttribute="leading" secondItem="Hu5-yU-NzR" secondAttribute="leading" constant="1" id="tC0-Kv-yef"/>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mAR-kh-Tq4">
@@ -59,12 +71,12 @@
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Formal Shirts" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="v05-99-hnC">
                                         <rect key="frame" x="5" y="5" width="83" height="17.5"/>
                                         <fontDescription key="fontDescription" name="Whitney-Medium" family="Whitney" pointSize="15"/>
-                                        <color key="textColor" red="0.49803921569999998" green="0.50588235290000005" blue="0.50980392159999999" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zHh-eh-bVF">
                                         <rect key="frame" x="5" y="27.5" width="0.0" height="0.0"/>
-                                        <fontDescription key="fontDescription" name="Whitney-Medium" family="Whitney" pointSize="13"/>
+                                        <fontDescription key="fontDescription" name="Whitney-Bold" family="Whitney" pointSize="13"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="$ 243" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="k7j-RG-poz">
@@ -146,13 +158,15 @@
                 <outlet property="originalPriceLabel" destination="zHh-eh-bVF" id="dlP-1u-Qkt"/>
                 <outlet property="productImg" destination="UmF-65-YHS" id="Tfn-UM-e2T"/>
                 <outlet property="productNameLabel" destination="dF1-Sp-dnt" id="lvO-5T-TLO"/>
+                <outlet property="stockImg" destination="e01-sa-yAy" id="6rn-pS-Abc"/>
                 <outlet property="wishlistBtn" destination="zk0-Af-RaC" id="g03-ag-nlk"/>
             </connections>
-            <point key="canvasLocation" x="-12" y="-52"/>
+            <point key="canvasLocation" x="-12.5" y="-52.5"/>
         </collectionViewCell>
     </objects>
     <resources>
         <image name="emptyWishlist" width="25" height="25"/>
-        <image name="text" width="225" height="125"/>
+        <image name="placeHolder1" width="110" height="110"/>
+        <image name="stock" width="125" height="125"/>
     </resources>
 </document>
