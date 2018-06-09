@@ -8,6 +8,7 @@
 
 import UIKit
 
+@available(iOS 10.0, *)
 class AddPaymentViewController: UIViewController,UITableViewDelegate,UITableViewDataSource{
 
     @IBOutlet weak var itemPriceLabel: UILabel!
@@ -36,18 +37,18 @@ class AddPaymentViewController: UIViewController,UITableViewDelegate,UITableView
         deliveryCharge = (UserDefaults.standard.value(forKey: "deliveryCharges") as! String)
         let result = Int(Model.sharedInstance.totalPrice) + Int(deliveryCharge)!
         print(result)
+        Model.sharedInstance.totalAmt = String(result)
         shipmentPriceLabel.text = "0.0"
         //taxPriceLabel.text = "0.0"
         //discountLabel.text = "- 0.0"
         totalPriceLabel.text = String("\(Model.sharedInstance.currency)\(result)")
         self.shipmentPriceLabel.text = deliveryCharge
-        Model.sharedInstance.totalAmt = totalPriceLabel.text!
+        
          self.tabBarController?.tabBar.isHidden = true
         self.navigationController?.navigationBar.isHidden = true
         tableView.register(UINib(nibName: "AddressTableViewCell", bundle: nil), forCellReuseIdentifier: "addressCell")
         tableView.tableFooterView = UIView()
         
-        print(userData)
     }
 
     override func didReceiveMemoryWarning() {
@@ -106,7 +107,7 @@ class AddPaymentViewController: UIViewController,UITableViewDelegate,UITableView
     }
 
     @IBAction func completeOrder(_ sender: UIButton) {
-        
+        Model.sharedInstance.paymentType.removeAll()
         if checkCard {
             Model.sharedInstance.paymentType = "card"
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -123,18 +124,45 @@ class AddPaymentViewController: UIViewController,UITableViewDelegate,UITableView
         }
     }
     
+    @IBAction func cancelOrder(_ sender: UIButton) {
+        
+//        let parameters: [String:Any] = ["cartArray":toJSonString(data: Model.sharedInstance.checkoutData)]
+//
+//        print(parameters)
+//        Webservice.apiPost(apiURl: "checkoutCancel/", parameters: parameters, headers: nil) { (response:NSDictionary?, error:NSError?) in
+//            if error != nil {
+//                print(error?.localizedDescription as Any)
+//                Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Login Failed.Try Again..")
+//                return
+//            }
+//            print(response!)
+//            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+//            let abcViewController = storyboard.instantiateViewController(withIdentifier: "MyCartViewController") as! MyCartViewController
+//            self.navigationController?.pushViewController(abcViewController, animated: true)
+//        }
+ }
+    func toJSonString(data : Any) -> String {
+        var jsonString = "";
+        do {
+            let jsonData = try JSONSerialization.data(withJSONObject: data, options: .prettyPrinted)
+            jsonString = NSString(data: jsonData, encoding: String.Encoding.utf8.rawValue)! as String
+            
+        } catch {
+            print(error.localizedDescription)
+        }
+        return jsonString;
+    }
     func orderDetailAPI(amount: String,userID: String,paymentType:String){
         
         var myString = amount
         myString.remove(at: myString.startIndex)
      //   print(myString)
+      
+        let parameters: [String:Any] = ["paymentType": paymentType,
+                                    "cartArray":toJSonString(data: Model.sharedInstance.checkoutData)
+           ];
         
-        let parameters = [
-            "user_id": userID,
-            "amount": myString,
-            "paymentType": paymentType,
-        ]
-        
+      
         print(parameters)
         Webservice.apiPost(apiURl: "orderDetail/", parameters: parameters, headers: nil) { (response:NSDictionary?, error:NSError?) in
             if error != nil {

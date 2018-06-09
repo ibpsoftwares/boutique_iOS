@@ -69,11 +69,10 @@ class Webservice: NSObject
             strURL = strURL + "/" + apiURl    // this gives again http://www.stack.com/index.php/signup
         }
         
-        
         Alamofire.request(strURL, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
-//            print("Request  \(String(describing: response.request))")
-//            print("RESPONSE \(String(describing: response.result.value))")
-//            print("RESPONSE \(response.result)")
+            print("Request  \(String(describing: response.request))")
+            print("RESPONSE \(String(describing: response.result.value))")
+            print("RESPONSE \(response.result)")
             print("RESPONSE \(response)")
             
             switch(response.result) {
@@ -86,6 +85,8 @@ class Webservice: NSObject
             case .failure(_):
                 
                  print("RESPONSE \(response.result)")
+//                 let alert = UIAlertView(title: "No Internet Connection", message: "Make sure your device is connected to the internet.", delegate: nil, cancelButtonTitle: "OK")
+//                 alert.show()
                 completionHandler(response.result.value as! NSDictionary,response.result.error as NSError?)
                 break
                 

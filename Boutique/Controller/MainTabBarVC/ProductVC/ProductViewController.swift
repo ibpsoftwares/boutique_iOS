@@ -21,7 +21,8 @@ class Product{
     var brand: String
     var wishlistID : String
      var stock : String
-    init(price:Double, name:String,id : String,image: String,oldPrice: String,brand:String,wishlistID:String,stock : String) {
+     var clothID : String
+    init(price:Double, name:String,id : String,image: String,oldPrice: String,brand:String,wishlistID:String,stock : String,clothID : String) {
         self.price = price
         self.name = name
         self.id = id
@@ -30,6 +31,7 @@ class Product{
         self.brand = brand
         self.wishlistID = wishlistID
         self.stock = stock
+        self.clothID = clothID
     }
 }
 
@@ -45,7 +47,8 @@ class getProductDetail {
     var sizeID : String
     var categoryID : String
      var stock : String
-    init(name: String,id : String,price: String,image: String,oldPrice: String,brand:String,wishlistID:String,cout: String,sizeID : String,categoryID: String,stock : String) {
+    var clothID : String
+    init(name: String,id : String,price: String,image: String,oldPrice: String,brand:String,wishlistID:String,cout: String,sizeID : String,categoryID: String,stock : String,clothID : String) {
         self.name = name
         self.id = id
         self.price = price
@@ -57,7 +60,7 @@ class getProductDetail {
         self.sizeID = sizeID
         self.categoryID = categoryID
         self.stock  = stock
-        
+         self.clothID = clothID
     }
 }
 class getPrice {
@@ -96,6 +99,7 @@ class ProductViewController: UIViewController,UICollectionViewDelegate,UICollect
     var wishlist: [NSManagedObject] = []
     var productlocal = [getProduct]()
     var seletedIndex = NSInteger()
+     var emptyArray: NSArray! = []
     var checkStr = String()
     var filteredData = [getProductDetail]()
     var searchActive : Bool = false
@@ -149,7 +153,7 @@ class ProductViewController: UIViewController,UICollectionViewDelegate,UICollect
         if wishlist.count > 0{
             for row in 0...wishlist.count - 1{
                 let person = wishlist[row]
-                self.productlocal.append(getProduct.init(name: (person.value(forKeyPath: "name") as! String), price: (person.value(forKeyPath: "price") as! String) , image: (person.value(forKeyPath: "image") as! String) , id:  (person.value(forKeyPath: "id") as! String), oldPrice: (person.value(forKeyPath: "oldPrice") as! String), brandName: (person.value(forKeyPath: "brand") as! String), wishlistID: person.value(forKeyPath: "wishlistID") as! String, sizeID: "", currency: "", categoryID: "", stock: ""))
+                self.productlocal.append(getProduct.init(name: (person.value(forKeyPath: "name") as! String), price: (person.value(forKeyPath: "price") as! String) , image: (person.value(forKeyPath: "image") as! String) , id:  (person.value(forKeyPath: "id") as! String), oldPrice: (person.value(forKeyPath: "oldPrice") as! String), brandName: (person.value(forKeyPath: "brand") as! String), wishlistID: person.value(forKeyPath: "wishlistID") as! String, sizeID: "", currency: "", categoryID: "", stock: "", sizeArr: emptyArray))
             }
         }
         
@@ -211,11 +215,11 @@ class ProductViewController: UIViewController,UICollectionViewDelegate,UICollect
                         
                         if (item as! NSDictionary).value(forKey: "offer_price")  is NSNull {
                             print("empty")
-                            self.product.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "id") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: ((item as! NSDictionary).value(forKey: "image") as! String), oldPrice: "", brand: ((item as! NSDictionary).value(forKey: "brand") as! String), wishlistID: ((item as! NSDictionary).value(forKey: "wishlist") as! String), cout: "1", sizeID: "", categoryID: ((item as! NSDictionary).value(forKey: "category_id") as! String), stock: ((item as! NSDictionary).value(forKey: "total_stock") as! String)))
+                            self.product.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "id") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: ((item as! NSDictionary).value(forKey: "image") as! String), oldPrice: "", brand: ((item as! NSDictionary).value(forKey: "brand") as! String), wishlistID: ((item as! NSDictionary).value(forKey: "wishlist") as! String), cout: "1", sizeID: "", categoryID: ((item as! NSDictionary).value(forKey: "category_id") as! String), stock: ((item as! NSDictionary).value(forKey: "total_stock") as! String), clothID: ""))
                         }
                         else {
                             
-                            self.product.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "id") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: ((item as! NSDictionary).value(forKey: "image") as! String), oldPrice: ((item as! NSDictionary).value(forKey: "offer_price") as! String), brand: ((item as! NSDictionary).value(forKey: "brand") as! String), wishlistID: ((item as! NSDictionary).value(forKey: "wishlist") as! String), cout: "1", sizeID: "", categoryID: ((item as! NSDictionary).value(forKey: "category_id") as! String), stock: ((item as! NSDictionary).value(forKey: "total_stock") as! String)))
+                            self.product.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "id") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: ((item as! NSDictionary).value(forKey: "image") as! String), oldPrice: ((item as! NSDictionary).value(forKey: "offer_price") as! String), brand: ((item as! NSDictionary).value(forKey: "brand") as! String), wishlistID: ((item as! NSDictionary).value(forKey: "wishlist") as! String), cout: "1", sizeID: "", categoryID: ((item as! NSDictionary).value(forKey: "category_id") as! String), stock: ((item as! NSDictionary).value(forKey: "total_stock") as! String), clothID: ""))
                         }
                     }
                     if Model.sharedInstance.userID == "" {
@@ -227,7 +231,7 @@ class ProductViewController: UIViewController,UICollectionViewDelegate,UICollect
                                     print("index :\(row)")
                                 }
                                 else{
-                                    self.productlocal.append(getProduct.init(name: "", price: "" , image: "" , id:  "", oldPrice: "", brandName: "", wishlistID: "", sizeID: "", currency: "", categoryID: "", stock: ""))
+                                    self.productlocal.append(getProduct.init(name: "", price: "" , image: "" , id:  "", oldPrice: "", brandName: "", wishlistID: "", sizeID: "", currency: "", categoryID: "", stock: "", sizeArr: self.emptyArray))
                                 }
                             }
                         }
@@ -607,7 +611,7 @@ class ProductViewController: UIViewController,UICollectionViewDelegate,UICollect
                     
                     self.data.append(((item as! NSDictionary).value(forKey: "title") as! String))
                     
-                    self.product.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "category_id") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: ((item as! NSDictionary).value(forKey: "image") as! String), oldPrice: ((item as! NSDictionary).value(forKey: "offer_price") as! String), brand: ((item as! NSDictionary).value(forKey: "brand") as! String), wishlistID: ((item as! NSDictionary).value(forKey: "Wishlist") as! String), cout: "1", sizeID: "", categoryID: ((item as! NSDictionary).value(forKey: "category_id") as! String), stock: ((item as! NSDictionary).value(forKey: "stock") as! String)))
+                    self.product.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "category_id") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: ((item as! NSDictionary).value(forKey: "image") as! String), oldPrice: ((item as! NSDictionary).value(forKey: "offer_price") as! String), brand: ((item as! NSDictionary).value(forKey: "brand") as! String), wishlistID: ((item as! NSDictionary).value(forKey: "Wishlist") as! String), cout: "1", sizeID: "", categoryID: ((item as! NSDictionary).value(forKey: "category_id") as! String), stock: ((item as! NSDictionary).value(forKey: "stock") as! String), clothID: ""))
                 }
                 DispatchQueue.main.async(execute: {
                     self.collectionView.reloadData()
@@ -802,7 +806,7 @@ class ProductViewController: UIViewController,UICollectionViewDelegate,UICollect
                 
                 sortedArray.removeAll()
                 for i in 0 ..< product.count {
-                    sortedArray.append(Product.init(price: Double(product[i].price)!, name:  product[i].name, id: product[i].id, image: product[i].image, oldPrice: product[i].oldPrice, brand: product[i].brand, wishlistID: product[i].wishlistID, stock: product[i].stock))
+                    sortedArray.append(Product.init(price: Double(product[i].price)!, name:  product[i].name, id: product[i].id, image: product[i].image, oldPrice: product[i].oldPrice, brand: product[i].brand, wishlistID: product[i].wishlistID, stock: product[i].stock, clothID: ""))
                 }
                 
 //                sortedArray = sortedArray.filter({
@@ -822,7 +826,7 @@ class ProductViewController: UIViewController,UICollectionViewDelegate,UICollect
                 
                 sortedArray.removeAll()
                 for i in 0 ..< product.count {
-                    sortedArray.append(Product.init(price: Double(product[i].price)!, name:  product[i].name, id: product[i].id, image: product[i].image, oldPrice: product[i].oldPrice, brand: product[i].brand, wishlistID: product[i].wishlistID, stock: product[i].stock))
+                    sortedArray.append(Product.init(price: Double(product[i].price)!, name:  product[i].name, id: product[i].id, image: product[i].image, oldPrice: product[i].oldPrice, brand: product[i].brand, wishlistID: product[i].wishlistID, stock: product[i].stock, clothID: ""))
                 }
                 
                 //                sortedArray = sortedArray.filter({
@@ -843,7 +847,7 @@ class ProductViewController: UIViewController,UICollectionViewDelegate,UICollect
                 
                 sortedArray.removeAll()
                 for i in 0 ..< product.count {
-                    sortedArray.append(Product.init(price: Double(product[i].price)!, name:  product[i].name, id: product[i].id, image: product[i].image, oldPrice: product[i].oldPrice, brand: product[i].brand, wishlistID: product[i].wishlistID, stock: product[i].stock))
+                    sortedArray.append(Product.init(price: Double(product[i].price)!, name:  product[i].name, id: product[i].id, image: product[i].image, oldPrice: product[i].oldPrice, brand: product[i].brand, wishlistID: product[i].wishlistID, stock: product[i].stock, clothID: ""))
                 }
                 
                 //                sortedArray = sortedArray.filter({
@@ -868,7 +872,7 @@ class ProductViewController: UIViewController,UICollectionViewDelegate,UICollect
      
         sortedArray.removeAll()
         for i in 0 ..< product.count {
-            sortedArray.append(Product.init(price: Double(product[i].price)!, name:  product[i].name, id: product[i].id, image: product[i].image, oldPrice: product[i].oldPrice, brand: product[i].brand, wishlistID: product[i].wishlistID, stock: product[i].stock))
+            sortedArray.append(Product.init(price: Double(product[i].price)!, name:  product[i].name, id: product[i].id, image: product[i].image, oldPrice: product[i].oldPrice, brand: product[i].brand, wishlistID: product[i].wishlistID, stock: product[i].stock, clothID: ""))
         }
         
        print(sortedArray)
@@ -889,7 +893,7 @@ class ProductViewController: UIViewController,UICollectionViewDelegate,UICollect
         
         sortedArray.removeAll()
         for i in 0 ..< product.count {
-            sortedArray.append(Product.init(price: Double(product[i].price)!, name:  product[i].name, id: product[i].id, image: product[i].image, oldPrice: product[i].oldPrice, brand: product[i].brand, wishlistID: product[i].wishlistID, stock: product[i].stock))
+            sortedArray.append(Product.init(price: Double(product[i].price)!, name:  product[i].name, id: product[i].id, image: product[i].image, oldPrice: product[i].oldPrice, brand: product[i].brand, wishlistID: product[i].wishlistID, stock: product[i].stock, clothID: ""))
         }
         
         print(sortedArray)
@@ -906,7 +910,7 @@ class ProductViewController: UIViewController,UICollectionViewDelegate,UICollect
         
         sortedArray.removeAll()
         for i in 0 ..< product.count {
-            sortedArray.append(Product.init(price: Double(product[i].price)!, name:  product[i].name, id: product[i].id, image: product[i].image, oldPrice: product[i].oldPrice, brand: product[i].brand, wishlistID: product[i].wishlistID, stock:product[i].stock))
+            sortedArray.append(Product.init(price: Double(product[i].price)!, name:  product[i].name, id: product[i].id, image: product[i].image, oldPrice: product[i].oldPrice, brand: product[i].brand, wishlistID: product[i].wishlistID, stock:product[i].stock, clothID: ""))
         }
         
         print(sortedArray)

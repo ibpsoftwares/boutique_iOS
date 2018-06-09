@@ -10,6 +10,7 @@ import UIKit
 import Alamofire
 import SKActivityIndicatorView
 
+@available(iOS 10.0, *)
 class UserDetailViewController: UIViewController ,UIPickerViewDelegate,UIPickerViewDataSource,UITextFieldDelegate{
 
     @IBOutlet weak var countryView: UIView!

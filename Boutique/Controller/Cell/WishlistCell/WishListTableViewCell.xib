@@ -25,7 +25,7 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Casual Shirts" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HfP-tz-GwR">
-                        <rect key="frame" x="65" y="12.5" width="83" height="18"/>
+                        <rect key="frame" x="65" y="7.5" width="83" height="18"/>
                         <fontDescription key="fontDescription" name="Whitney-Medium" family="Whitney" pointSize="15"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
@@ -38,7 +38,7 @@
                         </constraints>
                     </imageView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="$250" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Far-zh-mKS">
-                        <rect key="frame" x="65" y="32.5" width="33.5" height="18"/>
+                        <rect key="frame" x="65" y="27.5" width="33.5" height="18"/>
                         <fontDescription key="fontDescription" name="Whitney-Medium" family="Whitney" pointSize="15"/>
                         <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                         <nil key="highlightedColor"/>
@@ -59,6 +59,13 @@
                             <color key="titleColor" red="0.99975961540000002" green="0.99975961540000002" blue="0.99975961540000002" alpha="1" colorSpace="calibratedRGB"/>
                         </state>
                     </button>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="outOfStock" translatesAutoresizingMaskIntoConstraints="NO" id="S6o-Wa-NRb">
+                        <rect key="frame" x="137" y="25" width="100" height="30"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="30" id="4vE-lQ-Hyw"/>
+                            <constraint firstAttribute="width" constant="100" id="i3S-ZI-YTs"/>
+                        </constraints>
+                    </imageView>
                 </subviews>
                 <constraints>
                     <constraint firstItem="Jed-Zt-pYJ" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="5" id="61r-IO-vmo"/>
@@ -70,7 +77,9 @@
                     <constraint firstItem="Jed-Zt-pYJ" firstAttribute="leading" secondItem="4rm-ua-eoV" secondAttribute="trailing" constant="8" id="WhK-F9-wvx"/>
                     <constraint firstItem="HfP-tz-GwR" firstAttribute="leading" secondItem="Qyy-fL-bho" secondAttribute="trailing" constant="10" id="Zro-yz-ak1"/>
                     <constraint firstAttribute="trailing" secondItem="Jed-Zt-pYJ" secondAttribute="trailing" constant="5" id="iDM-oL-5TC"/>
-                    <constraint firstItem="HfP-tz-GwR" firstAttribute="top" secondItem="Qyy-fL-bho" secondAttribute="top" constant="5" id="yVY-oT-lMP"/>
+                    <constraint firstItem="S6o-Wa-NRb" firstAttribute="centerX" secondItem="H2p-sc-9uM" secondAttribute="centerX" id="nwF-iO-hvG"/>
+                    <constraint firstItem="S6o-Wa-NRb" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" constant="10" id="usY-JX-pcX"/>
+                    <constraint firstItem="HfP-tz-GwR" firstAttribute="top" secondItem="Qyy-fL-bho" secondAttribute="top" id="yVY-oT-lMP"/>
                 </constraints>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
@@ -79,6 +88,7 @@
                 <outlet property="productImg" destination="Qyy-fL-bho" id="mhk-VO-x18"/>
                 <outlet property="productNameLabel" destination="HfP-tz-GwR" id="01V-Nd-eR3"/>
                 <outlet property="productPriceLabel" destination="Far-zh-mKS" id="e5S-Se-F1J"/>
+                <outlet property="stockImg" destination="S6o-Wa-NRb" id="T7c-Ja-f8y"/>
                 <outlet property="wishlistBtn" destination="4rm-ua-eoV" id="xvX-r7-hVK"/>
             </connections>
             <point key="canvasLocation" x="-207.5" y="-1"/>
@@ -86,6 +96,7 @@
     </objects>
     <resources>
         <image name="cross" width="25" height="25"/>
+        <image name="outOfStock" width="83" height="18"/>
         <image name="test" width="136" height="174"/>
     </resources>
 </document>

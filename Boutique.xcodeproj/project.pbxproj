@@ -66,6 +66,8 @@
 		187E21CC2066030D00360F10 /* AddressTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 187E21CA2066030D00360F10 /* AddressTableViewCell.swift */; };
 		187E21CD2066030D00360F10 /* AddressTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 187E21CB2066030D00360F10 /* AddressTableViewCell.xib */; };
 		188BF30F20999A290035B937 /* AddBannerCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 188BF30E20999A290035B937 /* AddBannerCollectionViewCell.swift */; };
+		18C75F5520C7C0840001E69B /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18C75F5420C7C0840001E69B /* SystemConfiguration.framework */; };
+		18C75F5720C7C08E0001E69B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18C75F5620C7C08E0001E69B /* Foundation.framework */; };
 		18CF543B20AED7BC0076902F /* SubCategoryCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18CF543920AED7BC0076902F /* SubCategoryCollectionViewCell.swift */; };
 		18CF543C20AED7BC0076902F /* SubCategoryCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 18CF543A20AED7BC0076902F /* SubCategoryCollectionViewCell.xib */; };
 		18F074A9203EC30600E7E706 /* StripeTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18F074A8203EC30600E7E706 /* StripeTableViewController.swift */; };
@@ -160,6 +162,8 @@
 		187E21CA2066030D00360F10 /* AddressTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressTableViewCell.swift; sourceTree = "<group>"; };
 		187E21CB2066030D00360F10 /* AddressTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AddressTableViewCell.xib; sourceTree = "<group>"; };
 		188BF30E20999A290035B937 /* AddBannerCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddBannerCollectionViewCell.swift; sourceTree = "<group>"; };
+		18C75F5420C7C0840001E69B /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		18C75F5620C7C08E0001E69B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		18CF543920AED7BC0076902F /* SubCategoryCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubCategoryCollectionViewCell.swift; sourceTree = "<group>"; };
 		18CF543A20AED7BC0076902F /* SubCategoryCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SubCategoryCollectionViewCell.xib; sourceTree = "<group>"; };
 		18F074A8203EC30600E7E706 /* StripeTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StripeTableViewController.swift; sourceTree = "<group>"; };
@@ -180,6 +184,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				18C75F5720C7C08E0001E69B /* Foundation.framework in Frameworks */,
+				18C75F5520C7C0840001E69B /* SystemConfiguration.framework in Frameworks */,
 				4414FBAA94CDD6551E4D8A3D /* Pods_Boutique.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -580,6 +586,8 @@
 		220160D76D63B94D00DFA327 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				18C75F5620C7C08E0001E69B /* Foundation.framework */,
+				18C75F5420C7C0840001E69B /* SystemConfiguration.framework */,
 				F0B448B3C37EAE67CF70A0DC /* Pods_Boutique.framework */,
 				60666138C25A4FF088C007E7 /* Pods_BoutiqueTests.framework */,
 				FEE517DA5A052438EB9FAB5E /* Pods_BoutiqueUITests.framework */,

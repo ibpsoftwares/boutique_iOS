@@ -86,7 +86,7 @@ class MainTabBarViewController: UITabBarController ,UITabBarControllerDelegate{
                 
                 for item in (response?.value(forKey: "Wishlist") as! NSArray) {
                     print(item)
-                    self.wishListProduct.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "cloth_id") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), oldPrice: "", brand: "", wishlistID: "", cout: "1", sizeID: "", categoryID: ((item as! NSDictionary).value(forKey: "category_id") as! String), stock: ""))
+                    self.wishListProduct.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "cloth_id") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), oldPrice: "", brand: "", wishlistID: "", cout: "1", sizeID: "", categoryID: ((item as! NSDictionary).value(forKey: "category_id") as! String), stock: "", clothID: ""))
                 }
               
                  self.objectModel.badgeValue = (String)(self.wishListProduct.count)
@@ -179,7 +179,7 @@ class MainTabBarViewController: UITabBarController ,UITabBarControllerDelegate{
                     for item in ((response)?.value(forKey: "items") as! NSArray) {
                         print(item)
                         
-                        self.cartProduct.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "cloth_id") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), oldPrice: "", brand: "", wishlistID: "", cout: "1", sizeID: "", categoryID: ((item as! NSDictionary).value(forKey: "category_id") as! String), stock: ((item as! NSDictionary).value(forKey: "stock") as! String)))
+                        self.cartProduct.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "cloth_id") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), oldPrice: "", brand: "", wishlistID: "", cout: "1", sizeID: "", categoryID: ((item as! NSDictionary).value(forKey: "category_id") as! String), stock: ((item as! NSDictionary).value(forKey: "stock") as! String), clothID: ""))
                     }
                    
                     Model.sharedInstance.cartCount = self.cartProduct.count

@@ -36,7 +36,12 @@ class WishListViewController: UIViewController,UITableViewDelegate,UITableViewDa
     var cartSelectedIndex = NSInteger()
     var size_id = String()
     var size = String()
+     var stock = String()
+    var count = NSInteger()
+     var cartLocal = [getProduct]()
     var cartlist: [NSManagedObject] = []
+     var emptyArray: NSArray! = []
+    var productID = String()
      let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -57,6 +62,91 @@ class WishListViewController: UIViewController,UITableViewDelegate,UITableViewDa
         self.cartCountLabel.layer.cornerRadius = self.cartCountLabel.frame.size.height / 2
         self.cartCountLabel.clipsToBounds = true
     
+//        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+//            return
+//        }
+//
+//        let managedContext = appDelegate.persistentContainer.viewContext
+//
+//        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Wishlist")
+//        do {
+//            wishlist = try managedContext.fetch(fetchRequest)
+//        } catch let error as NSError {
+//            print("Could not fetch. \(error), \(error.userInfo)")
+//        }
+    }
+
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+  
+    //MARK: Fetch Cart Data From Core Data
+//    func fetchCartData(){
+//        self.cartlist.removeAll()
+//        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+//            return
+//        }
+//        let managedContext = appDelegate.persistentContainer.viewContext
+//        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Cartlist")
+//        do {
+//            cartlist = try managedContext.fetch(fetchRequest)
+//        } catch let error as NSError {
+//            print("Could not fetch. \(error), \(error.userInfo)")
+//        }
+//        if cartlist.count > 0{
+//           self.cartCountLabel.text  = (String)(self.cartlist.count)
+//        }
+//        else{
+//            print("no data...")
+//           self.cartCountLabel.isHidden  = true
+//
+//        }
+//        self.tableView.reloadData()
+//    }
+    func fetchCartData(){
+        cartLocal.removeAll()
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+            return
+        }
+        let managedContext = appDelegate.persistentContainer.viewContext
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Cartlist")
+        do {
+            cartlist = try managedContext.fetch(fetchRequest)
+        } catch let error as NSError {
+            print("Could not fetch. \(error), \(error.userInfo)")
+        }
+        if cartlist.count > 0{
+            for row in 0...cartlist.count - 1{
+                let person = cartlist[row]
+                print(person)
+                self.cartLocal.append(getProduct.init(name: (person.value(forKeyPath: "name") as! String), price: (person.value(forKeyPath: "price") as! String) , image: (person.value(forKeyPath: "image") as! String) , id:  (person.value(forKeyPath: "id") as! String), oldPrice: (person.value(forKeyPath: "oldPrice") as! String), brandName: (person.value(forKeyPath: "brand") as! String), wishlistID: person.value(forKeyPath: "wishlistID") as! String, sizeID:(person.value(forKeyPath: "sizeID") as! String), currency: "", categoryID: "", stock: "", sizeArr: emptyArray ))
+            }
+        }
+        if cartLocal.count > 0{
+                       self.cartCountLabel.text  = (String)(self.cartLocal.count)
+                    }
+                    else{
+                        print("no data...")
+                       self.cartCountLabel.isHidden  = true
+                }
+            self.tableView.reloadData()
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        fetchCartData()
+         self.wishListProduct.removeAll()
+        if Model.sharedInstance.userID != "" {
+            getWishListAPI()
+        }
+        else{
+           wishlistLocalData()
+        }
+        //self.tableView.reloadData()
+    }
+    // MARK: frtch Wishlist Data
+    func wishlistLocalData(){
+        self.wishListProduct.removeAll()
+        self.wishlist.removeAll()
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
             return
         }
@@ -69,73 +159,26 @@ class WishListViewController: UIViewController,UITableViewDelegate,UITableViewDa
         } catch let error as NSError {
             print("Could not fetch. \(error), \(error.userInfo)")
         }
-    }
+        print(self.wishlist.count)
+        
+        if wishlist.count > 0{
+            for row in 0...wishlist.count - 1{
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-  
-    //MARK: Fetch Cart Data From Core Data
-    func fetchCartData(){
-        self.cartlist.removeAll()
-        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
-            return
-        }
-        let managedContext = appDelegate.persistentContainer.viewContext
-        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Cartlist")
-        do {
-            cartlist = try managedContext.fetch(fetchRequest)
-        } catch let error as NSError {
-            print("Could not fetch. \(error), \(error.userInfo)")
-        }
-        if cartlist.count > 0{
-           self.cartCountLabel.text  = (String)(self.cartlist.count)
+                let person = wishlist[row]
+                print(person)
+                self.wishListProduct.append(getProductDetail.init(name: (person.value(forKeyPath: "name") as! String), id: (person.value(forKeyPath: "id") as! String), price: (person.value(forKeyPath: "price") as! String), image: (person.value(forKeyPath: "image") as! String), oldPrice: (person.value(forKeyPath: "oldPrice") as! String), brand: (person.value(forKeyPath: "brand") as! String), wishlistID: (person.value(forKeyPath: "wishlistID") as! String), cout: "", sizeID: "", categoryID: (person.value(forKeyPath: "categoryID") as! String), stock: (person.value(forKeyPath: "stock") as! String), clothID: ""))
+            }
+            self.bgLabel.isHidden = true
+            self.bgImg.isHidden = true
+            self.tableView.reloadData()
         }
         else{
-            print("no data...")
-           self.cartCountLabel.isHidden  = true
-            
+            self.bgLabel.isHidden = false
+            self.bgImg.isHidden = false
         }
         self.tableView.reloadData()
     }
-    override func viewWillAppear(_ animated: Bool) {
-        fetchCartData()
-         self.wishListProduct.removeAll()
-        if Model.sharedInstance.userID != "" {
-            getWishListAPI()
-        }
-        else{
-            guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
-                return
-            }
-            
-            let managedContext = appDelegate.persistentContainer.viewContext
-            
-            let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Wishlist")
-            do {
-                wishlist = try managedContext.fetch(fetchRequest)
-            } catch let error as NSError {
-                print("Could not fetch. \(error), \(error.userInfo)")
-            }
-            
-            if wishlist.count > 0{
-                for row in 0...wishlist.count - 1{
-                    
-                    let person = wishlist[row]
-                    print(person)
-                    self.wishListProduct.append(getProductDetail.init(name: (person.value(forKeyPath: "name") as! String), id: (person.value(forKeyPath: "id") as! String), price: (person.value(forKeyPath: "price") as! String), image: (person.value(forKeyPath: "image") as! String), oldPrice: (person.value(forKeyPath: "oldPrice") as! String), brand: (person.value(forKeyPath: "brand") as! String), wishlistID: (person.value(forKeyPath: "wishlistID") as! String), cout: "", sizeID: "", categoryID: (person.value(forKeyPath: "categoryID") as! String), stock: ""))
-                }
-                self.bgLabel.isHidden = true
-                self.bgImg.isHidden = true
-            }
-            else{
-                self.bgLabel.isHidden = false
-                self.bgImg.isHidden = false
-            }
-        }
-        //self.tableView.reloadData()
-    }
+
     func removeDuplicates(array: [getProductDetail]) -> [getProductDetail] {
         var encountered = Set<String>()
         var result: [getProductDetail] = []
@@ -195,7 +238,7 @@ class WishListViewController: UIViewController,UITableViewDelegate,UITableViewDa
                     for item in (response?.value(forKey: "Wishlist") as! NSArray) {
                         print(item)
                         
-                        self.wishListProduct.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "cloth_id") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), oldPrice: "", brand: "", wishlistID: "", cout: "1", sizeID: "", categoryID: ((item as! NSDictionary).value(forKey: "category_id") as! String), stock: ""))
+                        self.wishListProduct.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "cloth_id") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), oldPrice: "", brand: "", wishlistID: "", cout: "1", sizeID: "", categoryID: ((item as! NSDictionary).value(forKey: "category_id") as! String), stock: ((item as! NSDictionary).value(forKey: "total_stock") as! String), clothID: "" ))
                     }
                     self.bgLabel.isHidden = true
                     self.bgImg.isHidden = true
@@ -240,7 +283,7 @@ class WishListViewController: UIViewController,UITableViewDelegate,UITableViewDa
     // number of rows in table view
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if Model.sharedInstance.userID == "" {
-            return wishlist.count
+            return self.wishlist.count
         }else{
             return self.wishListProduct.count
         }
@@ -256,25 +299,55 @@ class WishListViewController: UIViewController,UITableViewDelegate,UITableViewDa
         cell.productImg.clipsToBounds = true
         
          if Model.sharedInstance.userID == "" {
-            
-            if wishlist.count > 0{
+            if self.wishlist.count > 0{
             let person = wishlist[indexPath.row]
-            let url = URL(string: (person.value(forKeyPath: "image") as? String)!)
+           
+            let url = URL(string: (person.value(forKeyPath: "image") as! String))
             cell.productImg.kf.setImage(with: url,placeholder: nil)
-            cell.productNameLabel.text = person.value(forKeyPath: "name") as? String
-            let price: String? = person.value(forKeyPath: "price") as? String
-            cell.productPriceLabel.text = "\(Model.sharedInstance.currency)\(price!)"
+            cell.productNameLabel.text = (person.value(forKeyPath: "name") as! String)
+            let price: String? = (person.value(forKeyPath: "price") as! String)
+           
+                if (person.value(forKeyPath: "stock") as! String) == "0"{
+                    cell.productPriceLabel.isHidden = true
+                    cell.wishlistBtn.isHidden = true
+                }
+                else{
+                    cell.productPriceLabel.isHidden = false
+                    cell.wishlistBtn.isHidden = false
+                    cell.stockImg.isHidden = true
+                     cell.productPriceLabel.text = "\(Model.sharedInstance.currency)\(price!)"
+                }
             }
         }
          else{
-            if self.wishListProduct.count > 0{
-            let url = URL(string: self.wishListProduct[indexPath.row].image)
-            cell.productImg.kf.setImage(with: url,placeholder: nil)
-            cell.productNameLabel.text = wishListProduct[indexPath.row].name
-            cell.productPriceLabel.text = "\(Model.sharedInstance.currency)\(wishListProduct[indexPath.row].price)"
+            if wishListProduct.count > 0{
+                // let person = wishlist[indexPath.row]
+                let url = URL(string: self.wishListProduct[indexPath.row].image)
+                cell.productImg.kf.setImage(with: url,placeholder: nil)
+                cell.productNameLabel.text = self.wishListProduct[indexPath.row].name
+                let price: String? = self.wishListProduct[indexPath.row].price
+                
+                if self.wishListProduct[indexPath.row].stock == "0"{
+                    cell.productPriceLabel.isHidden = true
+                    cell.wishlistBtn.isHidden = true
+                }
+                else{
+                    cell.productPriceLabel.isHidden = false
+                    cell.wishlistBtn.isHidden = false
+                    cell.stockImg.isHidden = true
+                    cell.productPriceLabel.text = "\(Model.sharedInstance.currency)\(price!)"
+                }
             }
-            
         }
+//         else{
+//            if self.wishListProduct.count > 0{
+//            let url = URL(string: self.wishListProduct[indexPath.row].image)
+//            cell.productImg.kf.setImage(with: url,placeholder: nil)
+//            cell.productNameLabel.text = wishListProduct[indexPath.row].name
+//            cell.productPriceLabel.text = "\(Model.sharedInstance.currency)\(wishListProduct[indexPath.row].price)"
+//            }
+//
+//        }
         cell.deleteBtn.tag = indexPath.row
         cell.deleteBtn.addTarget(self,action:#selector(buttonClicked(sender:)), for: .touchUpInside)
         cell.wishlistBtn.layer.cornerRadius = 2
@@ -438,68 +511,159 @@ class WishListViewController: UIViewController,UITableViewDelegate,UITableViewDa
         } catch let error as NSError {
             print("Could not fetch. \(error), \(error.userInfo)")
         }
-        self.tableView.reloadData()
+        print(self.wishlist.count)
+        wishlistLocalData()
+      //  self.tableView.reloadData()
     }
     //MARK: MOVE To Cart in coredata
+   
     func moveToCart(index: NSInteger){
         
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
             return
         }
-        let managedCon = appDelegate.persistentContainer.viewContext
-        let entity = NSEntityDescription.entity(forEntityName: "Cartlist",
-                                                in: managedCon)!
-        let cart = NSManagedObject(entity: entity,
-                                   insertInto: managedCon)
-        let data = wishlist[index]
-        print(data)
-        cart.setValue((data.value(forKeyPath: "id") as? String)!, forKeyPath: "id")
-        cart.setValue((data.value(forKeyPath: "name") as? String)!, forKeyPath: "name")
-        cart.setValue((data.value(forKeyPath: "price") as? String)!, forKeyPath: "price")
-        cart.setValue((data.value(forKeyPath: "oldPrice") as? String)!, forKeyPath: "oldPrice")
-        cart.setValue((data.value(forKeyPath: "brand") as? String)!, forKeyPath: "brand")
-        cart.setValue((data.value(forKeyPath: "image") as? String)!, forKeyPath: "image")
-        cart.setValue((data.value(forKeyPath: "categoryID") as? String), forKeyPath: "categoryID")
-        cart.setValue(size_id, forKeyPath: "sizeID")
-        cart.setValue(size, forKeyPath: "size")
-        cart.setValue("1", forKeyPath: "wishlistID")
-        print(cart)
-        do {
-            try managedCon.save()
-            addToCart.append(cart)
-        } catch let error as NSError {
-            print("Could not save. \(error), \(error.userInfo)")
+        if self.cartLocal.count > 0{
+            for row in 0...self.cartLocal.count - 1{
+                print(selectedIndex)
+                size_id = (((sizeArr[0].size[selectedIndex] as! NSDictionary).value(forKey: "Size") as! NSDictionary).value(forKey: "id") as! String)
+                size = (((sizeArr[0].size[selectedIndex] as! NSDictionary).value(forKey: "Size") as! NSDictionary).value(forKey: "size") as! String)
+                stock = ((sizeArr[0].size[selectedIndex] as! NSDictionary).value(forKey: "stock") as! String)
+                print(size_id)
+                print(size)
+                 print(stock)
+                count = 0
+                if ( self.cartLocal[row].id == self.wishListProduct[index].id  && self.cartLocal[row].sizeID == size_id ){
+                    count = 1
+                    Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Item Is Already Exits.")
+                    break
+                    
+                }
+            }
+            if(count == 1){
+                
+            }
+            else{
+                let managedCon = appDelegate.persistentContainer.viewContext
+                
+                let entity = NSEntityDescription.entity(forEntityName: "Cartlist",
+                                                        in: managedCon)!
+                
+                let cart = NSManagedObject(entity: entity,
+                                           insertInto: managedCon)
+                cart.setValue(self.wishListProduct[index].id, forKeyPath: "id")
+                cart.setValue(self.wishListProduct[index].name, forKeyPath: "name")
+                cart.setValue(self.wishListProduct[index].price, forKeyPath: "price")
+                cart.setValue(self.wishListProduct[index].oldPrice, forKeyPath: "oldPrice")
+                cart.setValue(self.wishListProduct[index].brand, forKeyPath: "brand")
+                cart.setValue(self.wishListProduct[index].image, forKeyPath: "image")
+                cart.setValue(self.wishListProduct[index].categoryID, forKeyPath: "categoryID")
+                cart.setValue(size_id, forKeyPath: "sizeID")
+                cart.setValue(size, forKeyPath: "size")
+                cart.setValue(stock, forKeyPath: "stock")
+                cart.setValue("1", forKeyPath: "wishlistID")
+                print(cart)
+                do {
+                    try managedCon.save()
+                    // addToCart.append(cart)
+                } catch let error as NSError {
+                    print("Could not save. \(error), \(error.userInfo)")
+                }
+                 deleteRecords( index : index)
+            }
+            // }
+        }
+        else{
+            
+            guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+                return
+            }
+            let managedCon = appDelegate.persistentContainer.viewContext
+            let entity = NSEntityDescription.entity(forEntityName: "Cartlist",
+                                                    in: managedCon)!
+            let cart = NSManagedObject(entity: entity,
+                                       insertInto: managedCon)
+            cart.setValue(self.wishListProduct[index].id, forKeyPath: "id")
+            cart.setValue(self.wishListProduct[index].name, forKeyPath: "name")
+            cart.setValue(self.wishListProduct[index].price, forKeyPath: "price")
+            cart.setValue(self.wishListProduct[index].oldPrice, forKeyPath: "oldPrice")
+            cart.setValue(self.wishListProduct[index].brand, forKeyPath: "brand")
+            cart.setValue(self.wishListProduct[index].image, forKeyPath: "image")
+            cart.setValue(self.wishListProduct[index].categoryID, forKeyPath: "categoryID")
+            cart.setValue(size_id, forKeyPath: "sizeID")
+            cart.setValue(size, forKeyPath: "size")
+            cart.setValue(stock, forKeyPath: "stock")
+            cart.setValue("1", forKeyPath: "wishlistID")
+            print(cart)
+            do {
+                try managedCon.save()
+                addToCart.append(cart)
+            } catch let error as NSError {
+                print("Could not save. \(error), \(error.userInfo)")
+            }
+            
+//            let managedContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+//            let id = self.wishListProduct[index].id
+//            let note = wishlist[index].
+//
+//            managedContext.delete(note)
+//
+//            do {
+//                try managedContext.save()
+//            } catch let error as NSError {
+//                print("Error While Deleting Note: \(error.userInfo)")
+//            }
+            deleteRecords( index : index)
+            self.crossBtn.isHidden = true
+            self.sizeLabel.isHidden = true
+            self.doneBtn.isHidden = true
+            self.sizeCollectionView.isHidden = true
+            self.sizeCollectionView.removeFromSuperview()
+            //Code to Fetch New Data From The DB and Reload Table.
+            
+            let Context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+            
+            let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Wishlist")
+            do {
+                wishlist.removeAll()
+                wishlist = try Context.fetch(fetchRequest)
+            } catch let error as NSError {
+                print("Could not fetch. \(error), \(error.userInfo)")
+            }
         }
         
-        let managedContext = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-        let note = wishlist[index]
-        managedContext.delete(note)
         
-        do {
-            try managedContext.save()
-        } catch let error as NSError {
-            print("Error While Deleting Note: \(error.userInfo)")
+    }
+    
+    
+    func deleteRecords( index : NSInteger)  {
+        
+        self.wishlist.removeAll()
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+            return
         }
-        
-        self.crossBtn.isHidden = true
-        self.sizeLabel.isHidden = true
-        self.doneBtn.isHidden = true
-        self.sizeCollectionView.isHidden = true
-        self.sizeCollectionView.removeFromSuperview()
-        //Code to Fetch New Data From The DB and Reload Table.
-        
-        let Context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-        
+        let managedContext = appDelegate.persistentContainer.viewContext
         let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Wishlist")
         do {
-            wishlist.removeAll()
-            wishlist = try Context.fetch(fetchRequest)
+            self.wishlist = try managedContext.fetch(fetchRequest)
         } catch let error as NSError {
             print("Could not fetch. \(error), \(error.userInfo)")
         }
-          fetchCartData()
+        print(wishlist.count)
+        //for row in 0...wishlist.count - 1{
+            let note = wishlist[index]
+            managedContext.delete(note)
+            
+            do {
+                try managedContext.save()
+            } catch let error as NSError {
+                print("Error While Deleting Note: \(error.userInfo)")
+            }
+       // }
+        wishlistLocalData()
         self.tableView.reloadData()
     }
+    
+    
     //MARK: addToCartAPI Methods
     
     @objc func addToCartAPI(sender:UIButton!){
@@ -507,13 +671,14 @@ class WishListViewController: UIViewController,UITableViewDelegate,UITableViewDa
         if Model.sharedInstance.userID == ""{
         cartSelectedIndex = sender.tag
         getItemSize(index: sender.tag)
+        Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Select Size")
     }
-        else{
-        var parameter: Parameters = [:]
-            if size == ""{
-                getItemSize(index: sender.tag)
-                Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Select Size")
-            }
+//        else{
+//        var parameter: Parameters = [:]
+//            if size == ""{
+//                getItemSize(index: sender.tag)
+//                Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Select Size")
+//            }
 //            }else{
 //
 //                SKActivityIndicator.spinnerColor(UIColor.darkGray)
@@ -567,14 +732,14 @@ class WishListViewController: UIViewController,UITableViewDelegate,UITableViewDa
 //            }
 //        }
 //      }
-    }
+   // }
     }
     
     func getItemSize(index: NSInteger){
         var parameter: Parameters = [:]
         if Model.sharedInstance.userID == ""{
         let person = wishlist[index]
-        let clothID = (person.value(forKeyPath: "id") as? String)!
+        let clothID = (person.value(forKeyPath: "id") as! String)
          parameter = ["cloth_id":clothID]
         }
         else{
@@ -689,7 +854,6 @@ class WishListViewController: UIViewController,UITableViewDelegate,UITableViewDa
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "sizeCell", for: indexPath as IndexPath) as! SizeCollectionViewCell
                 cell.sizeBtn.layer.cornerRadius = cell.sizeBtn.frame.size.height / 2
                 cell.sizeBtn.clipsToBounds = true
-        
                 let size = (((sizeArr[0].size[indexPath.row] as! NSDictionary).value(forKey: "Size") as! NSDictionary).value(forKey: "size") as! String)
                 let value:String?
                 value = size
@@ -698,6 +862,15 @@ class WishListViewController: UIViewController,UITableViewDelegate,UITableViewDa
                 cell.sizeBtn.layer.borderColor = UIColor (red: 204.0/255.0, green: 204.0/255.0, blue: 204/255.0, alpha: 1).cgColor
                 cell.sizeBtn.layer.borderWidth = 0.8
         
+            let stock = (((sizeArr[0].size)[indexPath.row] as! NSDictionary).value(forKey: "stock") as! String)
+                print(stock)
+            if stock == "0"{
+                cell.sizeBtn.backgroundColor = UIColor.lightGray
+                cell.sizeBtn.isUserInteractionEnabled  = false
+            }
+            else{
+                cell.sizeBtn.isUserInteractionEnabled  = true
+                }
                 if selectedIndex == indexPath.row                {
                     cell.sizeBtn.backgroundColor = UIColor (red: 43.0/255.0, green: 59.0/255.0, blue: 68.0/255.0, alpha: 1)
                     cell.sizeLabel.textColor = UIColor.white
@@ -716,6 +889,7 @@ class WishListViewController: UIViewController,UITableViewDelegate,UITableViewDa
         self.selectedIndex = sender.tag
          size_id = (((sizeArr[0].size[selectedIndex] as! NSDictionary).value(forKey: "Size") as! NSDictionary).value(forKey: "id") as! String)
          size = (((sizeArr[0].size[selectedIndex] as! NSDictionary).value(forKey: "Size") as! NSDictionary).value(forKey: "size") as! String)
+        stock = ((sizeArr[0].size[selectedIndex] as! NSDictionary).value(forKey: "stock") as! String)
         self.sizeCollectionView.reloadData()
         
     }

@@ -13,6 +13,7 @@ class WishListTableViewCell: UITableViewCell {
     @IBOutlet weak var productNameLabel: UILabel!
     @IBOutlet weak var productPriceLabel: UILabel!
     @IBOutlet weak var productImg: UIImageView!
+     @IBOutlet weak var stockImg: UIImageView!
     @IBOutlet weak var deleteBtn: UIButton!
     @IBOutlet weak var wishlistBtn: UIButton!
     

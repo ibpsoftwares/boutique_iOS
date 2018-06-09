@@ -11,6 +11,8 @@ import Kingfisher
 import SKActivityIndicatorView
 import Alamofire
 
+@available(iOS 10.0, *)
+@available(iOS 10.0, *)
 class CartViewController: UIViewController,UITableViewDelegate,UITableViewDataSource {
 
     @IBOutlet weak var tableView: UITableView!
@@ -73,7 +75,7 @@ class CartViewController: UIViewController,UITableViewDelegate,UITableViewDataSo
                     for item in ((product ).value(forKey: "items") as! NSArray) {
                         print(item)
                         
-                        self.cartProduct.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "Cart_id") as! String), price: ((item as! NSDictionary).value(forKey: "price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), oldPrice: ((item as! NSDictionary).value(forKey: "image1") as! String), brand: "", wishlistID: ((item as! NSDictionary).value(forKey: "Wishlist") as! String), cout: "1", sizeID: "", categoryID: ((item as! NSDictionary).value(forKey: "category_id") as! String), stock: ((item as! NSDictionary).value(forKey: "stock") as! String)))
+                        self.cartProduct.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "Cart_id") as! String), price: ((item as! NSDictionary).value(forKey: "price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), oldPrice: ((item as! NSDictionary).value(forKey: "image1") as! String), brand: "", wishlistID: ((item as! NSDictionary).value(forKey: "Wishlist") as! String), cout: "1", sizeID: "", categoryID: ((item as! NSDictionary).value(forKey: "category_id") as! String), stock: ((item as! NSDictionary).value(forKey: "stock") as! String), clothID: ((item as! NSDictionary).value(forKey: "Cloth_id") as! String)))
                     }
                     
                     for var i in (0..<(self.cartProduct.count)){

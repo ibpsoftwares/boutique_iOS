@@ -29,7 +29,7 @@ final class Model {
     var tempData = NSMutableDictionary()
      var lacalDataArr = NSMutableArray()
     var loginData = NSMutableDictionary()
-    
+     var checkoutData: [Dictionary<String, AnyObject>] = []
     
     
 }

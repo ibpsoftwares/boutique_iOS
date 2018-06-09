@@ -80,55 +80,36 @@ class LoginViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     override func viewWillAppear(_ animated: Bool) {
-        
+         self.navigationController?.navigationBar.isHidden = true
         self.cartArr.removeAll()
         self.wishlistArr.removeAll()
-        wishlist.removeAll()
-        cartlist.removeAll()
+       
+        cartdata()
+        wishlistdata()
+    }
+    
+    //MARK: fetch cart local data
+    func cartdata(){
+         cartlist.removeAll()
+        self.dictCart.removeAll()
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
             return
         }
-        
-        let managedContext = appDelegate.persistentContainer.viewContext
-        
-        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Wishlist")
-        do {
-            wishlist = try managedContext.fetch(fetchRequest)
-        } catch let error as NSError {
-            print("Could not fetch. \(error), \(error.userInfo)")
-        }
-        
-        if wishlist.count > 0{
-            for row in 0...wishlist.count - 1{
-                let person = wishlist[row]
-                let wishID = (person.value(forKeyPath: "id") as! String)
-                
-                let dictPoint = [
-                    "cloth_id": wishID
-                ]
-                dictWishlist.append(dictPoint as [String : AnyObject])
-                
-                let dict = ["cloth_id": "\(wishID)"]
-                self.arrayWishlist.append(dict as NSDictionary)
-        }
-          
-            print(self.arrayWishlist)
          let Context = appDelegate.persistentContainer.viewContext
-        
         let Request = NSFetchRequest<NSManagedObject>(entityName: "Cartlist")
         do {
             cartlist = try Context.fetch(Request)
         } catch let error as NSError {
             print("Could not fetch. \(error), \(error.userInfo)")
         }
-       }
+        
         if cartlist.count > 0{
             for row in 0...cartlist.count - 1{
                 let person = cartlist[row]
                 
                 //self.size.append(getPrice.init(id: (person.value(forKeyPath: "id") as! String), range_a: "1", range_b: "2"))
-               
-               let cartID = (person.value(forKeyPath: "id") as! String)
+                
+                let cartID = (person.value(forKeyPath: "id") as! String)
                 
                 let dictPoint = [
                     "cloth_id": cartID,
@@ -138,10 +119,45 @@ class LoginViewController: UIViewController {
                 
                 let dict = ["cloth_id": cartID,
                             "size_id" : (person.value(forKeyPath: "sizeID") as! String)
-                        ]
+                ]
                 self.arrayCart.append(dict as NSDictionary)
             }
         }
+    }
+
+//MARK: fetch wishlist local data
+func wishlistdata(){
+    wishlist.removeAll()
+    self.dictWishlist.removeAll()
+    guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+        return
+    }
+    
+    let managedContext = appDelegate.persistentContainer.viewContext
+    
+    let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Wishlist")
+    do {
+        wishlist = try managedContext.fetch(fetchRequest)
+    } catch let error as NSError {
+        print("Could not fetch. \(error), \(error.userInfo)")
+    }
+    
+    if wishlist.count > 0{
+        for row in 0...wishlist.count - 1{
+            let person = wishlist[row]
+            let wishID = (person.value(forKeyPath: "id") as! String)
+            
+            let dictPoint = [
+                "cloth_id": wishID
+            ]
+            dictWishlist.append(dictPoint as [String : AnyObject])
+            
+            let dict = ["cloth_id": "\(wishID)"]
+            self.arrayWishlist.append(dict as NSDictionary)
+        }
+        
+        print(self.arrayWishlist)
+ }
     }
     
     //MARK: textFieldValidation Method
@@ -162,6 +178,7 @@ class LoginViewController: UIViewController {
         textFieldValidation()
     }
     @IBAction func btnBack(_ sender: UIButton) {
+        print("fjkdhjfhdfhds")
         self.navigationController?.popViewController(animated: true)
     }
     //MARK: loginAPI Methods
@@ -238,6 +255,8 @@ class LoginViewController: UIViewController {
                     self.objectModel.userID = ((item as! NSDictionary).value(forKey: "userid") as! String)
                     print(self.objectModel.userID)
                 }
+                self.cartdata()
+                self.wishlistdata()
                 self.wishlistAndCart()
          }
         }

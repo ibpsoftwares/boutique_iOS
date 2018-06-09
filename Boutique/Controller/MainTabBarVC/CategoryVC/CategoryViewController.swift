@@ -137,9 +137,9 @@ class CategoryViewController: UIViewController,UITableViewDelegate,UITableViewDa
             // Fallback on earlier versions
         }
     }
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 170
-    }
+//    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+//        return 220
+//    }
 }
 // MARK: - LUExpandableTableViewDataSource
 /*

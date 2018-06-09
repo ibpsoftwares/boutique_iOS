@@ -38,6 +38,7 @@ class MyCartViewController: UIViewController,UITableViewDelegate,UITableViewData
     @IBOutlet weak var bgLabel: UILabel!
     @IBOutlet var bgImg: UIImageView!
     var count = Int()
+     var countProduct = Int()
     var cartProduct = [getProductDetail]()
     var totalPrice = Int()
      var currentQty = 1
@@ -51,9 +52,11 @@ class MyCartViewController: UIViewController,UITableViewDelegate,UITableViewData
     var checkoutlist: [Dictionary<String, AnyObject>] = []
      var quantitylist: [Dictionary<String, AnyObject>] = []
     var quanity = NSMutableArray()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         count = 1
+        countProduct = 1
         checkoutView.isHidden = false
         tableView.tableFooterView = UIView()
         checkoutButton.layer.borderWidth = 0.5
@@ -63,27 +66,24 @@ class MyCartViewController: UIViewController,UITableViewDelegate,UITableViewData
         self.bgLabel.isHidden =  true
         
     }
-    
+     //MARK: viewWillDisappear
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         self.tabBarController?.tabBar.isHidden = false
         
     }
+    //MARK: viewWillAppear
     override func viewWillAppear(_ animated: Bool) {
-        //fetchCartDetails()
         self.cartProduct.removeAll()
-        //self.tabBarController?.tabBar.isHidden = true
         if Model.sharedInstance.userID != "" {
             getCartViewAPI()
         }else{
             fetchCartData()
-            //deleteRecords()
         }
     }
     
-    
+    //MARK: Delete Record From Coredata
     func deleteRecords() -> Void {
-            
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
             return
         }
@@ -132,24 +132,33 @@ class MyCartViewController: UIViewController,UITableViewDelegate,UITableViewData
                 if (person.value(forKeyPath: "name") as! String) == ""{
                     
                 }else{
-                    self.cartProduct.append(getProductDetail.init(name: (person.value(forKeyPath: "name") as! String), id:  (person.value(forKeyPath: "id") as! String), price: (person.value(forKeyPath: "price") as! String) , image: (person.value(forKeyPath: "image") as! String), oldPrice: (person.value(forKeyPath: "oldPrice") as! String), brand: (person.value(forKeyPath: "brand") as! String), wishlistID: person.value(forKeyPath: "wishlistID") as! String, cout: "1", sizeID: (person.value(forKeyPath: "size") as! String), categoryID: (person.value(forKeyPath: "categoryID") as! String), stock: ""))
+                    self.cartProduct.append(getProductDetail.init(name: (person.value(forKeyPath: "name") as! String), id:  (person.value(forKeyPath: "id") as! String), price: (person.value(forKeyPath: "price") as! String) , image: (person.value(forKeyPath: "image") as! String), oldPrice: (person.value(forKeyPath: "oldPrice") as! String), brand: (person.value(forKeyPath: "brand") as! String), wishlistID: person.value(forKeyPath: "wishlistID") as! String, cout: "1", sizeID: (person.value(forKeyPath: "size") as! String), categoryID: (person.value(forKeyPath: "categoryID") as! String), stock: (person.value(forKeyPath: "stock") as! String), clothID: ""))
                 }
             }
         
         self.itemsCountLabel.text =  "Total (\(self.cartProduct.count))"
-        for var i in (0..<(self.cartProduct.count)){
-            let total = (Int)(self.cartProduct[i].price)!
-            print(total)
-            self.totalPrice += total
-            self.totalPriceLabel.text = String("$\(self.totalPrice)")
-            Model.sharedInstance.totalPrice = Double(self.totalPrice)
-        }
+            for row in 0...self.cartProduct.count - 1{
+                
+                if self.cartProduct[row].stock == "0"{
+                    
+                }
+                else{
+                    let total = (Int)(self.cartProduct[row].price)!
+                    print(total)
+                    self.totalPrice += total
+                    self.totalPriceLabel.text = String("\(Model.sharedInstance.currency)\(self.totalPrice)")
+                    Model.sharedInstance.totalPrice = Double(self.totalPrice)
+                }
+                
+            }
             self.bgImg.isHidden = true
             self.bgLabel.isHidden =  true
      }
         else{
             self.bgImg.isHidden = false
             self.bgLabel.isHidden =  false
+            self.bgLabel.text = "Empty Cartlist"
+            self.bgImg.image = UIImage(named: "emptyCart")
         }
          self.tableView.reloadData()
     }
@@ -162,7 +171,6 @@ class MyCartViewController: UIViewController,UITableViewDelegate,UITableViewData
     func getCartViewAPI(){
         self.cartProduct.removeAll()
         self.totalPrice = 0
-        self.cartProduct.removeAll()
         SKActivityIndicator.spinnerColor(UIColor.darkGray)
         SKActivityIndicator.show("Loading...")
         
@@ -196,27 +204,32 @@ class MyCartViewController: UIViewController,UITableViewDelegate,UITableViewData
                     
                     for item in ((response)?.value(forKey: "items") as! NSArray) {
                         print(item)
-                        
 
                         if (item as! NSDictionary).value(forKey: "offer_price")  is NSNull {
-                            self.cartProduct.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "cart_id") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), oldPrice: (((item as! NSDictionary).value(forKey: "size") as! NSDictionary).value(forKey: "id") as! String), brand: "", wishlistID: "", cout: "1", sizeID: (((item as! NSDictionary).value(forKey: "size") as! NSDictionary).value(forKey: "size") as! String), categoryID: ((item as! NSDictionary).value(forKey: "category_id") as! String), stock: ((item as! NSDictionary).value(forKey: "stock") as! String)))
+                            self.cartProduct.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "cart_id") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), oldPrice: (((item as! NSDictionary).value(forKey: "size") as! NSDictionary).value(forKey: "id") as! String), brand: "", wishlistID: "", cout: "1", sizeID: (((item as! NSDictionary).value(forKey: "size") as! NSDictionary).value(forKey: "size") as! String), categoryID: ((item as! NSDictionary).value(forKey: "category_id") as! String), stock: ((item as! NSDictionary).value(forKey: "stock") as! String), clothID: ((item as! NSDictionary).value(forKey: "cloth_id") as! String)))
                         }
                         else {
-                            self.cartProduct.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "cart_id") as! String), price: ((item as! NSDictionary).value(forKey: "offer_price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), oldPrice: (((item as! NSDictionary).value(forKey: "size") as! NSDictionary).value(forKey: "id") as! String), brand: "", wishlistID: "", cout: "1", sizeID: (((item as! NSDictionary).value(forKey: "size") as! NSDictionary).value(forKey: "size") as! String), categoryID: ((item as! NSDictionary).value(forKey: "category_id") as! String), stock: ((item as! NSDictionary).value(forKey: "stock") as! String)))
+                            self.cartProduct.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "cart_id") as! String), price: ((item as! NSDictionary).value(forKey: "offer_price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), oldPrice: (((item as! NSDictionary).value(forKey: "size") as! NSDictionary).value(forKey: "id") as! String), brand: "", wishlistID: "", cout: "1", sizeID: (((item as! NSDictionary).value(forKey: "size") as! NSDictionary).value(forKey: "size") as! String), categoryID: ((item as! NSDictionary).value(forKey: "category_id") as! String), stock: ((item as! NSDictionary).value(forKey: "stock") as! String), clothID: ((item as! NSDictionary).value(forKey: "cloth_id") as! String)))
                         }
-                        
-//                        self.cartProduct.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "cart_id") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), oldPrice: (((item as! NSDictionary).value(forKey: "size") as! NSDictionary).value(forKey: "id") as! String), brand: "", wishlistID: "", cout: "1", sizeID: (((item as! NSDictionary).value(forKey: "size") as! NSDictionary).value(forKey: "size") as! String)))
+ 
                     }
                     let defaults = UserDefaults.standard
                     defaults.set(self.cartProduct.count, forKey: "totalCartItem")
                     defaults .synchronize()
                     Model.sharedInstance.cartCount = self.cartProduct.count
-                    for var i in (0..<(self.cartProduct.count)){
-                        let total = (Int)(self.cartProduct[i].price)!
-                        print(total)
-                        self.totalPrice += total
-                        self.totalPriceLabel.text = String("\(Model.sharedInstance.currency)\(self.totalPrice)")
-                        Model.sharedInstance.totalPrice = Double(self.totalPrice)
+                    for row in 0...self.cartProduct.count - 1{
+                        
+                        if self.cartProduct[row].stock == "0"{
+                            
+                        }
+                        else{
+                            let total = (Int)(self.cartProduct[row].price)!
+                            print(total)
+                            self.totalPrice += total
+                            self.totalPriceLabel.text = String("\(Model.sharedInstance.currency)\(self.totalPrice)")
+                            Model.sharedInstance.totalPrice = Double(self.totalPrice)
+                        }
+                       
                     }
                     DispatchQueue.main.async(execute: {
                         self.itemsCountLabel.text =  "Total (\(self.cartProduct.count))"
@@ -226,18 +239,20 @@ class MyCartViewController: UIViewController,UITableViewDelegate,UITableViewData
                     self.bgLabel.isHidden =  true
                 }
                 else {
-                    self.bgImg.isHidden = false
-                    self.bgLabel.isHidden =  false
                     let defaults = UserDefaults.standard
                     defaults.removeObject(forKey: "totalCartItem")
                     defaults.synchronize()
+                    self.tableView.reloadData()
                     Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: (response?.value(forKey: "message") as! String))
+                    self.bgImg.isHidden = false
+                    self.bgLabel.isHidden =  false
+                    self.bgLabel.text = "Empty Cartlist"
+                    self.bgImg.image = UIImage(named: "emptyCart")
                 }
             }
         }
     }
-
-
+    // MARK: TableView Delegate & DataSource
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         return self.cartProduct.count
@@ -245,17 +260,27 @@ class MyCartViewController: UIViewController,UITableViewDelegate,UITableViewData
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "CartCell", for: indexPath) as! CartCell
-       
-        cell.thumbImageView.layer.cornerRadius = cell.thumbImageView.frame.size.height / 2
-        cell.thumbImageView.clipsToBounds = true
         
         cell.nameLabel.text = cartProduct[indexPath.row].name
         cell.priceLabel.text = "\(Model.sharedInstance.currency)\(cartProduct[indexPath.row].price)"
         let url = URL(string: self.cartProduct[indexPath.row].image)
         cell.thumbImageView.kf.setImage(with: url,placeholder: nil)
         cell.sizeLabel.text = cartProduct[indexPath.row].sizeID
+        if cartProduct[indexPath.row].stock == "0"{
+            cell.qty.isHidden = true
+            cell.incrementQty.isHidden = true
+            cell.decrementQty.isHidden = true
+            cell.qty.isHidden = true
+            cell.stockImageView.isHidden = false
+        }else
+        {
+            cell.qty.isHidden = false
+            cell.incrementQty.isHidden = false
+            cell.decrementQty.isHidden = false
+            cell.qty.isHidden = false
+            cell.stockImageView.isHidden = true
+        }
         let qqq = cell.qty.text!
-        
         let dictPoint = [
             "quantity": qqq
         ]
@@ -279,23 +304,31 @@ class MyCartViewController: UIViewController,UITableViewDelegate,UITableViewData
         quantitylist.removeAll()
         count = 1 + count
         print(count)
+        if count == Int(self.cartProduct[sender.tag].stock)! + 1 {
+            print(count)
+            count = count - 1
+            print(count)
+        }
+        else{
+            let myDouble = Double(self.cartProduct[sender.tag].price)
+            print(myDouble!)
+            totalPrice -= Int(myDouble!)
+            print(totalPrice)
+            let qyt = Double(count)
+            let total = myDouble! * qyt
+            print(total)
+            lblprice = String(format: "%.0f", total)
+            cell?.priceLabel.text = String(format: "%.0f", total)
+            cell?.qty.text = "\(count)" // Once you have the reference to the cell, just use the traditional way of setting up the objects inside the cell.
+            
+            print(totalPrice)
+            self.totalPrice += Int(total)
+            self.totalPriceLabel.text = String("\(Model.sharedInstance.currency)\(self.totalPrice)")
+            Model.sharedInstance.totalPrice = Double(self.totalPrice)
+            self.tableView.reloadData()
+        }
+         countProduct = count
         
-        let myDouble = Double(self.cartProduct[sender.tag].price)
-        print(myDouble!)
-        totalPrice -= Int(myDouble!)
-        print(totalPrice)
-        let qyt = Double(count)
-        let total = myDouble! * qyt
-        print(total)
-        lblprice = String(format: "%.0f", total)
-        cell?.priceLabel.text = String(format: "%.0f", total)
-        cell?.qty.text = "\(count)" // Once you have the reference to the cell, just use the traditional way of setting up the objects inside the cell.
-        
-        print(totalPrice)
-        self.totalPrice += Int(total)
-        self.totalPriceLabel.text = String("\(Model.sharedInstance.currency)\(self.totalPrice)")
-        Model.sharedInstance.totalPrice = Double(self.totalPrice)
-        self.tableView.reloadData()
         return count
     }
     
@@ -306,18 +339,15 @@ class MyCartViewController: UIViewController,UITableViewDelegate,UITableViewData
         if count == 1 {
             print("Count zero")
             count = 1
-            let myDouble = Double(self.cartProduct[sender.tag].price)
-            print(myDouble!)
-            let qyt = Double(count)
-            let total = myDouble! * qyt
-            print(total)
-            lblprice = String(format: "%.0f", total)
-            cell?.priceLabel.text = String(format: "%.0f", total)
-            cell?.qty.text = "\(count)"
-            print(count)
-
-//            print(totalPrice)
-//            self.totalPrice = Int(total)
+//            let myDouble = Double(self.cartProduct[sender.tag].price)
+//            print(myDouble!)
+//            let qyt = Double(count)
+//            let total = myDouble! * qyt
+//            print(total)
+//            lblprice = String(format: "%.0f", total)
+//            cell?.priceLabel.text = String(format: "%.0f", total)
+//            cell?.qty.text = "\(count)"
+//            print(count)
             self.totalPriceLabel.text = String("\(Model.sharedInstance.currency)\(self.totalPrice)")
         } else {
             count = count - 1
@@ -336,7 +366,8 @@ class MyCartViewController: UIViewController,UITableViewDelegate,UITableViewData
             self.totalPriceLabel.text = String("\(Model.sharedInstance.currency)\(self.totalPrice)")
             Model.sharedInstance.totalPrice = Double(self.totalPrice)
         }
-    self.tableView.reloadData()
+        self.tableView.reloadData()
+        countProduct = count
         return count
     }
     
@@ -355,8 +386,9 @@ class MyCartViewController: UIViewController,UITableViewDelegate,UITableViewData
         }
     }
     @objc func remove(sender:UIButton!) {
+        
         if Model.sharedInstance.userID != "" {
-            self.deleteItemFromCart(cartID: self.cartProduct[sender.tag].id, sizeID: self.cartProduct[sender.tag].oldPrice)
+            self.deleteItemFromCart(clothID: self.cartProduct[sender.tag].clothID, sizeID: self.cartProduct[sender.tag].oldPrice)
         }
         else{
              if cartlist.count > 0{
@@ -369,17 +401,17 @@ class MyCartViewController: UIViewController,UITableViewDelegate,UITableViewData
             } catch let error as NSError {
                 print("Error While Deleting Note: \(error.userInfo)")
             }
+         }
+            self.fetchCartData()
         }
-        }
-         self.fetchCartData()
+        
     }
     
     //MARK: deleteItemFromCart Methods
-    func deleteItemFromCart( cartID : String,sizeID: String){
-        
+    func deleteItemFromCart( clothID : String,sizeID: String){
         var parameter: Parameters = [:]
         if Model.sharedInstance.userID != "" {
-            parameter = ["user_id": Model.sharedInstance.userID, "cloth_id": cartID,"size_id": sizeID]
+            parameter = ["user_id": Model.sharedInstance.userID, "cloth_id": clothID,"size_id": sizeID]
         }
         print(parameter)
         
@@ -430,20 +462,25 @@ class MyCartViewController: UIViewController,UITableViewDelegate,UITableViewData
         self.present(alertController, animated: true, completion: nil)
     }
     }
+    //MARK: Checkout Method
     func checkout(){
+        print(countProduct)
+        Model.sharedInstance.checkoutData.removeAll()
         if cartProduct.count > 0{
             for row in 0...cartProduct.count - 1{
                 if(self.cartProduct[row].stock != "0"){
                 let dictPoint = [
                     "cart_id": self.cartProduct[row].id,
-                    "quantity": (quantitylist[row] as NSDictionary).value(forKey: "quantity") as! String,
+                    "quantity": String(countProduct),
                     "user_id": Model.sharedInstance.userID]
                 
                 print(dictPoint)
                 checkoutlist.append(dictPoint as [String : AnyObject])
+                Model.sharedInstance.checkoutData.append(dictPoint as [String : AnyObject])
             }
             }
         }
+        print(Model.sharedInstance.checkoutData)
         SKActivityIndicator.spinnerColor(UIColor.darkGray)
         SKActivityIndicator.show("Loading...")
         let params: [String:Any] = ["cartArray":toJSonString(data: checkoutlist)]
@@ -488,6 +525,7 @@ class MyCartViewController: UIViewController,UITableViewDelegate,UITableViewData
         }
 
     }
+    //MARK: Convert into Json
     func toJSonString(data : Any) -> String {
         
         var jsonString = "";

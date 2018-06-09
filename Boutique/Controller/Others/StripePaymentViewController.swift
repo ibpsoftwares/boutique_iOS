@@ -95,9 +95,12 @@ class StripePaymentViewController: UIViewController,UITextFieldDelegate {
               //  self.showAlert(msg: "Token created: \(token)")
              
                 self.postStripeToken(token: token)
+               
             }
         })
     }
+    
+
     //MARK: Alert Method
     func showAlert(msg : String){
         let alert = UIAlertController(title: "Welcome to Stripe", message: msg, preferredStyle: UIAlertControllerStyle.alert)
@@ -108,22 +111,24 @@ class StripePaymentViewController: UIViewController,UITextFieldDelegate {
             self.present(alert, animated: true, completion: nil)
     }
     
+    
+    
+    
+    
     func postStripeToken(token:STPToken){
+    
         let parameters: Parameters = [
             "token": ("\(token.tokenId)"),
-            "amount": "200",
-//            "currency": "usd",
-//            "description": "testRun"
+            "amount":  Model.sharedInstance.totalAmt,
+            "paymentType": Model.sharedInstance.paymentType,
+            "cartArray":toJSonString(data: Model.sharedInstance.checkoutData)
         ]
         print(parameters)
-         let headers = ["Authorization":"Bearer ZWNvbW1lcmNl"]
-        //let url = "https://thawing-inlet-46474.herokuapp.com/charge.php"
-        let url = "http://kftsoftwares.com/ecomm/recipes/payment/"
-        
+
         SKActivityIndicator.spinnerColor(UIColor.darkGray)
         SKActivityIndicator.show("Loading...")
-        
-        Webservice.apiPost(apiURl: "payment/", parameters: parameters, headers: nil) { (response:NSDictionary?, error:NSError?) in
+
+        Webservice.apiPost(apiURl: "orderDetail", parameters: parameters, headers: nil) { (response:NSDictionary?, error:NSError?) in
             if error != nil {
                 print(error?.localizedDescription as Any)
                 Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Login Failed.Try Again..")
@@ -134,19 +139,33 @@ class StripePaymentViewController: UIViewController,UITextFieldDelegate {
             })
             print(response!)
             if (((response?.value(forKey: "customer_array") as! NSDictionary).value(forKey: "status") as! String)  == "succeeded"){
-                
-                self.orderDetailAPI(amount: Model.sharedInstance.totalAmt, userID: Model.sharedInstance.userID, paymentType: Model.sharedInstance.paymentType)
+
+                let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                let abcViewController = storyboard.instantiateViewController(withIdentifier: "SuccessViewController") as! SuccessViewController
+                self.navigationController?.pushViewController(abcViewController, animated: true)
+
+                //self.orderDetailAPI(amount: Model.sharedInstance.totalAmt, userID: Model.sharedInstance.userID, paymentType: Model.sharedInstance.paymentType)
             }
             else{
                 if (response?.value(forKey: "customer_array")  != nil){
-                    
+
                     }else{
-                        
+
                     }
                 }
             }
         }
-        
+    func toJSonString(data : Any) -> String {
+        var jsonString = "";
+        do {
+            let jsonData = try JSONSerialization.data(withJSONObject: data, options: .prettyPrinted)
+            jsonString = NSString(data: jsonData, encoding: String.Encoding.utf8.rawValue)! as String
+            
+        } catch {
+            print(error.localizedDescription)
+        }
+        return jsonString;
+    }
     func orderDetailAPI(amount: String,userID: String,paymentType:String){
         
         var myString = amount

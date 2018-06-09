@@ -10,6 +10,7 @@ import UIKit
 import CoreData
 import Stripe
 import IQKeyboardManagerSwift
+import SystemConfiguration
 
 @available(iOS 10.0, *)
 @available(iOS 10.0, *)
@@ -21,6 +22,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        
+        if Reachability.isConnectedToNetwork(){
+            print("Internet Connection Available!")
+        }else{
+            print("Internet Connection not Available!")
+            let alert = UIAlertView(title: "No Internet Connection", message: "Make sure your device is connected to the internet.", delegate: nil, cancelButtonTitle: "OK")
+            alert.show()
+        }
         
         isLoggedIn = true
         IQKeyboardManager.sharedManager().enable = true
@@ -126,6 +135,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
     }
+    
 
 }
  var preferredStatusBarStyle: UIStatusBarStyle {
@@ -138,5 +148,40 @@ extension UIApplication {
         } set {
             (shared.value(forKey: "statusBar") as? UIView)?.backgroundColor = newValue
         }
+    }
+}
+public class Reachability {
+    
+    class func isConnectedToNetwork() -> Bool {
+        
+        var zeroAddress = sockaddr_in(sin_len: 0, sin_family: 0, sin_port: 0, sin_addr: in_addr(s_addr: 0), sin_zero: (0, 0, 0, 0, 0, 0, 0, 0))
+        zeroAddress.sin_len = UInt8(MemoryLayout.size(ofValue: zeroAddress))
+        zeroAddress.sin_family = sa_family_t(AF_INET)
+        
+        let defaultRouteReachability = withUnsafePointer(to: &zeroAddress) {
+            $0.withMemoryRebound(to: sockaddr.self, capacity: 1) {zeroSockAddress in
+                SCNetworkReachabilityCreateWithAddress(nil, zeroSockAddress)
+            }
+        }
+        
+        var flags: SCNetworkReachabilityFlags = SCNetworkReachabilityFlags(rawValue: 0)
+        if SCNetworkReachabilityGetFlags(defaultRouteReachability!, &flags) == false {
+            return false
+        }
+        
+        /* Only Working for WIFI
+         let isReachable = flags == .reachable
+         let needsConnection = flags == .connectionRequired
+         
+         return isReachable && !needsConnection
+         */
+        
+        // Working for Cellular and WIFI
+        let isReachable = (flags.rawValue & UInt32(kSCNetworkFlagsReachable)) != 0
+        let needsConnection = (flags.rawValue & UInt32(kSCNetworkFlagsConnectionRequired)) != 0
+        let ret = (isReachable && !needsConnection)
+        
+        return ret
+        
     }
 }
