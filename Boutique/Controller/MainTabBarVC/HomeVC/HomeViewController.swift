@@ -336,7 +336,7 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
             }
             else{
 
-                let url = URL(string: ((response as! NSDictionary).value(forKey: "bannerImages") as! String))
+                let url = URL(string: ((response)?.value(forKey: "bannerImages") as! String))
                 self.bannerImg.kf.indicatorType = .activity
                 self.bannerImg.kf.setImage(with: url,placeholder: nil)
                 //self.bannerImg1.kf.indicatorType = .activity
@@ -353,7 +353,6 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
                 }
                 DispatchQueue.main.async(execute: {
                     //self.imgSlider.setUpView(imageSource: .Url(imageArray: self.localImages, placeHolderImage: UIImage (named: "placeHolder")), slideType: .ManualSwipe, isArrowBtnEnabled: true)
-
                     self.slideCollectionView.reloadData()
                     self.slideCollectionView1.reloadData()
                     //self.imgSlider.setUpView(imageSource: .Url(imageArray: self.urlImages , placeHolderImage: UIImage (named: "placeHolder")), slideType: .Automatic(timeIntervalinSeconds: 2.0), isArrowBtnEnabled: true)
@@ -395,7 +394,6 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
                 Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Something Wrong..")
                 return
             }
-          
             print(response!)
             if ((response!["message"] as? [String:Any]) != nil){
                 Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: (response?.value(forKey: "message") as! String))
@@ -412,8 +410,7 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
                        // print("not null")
                         self.product.append(getProduct.init(name:((item as! NSDictionary).value(forKey: "title") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), id: ((item as! NSDictionary).value(forKey: "id") as! String), oldPrice: ((item as! NSDictionary).value(forKey: "offer_price") as! String), brandName: ((item as! NSDictionary).value(forKey: "brand") as! String), wishlistID: ((item as! NSDictionary).value(forKey: "wishlist") as! String), sizeID: "", currency: ((item as! NSDictionary).value(forKey: "symbol") as! String), categoryID: ((item as! NSDictionary).value(forKey: "category_id") as! String), stock: ((item as! NSDictionary).value(forKey: "total_stock") as! String), sizeArr: ((item as! NSDictionary).value(forKey: "size") as! NSArray)))
                     }
-                    }
-              
+                }
                     if Model.sharedInstance.userID == "" {
                         
                         if self.product.count > 0{
@@ -452,7 +449,6 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
                         }
                     }
                 }
-              
                     // for cartdataLocal
                     if self.cartProduct.count > 0 {
                      for section in 0...self.cartProduct.count - 1 {
@@ -499,10 +495,9 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
                             }
                             
                         }
-                    
                     }
                     
-                    }
+                }
                     // self.fetchCartData()
             
                 DispatchQueue.main.async(execute: {
@@ -513,8 +508,8 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
                     let int1: Int32 = Int32((self.product2.count) * 290 / 2 )
                     let cgfloat1 = CGFloat(int1)
                     print(cgfloat1)
-                    self.collectionViewHeight.constant = cgfloat + 15
-                    self.collectionViewHeight1.constant = cgfloat1 + 220
+                    self.collectionViewHeight.constant = cgfloat + 26
+                    self.collectionViewHeight1.constant = cgfloat1 + 110
                     self.collectionView1.reloadData()
                    self.collectionView.reloadData()
                     DispatchQueue.main.async(execute: {
@@ -601,7 +596,6 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
             
                     cell.brandNameLabel.text = self.product1[indexPath.row].name
             
-            
                     cell.wishlistBtn.tag = indexPath.row
                     cell.wishlistBtn.addTarget(self,action:#selector(addToWishListAPI(sender:)), for: .touchUpInside)
         }
@@ -627,15 +621,12 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
             let url = URL(string: self.product2[indexPath.row].image)
             cell.productImg.kf.indicatorType = .activity
             cell.productImg.kf.setImage(with: url,placeholder: UIImage(named: "placeHolder"))
-
             cell.productNameLabel.text = self.product2[indexPath.row].name
             cell.originalPriceLabel.text = "\(Model.sharedInstance.currency)\(self.product2[indexPath.row].oldPrice)"
             var curr = String()
             curr = self.product2[indexPath.row].currency
-
             cell.currencyLabel.attributedText = NSAttributedString(html: "<span>\(curr)</span>")
             Model.sharedInstance.currency = cell.currencyLabel.text!
-            //print(Model.sharedInstance.currency)
 
             if  self.product2[indexPath.row].oldPrice != "" {
                 cell.oldPriceLabel.text = "\(Model.sharedInstance.currency)\(self.product2[indexPath.row].price)"
@@ -739,8 +730,6 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
             categoryViewController.offerID = imgArr1[indexPath.row].id
             navigationController?.pushViewController(categoryViewController, animated: true)
         }
-        
-        
     }
     @IBAction func cartBtn(_ sender: UIButton) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -752,7 +741,6 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
         let abcViewController = storyboard.instantiateViewController(withIdentifier: "LoginViewController") as! LoginViewController
         navigationController?.pushViewController(abcViewController, animated: true)
     }
-   
     // MARK: Add wishlist into coredata
     @available(iOS 10.0, *)
     func save(index : NSInteger) {
@@ -773,7 +761,7 @@ class HomeViewController: UIViewController ,UICollectionViewDelegate,UICollectio
         person.setValue(self.product[index].image, forKeyPath: "image")
         person.setValue(self.product[index].categoryID, forKeyPath: "categoryID")
         person.setValue("1", forKeyPath: "wishlistID")
-         person.setValue(self.product[index].stock, forKeyPath: "stock")
+        person.setValue(self.product[index].stock, forKeyPath: "stock")
        
         do {
             try managedContext.save()

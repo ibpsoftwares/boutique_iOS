@@ -670,7 +670,7 @@
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Profile" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TSl-XD-8tr">
-                                        <rect key="frame" x="167" y="21" width="41" height="18"/>
+                                        <rect key="frame" x="167.5" y="21" width="40.5" height="18"/>
                                         <fontDescription key="fontDescription" name="Whitney-Medium" family="Whitney" pointSize="15"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
@@ -720,7 +720,7 @@
                                                                 </connections>
                                                             </button>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Zane David" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="z82-x0-Iiv">
-                                                                <rect key="frame" x="39" y="103" width="72" height="18"/>
+                                                                <rect key="frame" x="39.5" y="103" width="72" height="18"/>
                                                                 <fontDescription key="fontDescription" name="Whitney-Medium" family="Whitney" pointSize="15"/>
                                                                 <nil key="textColor"/>
                                                                 <nil key="highlightedColor"/>
@@ -739,7 +739,7 @@
                                                         </constraints>
                                                     </view>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vb6-gN-Sdj">
-                                                        <rect key="frame" x="144" y="141" width="45" height="45"/>
+                                                        <rect key="frame" x="144.5" y="141" width="45" height="45"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="45" id="48S-5K-KIi"/>
                                                             <constraint firstAttribute="width" constant="45" id="v3l-Bh-rCz"/>
@@ -747,7 +747,7 @@
                                                         <state key="normal" image="edit"/>
                                                     </button>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Edit Profile" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QbN-VX-eTV">
-                                                        <rect key="frame" x="189" y="155" width="68" height="18"/>
+                                                        <rect key="frame" x="189.5" y="155" width="68" height="18"/>
                                                         <fontDescription key="fontDescription" name="Whitney-Medium" family="Whitney" pointSize="15"/>
                                                         <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                                         <nil key="highlightedColor"/>
@@ -1214,7 +1214,7 @@
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Change Password" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mDP-eT-y1W">
-                                        <rect key="frame" x="132" y="21" width="111.5" height="18"/>
+                                        <rect key="frame" x="132.5" y="21" width="111.5" height="18"/>
                                         <fontDescription key="fontDescription" name="Whitney-Medium" family="Whitney" pointSize="15"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
@@ -1510,7 +1510,7 @@
                                                         <rect key="frame" x="10" y="271" width="355" height="40"/>
                                                         <subviews>
                                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="City/District" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="3Oz-TK-e0m">
-                                                                <rect key="frame" x="10" y="11" width="83.5" height="18"/>
+                                                                <rect key="frame" x="10" y="11" width="83" height="18"/>
                                                                 <nil key="textColor"/>
                                                                 <fontDescription key="fontDescription" name="Whitney-Medium" family="Whitney" pointSize="15"/>
                                                                 <textInputTraits key="textInputTraits"/>
@@ -1826,7 +1826,7 @@
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Payment" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EqN-NZ-T8B">
-                                        <rect key="frame" x="160" y="21" width="55" height="18"/>
+                                        <rect key="frame" x="160.5" y="21" width="55" height="18"/>
                                         <fontDescription key="fontDescription" name="Whitney-Medium" family="Whitney" pointSize="15"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
@@ -2072,12 +2072,12 @@
                                 </constraints>
                             </stackView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Congratulations" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nYv-OT-YLk">
-                                <rect key="frame" x="86.5" y="264" width="201.5" height="35"/>
+                                <rect key="frame" x="87" y="264" width="201.5" height="35"/>
                                 <fontDescription key="fontDescription" name="Whitney-Medium" family="Whitney" pointSize="30"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Your order has been accepted." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kX7-al-rje">
-                                <rect key="frame" x="93" y="316" width="190" height="17.5"/>
+                                <rect key="frame" x="93.5" y="316" width="190" height="17.5"/>
                                 <fontDescription key="fontDescription" name="Whitney-Medium" family="Whitney" pointSize="15"/>
                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
@@ -2144,7 +2144,7 @@
                                         </constraints>
                                     </imageView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Category" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="f0s-xm-ffS">
-                                        <rect key="frame" x="159" y="21" width="58" height="18"/>
+                                        <rect key="frame" x="158.5" y="21" width="58" height="18"/>
                                         <fontDescription key="fontDescription" name="Whitney-Medium" family="Whitney" pointSize="15"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
@@ -2900,7 +2900,7 @@
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Cart View" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2Qw-Dc-RrZ">
-                                        <rect key="frame" x="156" y="21" width="63" height="18"/>
+                                        <rect key="frame" x="156.5" y="21" width="63" height="18"/>
                                         <fontDescription key="fontDescription" name="Whitney-Medium" family="Whitney" pointSize="15"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
@@ -3273,7 +3273,7 @@
                                 <rect key="frame" x="0.0" y="79" width="375" height="1672"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Hgd-l7-rU6">
-                                        <rect key="frame" x="0.0" y="0.0" width="375" height="1213"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="1215"/>
                                         <subviews>
                                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="60e-LS-brW" customClass="CLabsImageSlider" customModule="CLabsImageSlider">
                                                 <rect key="frame" x="0.0" y="0.0" width="375" height="225"/>
@@ -3306,7 +3306,7 @@
                                                 <rect key="frame" x="0.0" y="225" width="375" height="150"/>
                                                 <subviews>
                                                     <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" tag="11" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="03t-mN-0hp">
-                                                        <rect key="frame" x="0.0" y="5" width="375" height="145"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="375" height="150"/>
                                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                         <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="rrT-ce-6rr">
                                                             <size key="itemSize" width="174" height="149"/>
@@ -3316,7 +3316,7 @@
                                                         </collectionViewFlowLayout>
                                                         <cells>
                                                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="cell" id="nea-aU-hYs" customClass="AddBannerCollectionViewCell" customModule="Boutique" customModuleProvider="target">
-                                                                <rect key="frame" x="0.0" y="-2" width="174" height="149"/>
+                                                                <rect key="frame" x="0.0" y="0.5" width="174" height="149"/>
                                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
                                                                     <rect key="frame" x="0.0" y="0.0" width="174" height="149"/>
@@ -3350,7 +3350,7 @@
                                                     <constraint firstItem="03t-mN-0hp" firstAttribute="leading" secondItem="np7-io-8Oe" secondAttribute="leading" id="IEt-6J-f2h"/>
                                                     <constraint firstAttribute="trailing" secondItem="03t-mN-0hp" secondAttribute="trailing" id="YJD-BZ-7Dh"/>
                                                     <constraint firstAttribute="height" constant="150" id="oeA-LX-XJY"/>
-                                                    <constraint firstItem="03t-mN-0hp" firstAttribute="top" secondItem="np7-io-8Oe" secondAttribute="top" constant="5" id="qwo-6e-1bC"/>
+                                                    <constraint firstItem="03t-mN-0hp" firstAttribute="top" secondItem="np7-io-8Oe" secondAttribute="top" id="qwo-6e-1bC"/>
                                                 </constraints>
                                             </view>
                                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="xqm-la-UOm">
@@ -3432,7 +3432,7 @@
                                                 </constraints>
                                             </view>
                                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="b2x-Ng-OUV">
-                                                <rect key="frame" x="0.0" y="878" width="375" height="335"/>
+                                                <rect key="frame" x="0.0" y="875" width="375" height="335"/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="335" id="t4I-wq-U0Y"/>
@@ -3465,7 +3465,7 @@
                                             <constraint firstAttribute="trailing" secondItem="xqm-la-UOm" secondAttribute="trailing" id="1dT-NT-Zah"/>
                                             <constraint firstItem="Eic-kI-7YB" firstAttribute="top" secondItem="xqm-la-UOm" secondAttribute="bottom" constant="5" id="1id-Ei-Y8U"/>
                                             <constraint firstItem="np7-io-8Oe" firstAttribute="top" secondItem="60e-LS-brW" secondAttribute="bottom" id="6BJ-lW-dzv"/>
-                                            <constraint firstItem="b2x-Ng-OUV" firstAttribute="top" secondItem="Eic-kI-7YB" secondAttribute="bottom" constant="8" id="6P6-Ui-eTu"/>
+                                            <constraint firstItem="b2x-Ng-OUV" firstAttribute="top" secondItem="Eic-kI-7YB" secondAttribute="bottom" constant="5" id="6P6-Ui-eTu"/>
                                             <constraint firstItem="np7-io-8Oe" firstAttribute="top" secondItem="u7f-23-lqu" secondAttribute="bottom" constant="5" id="6qh-OF-Ca4"/>
                                             <constraint firstItem="u7f-23-lqu" firstAttribute="leading" secondItem="Hgd-l7-rU6" secondAttribute="leading" id="9LJ-DD-K9c"/>
                                             <constraint firstAttribute="trailing" secondItem="np7-io-8Oe" secondAttribute="trailing" id="AMZ-za-mzi"/>
@@ -3476,7 +3476,7 @@
                                             <constraint firstItem="b2x-Ng-OUV" firstAttribute="leading" secondItem="Hgd-l7-rU6" secondAttribute="leading" id="Z4h-bs-alS"/>
                                             <constraint firstAttribute="trailing" secondItem="Eic-kI-7YB" secondAttribute="trailing" id="cdR-sd-bh0"/>
                                             <constraint firstItem="60e-LS-brW" firstAttribute="leading" secondItem="Hgd-l7-rU6" secondAttribute="leading" id="gXG-xs-Ar8"/>
-                                            <constraint firstAttribute="bottom" secondItem="b2x-Ng-OUV" secondAttribute="bottom" id="gcr-GA-Tun"/>
+                                            <constraint firstAttribute="bottom" secondItem="b2x-Ng-OUV" secondAttribute="bottom" constant="5" id="gcr-GA-Tun"/>
                                             <constraint firstItem="Eic-kI-7YB" firstAttribute="leading" secondItem="Hgd-l7-rU6" secondAttribute="leading" id="gmz-Mt-AVy"/>
                                             <constraint firstItem="xqm-la-UOm" firstAttribute="top" secondItem="np7-io-8Oe" secondAttribute="bottom" constant="5" id="tKh-3G-2Ru"/>
                                             <constraint firstAttribute="trailing" secondItem="60e-LS-brW" secondAttribute="trailing" id="yPT-SC-Pe0"/>
@@ -3595,7 +3595,7 @@
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Cart View" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iGq-B7-OXz">
-                                        <rect key="frame" x="156" y="21" width="63" height="18"/>
+                                        <rect key="frame" x="156.5" y="21" width="63" height="18"/>
                                         <fontDescription key="fontDescription" name="Whitney-Medium" family="Whitney" pointSize="15"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
@@ -3647,13 +3647,13 @@
                                                     </constraints>
                                                 </view>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Price" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DNf-mm-lgC">
-                                                    <rect key="frame" x="328" y="104" width="32" height="18"/>
+                                                    <rect key="frame" x="328.5" y="104" width="31.5" height="18"/>
                                                     <fontDescription key="fontDescription" name="Whitney-Medium" family="Whitney" pointSize="15"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Size :" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EBO-Ky-Oos">
-                                                    <rect key="frame" x="138" y="104" width="33" height="18"/>
+                                                    <rect key="frame" x="138" y="104" width="32.5" height="18"/>
                                                     <fontDescription key="fontDescription" name="Whitney-Medium" family="Whitney" pointSize="15"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
@@ -3691,7 +3691,7 @@
                                                     <state key="normal" title="Button" image="Increment"/>
                                                 </button>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="M" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FdZ-KK-Ml9">
-                                                    <rect key="frame" x="183" y="104" width="14" height="18"/>
+                                                    <rect key="frame" x="182.5" y="104" width="14" height="18"/>
                                                     <fontDescription key="fontDescription" name="Whitney-Medium" family="Whitney" pointSize="15"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
@@ -3889,7 +3889,7 @@
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Payment" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Th2-ow-Or8">
-                                        <rect key="frame" x="160" y="21.5" width="55" height="17.5"/>
+                                        <rect key="frame" x="160.5" y="21.5" width="55" height="17.5"/>
                                         <fontDescription key="fontDescription" name="Whitney-Medium" family="Whitney" pointSize="15"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>

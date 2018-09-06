@@ -68,6 +68,7 @@ class CategoryViewController: UIViewController,UITableViewDelegate,UITableViewDa
         // Dispose of any resources that can be recreated.
     }
     override func viewWillAppear(_ animated: Bool) {
+        UIApplication.shared.beginIgnoringInteractionEvents()
          self.getCategoryAPI()
     }
     override func viewDidLayoutSubviews() {
@@ -103,6 +104,7 @@ class CategoryViewController: UIViewController,UITableViewDelegate,UITableViewDa
                 
                 DispatchQueue.main.async(execute: {
                     self.tableView.reloadData()
+                    UIApplication.shared.endIgnoringInteractionEvents()
                 })
                  }else{
                      Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: (response?.value(forKey: "message") as! String))

@@ -175,7 +175,6 @@ class ProductDetailViewController: UIViewController,UICollectionViewDelegate,UIC
             fetchWishlistFromCoreData()
             fetchCartData()
         }
-        
     }
    
     //MARK: Fetch Cart Data From CoreData
@@ -252,7 +251,6 @@ class ProductDetailViewController: UIViewController,UICollectionViewDelegate,UIC
             }else{
                  parameter = ["user_id": Model.sharedInstance.userID,"cloth_id" : productID,"category_id":self.passDict.value(forKey: "categoryID") as! String]
             }
-           
         }
         else{
             if checkSub == true{
@@ -261,7 +259,6 @@ class ProductDetailViewController: UIViewController,UICollectionViewDelegate,UIC
                parameter = ["user_id": "" , "cloth_id" : self.passDict.value(forKey: "id") as! String,"category_id":self.passDict.value(forKey: "categoryID") as! String]
             }
         }
-        
         print(parameter)
         
         Webservice.apiPost(apiURl: "getCloth", parameters: parameter, headers: nil) { (response:NSDictionary?, error:NSError?) in
@@ -299,7 +296,6 @@ class ProductDetailViewController: UIViewController,UICollectionViewDelegate,UIC
                         else {
                             self.product.append(getSingleProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "id") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: "", oldPrice: "", brand: ((item as! NSDictionary).value(forKey: "brand") as! String), wishlistID: "", cout: "1", desc: ((item as! NSDictionary).value(forKey: "description") as! String), categoryID: ((item as! NSDictionary).value(forKey: "category_id") as! String), stock: ((item as! NSDictionary).value(forKey: "total_stock") as! String)))
                         }
-                        
                     }
                     self.sizeArr.append(getSize.init(size: ((item as! NSDictionary).value(forKey: "size") as! NSArray)))
                    
@@ -329,7 +325,7 @@ class ProductDetailViewController: UIViewController,UICollectionViewDelegate,UIC
                         print("not null")
                         self.subCat.append(subCategory.init(id: ((item as! NSDictionary).value(forKey: "id") as! String), categoryID: ((item as! NSDictionary).value(forKey: "category_id") as! String), name: ((item as! NSDictionary).value(forKey: "title") as! String), image: ((item as! NSDictionary).value(forKey: "image") as! String), originalPrice: ((item as! NSDictionary).value(forKey: "original_price") as! String), offerPrice: ((item as! NSDictionary).value(forKey: "offer_price") as! String), stock: ((item as! NSDictionary).value(forKey: "total_stock") as! String)))
                     }
-                }
+                  }
                 }
                 print(self.sizeArr)
                 self.count = self.imgArr.count
@@ -500,8 +496,6 @@ class ProductDetailViewController: UIViewController,UICollectionViewDelegate,UIC
             self.subCategoryProductID = self.subCat[indexPath.row].id
             getProductAPI()
         }
-        
-        
     }
 
     @IBAction func btnAddToCart(_ sender: UIButton) {
@@ -658,7 +652,6 @@ class ProductDetailViewController: UIViewController,UICollectionViewDelegate,UIC
                    count = 1
                     Alert.showAlertMessage(vc: self, titleStr: "Alert!", messageStr: "Item Is Already Exits.")
                     break
-                   
                 }
             }
                 if(count == 1){
@@ -719,12 +712,10 @@ class ProductDetailViewController: UIViewController,UICollectionViewDelegate,UIC
             } catch let error as NSError {
                 print("Could not save. \(error), \(error.userInfo)")
             }
-            
         }
 
        fetchCartData()
-}
-    
+   }
     //MARK: getCartViewAPI Methods
     func viewToCartAPI(){
         SKActivityIndicator.spinnerColor(UIColor.darkGray)
@@ -758,7 +749,7 @@ class ProductDetailViewController: UIViewController,UICollectionViewDelegate,UIC
                     }
                     else {
                         self.cartProduct.append(getProductDetail.init(name:((item as! NSDictionary).value(forKey: "title") as! String), id: ((item as! NSDictionary).value(forKey: "cloth_id") as! String), price: ((item as! NSDictionary).value(forKey: "original_price") as! String), image: ((item as! NSDictionary).value(forKey: "image1") as! String), oldPrice: ((item as! NSDictionary).value(forKey: "offer_price") as! String), brand: "", wishlistID: "", cout: "1", sizeID: "", categoryID: ((item as! NSDictionary).value(forKey: "category_id") as! String), stock: ((item as! NSDictionary).value(forKey: "stock") as! String), clothID: ((item as! NSDictionary).value(forKey: "cloth_id") as! String)))
-                        }
+                    }
                 }
             }
                 DispatchQueue.main.async(execute: {
@@ -811,7 +802,6 @@ class ProductDetailViewController: UIViewController,UICollectionViewDelegate,UIC
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
             return
         }
-        
         if productlocal.count > 0{
         for section in 0...self.productlocal.count - 1 {
             
@@ -835,6 +825,7 @@ class ProductDetailViewController: UIViewController,UICollectionViewDelegate,UIC
                 person.setValue(self.imgArray[0] as! String, forKeyPath: "image")
                 person.setValue(self.product[0].categoryID, forKey: "categoryID")
                 person.setValue("1", forKeyPath: "wishlistID")
+                person.setValue(self.product[0].stock, forKeyPath: "stock")
                 print(person)
                 do {
                     try managedContext.save()
@@ -844,7 +835,7 @@ class ProductDetailViewController: UIViewController,UICollectionViewDelegate,UIC
                 }
                 fetchWishlistFromCoreData()
             }
-            }
+          }
         }
         else{
             
